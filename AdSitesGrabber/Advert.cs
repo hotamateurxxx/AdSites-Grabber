@@ -116,6 +116,17 @@ namespace AdSitesGrabber
         protected List<List<string>> categories;
 
         /// <summary>
+        /// Адрес объявления.
+        /// </summary>
+        public string Url
+        {
+            get
+            {
+                return url;
+            }
+        }
+
+        /// <summary>
         /// Конструктор.
         /// </summary>
         public Advert()

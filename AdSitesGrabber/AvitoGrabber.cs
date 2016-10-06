@@ -52,6 +52,12 @@ namespace AdSitesGrabber
             selectLocation();
             // Обрабатываем объявления на текущей странице
             processPageAdverts();
+            // Когда закончили читать объявления в списках - заходим по ссылке на каждое объявление и дочитываем его
+            for (int idx = 0; idx < adverts.Count; idx++)
+            {
+                adverts[idx] = new AvitoAdvertOnPage(adverts[idx] as AvitoAdvertOnList, driver);
+            }
+            // Сейчас 
             driver.Close();
         }
 

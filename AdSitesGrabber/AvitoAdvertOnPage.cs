@@ -14,7 +14,8 @@ namespace AdSitesGrabber
     /// <summary>
     /// Объявление на Avito.
     /// </summary>
-    class AvitoAdvertOnPage : AvitoAdvertOnList, IAdvertOnPage
+    class AvitoAdvertOnPage 
+        : AvitoAdvertOnList, IAdvertOnPage
     {
 
         /// <summary>
@@ -27,11 +28,13 @@ namespace AdSitesGrabber
         }
 
         /// <summary>
-        /// Выполнение рабочей последовательности.
+        /// Апгрейд объявления со списка объявлением со страницы.
         /// </summary>
-        public void Execute(IWebDriver driver)
+        /// <param name="advert">Объявление на странице списка.</param>
+        public AvitoAdvertOnPage(AvitoAdvertOnList advert, IWebDriver driver = null)
+            : base()
         {
-            // Если драйвер не был передан
+            url = advert.Url;
             if (driver == null)
             {
                 driver = new FirefoxDriver();
@@ -40,19 +43,7 @@ namespace AdSitesGrabber
             }
             else
             {
-                // Открытие во вкладках пока не работает - непонятно как переключиться на старую вкладку обратно
-                throw new Exception("Работа во вкладке не реализована.");
-                /*
-                IWebElement body1 = driver.FindElement(By.TagName("body"));
-                //string currentWindowHandle = driver.CurrentWindowHandle;
-                body1.SendKeys(Keys.Control + 't');
-                //string newWindowHandle = driver.WindowHandles[driver.WindowHandles.Count - 1].ToString();
-                //driver.SwitchTo().Window(newWindowHandle);
-                Parse();
-                IWebElement body2 = driver.FindElement(By.TagName("body"));
-                body2.SendKeys(Keys.Control + 'w');
-                driver.SwitchTo().Frame(body1);
-                */
+                ParsePage(driver);
             }
         }
 
@@ -83,8 +74,15 @@ namespace AdSitesGrabber
         /// </summary>
         protected void ParsePrice(IWebDriver driver)
         {
-            IWebElement elem = driver.FindElement(By.CssSelector(".description_price > span[itemprop=price]"));
-            priceStr = elem.Text;
+            try
+            {
+                IWebElement elem = driver.FindElement(By.CssSelector(".description_price > span[itemprop=price]"));
+                priceStr = elem.Text;
+            }
+            catch (NoSuchElementException e)
+            {
+                // Do nothing
+            }
         }
 
         /// <summary>
@@ -101,9 +99,19 @@ namespace AdSitesGrabber
         /// </summary>
         protected void ParseText(IWebDriver driver)
         {
-            IWebElement elem = driver.FindElement(By.CssSelector("#desc_text > p"));
-            text = elem.Text;
-            htmlText = elem.ToString();
+            try
+            {
+                IWebElement elem = driver.FindElement(By.CssSelector("#desc_text > p"));
+                text = elem.Text;
+                htmlText = elem.ToString();
+            }
+            catch (NoSuchElementException e)
+            {
+                IWebElement elem = driver.FindElement(By.CssSelector(".description.description-expanded"));
+                text = elem.Text;
+                htmlText = elem.ToString();
+            }
+
         }
 
         /// <summary>
