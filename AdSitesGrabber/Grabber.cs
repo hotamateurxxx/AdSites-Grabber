@@ -45,7 +45,7 @@ namespace AdSitesGrabber
         {
             get 
             {
-                return "Ижевск";
+                return "Санкт-Петербург";
             }
         }
 
@@ -62,13 +62,21 @@ namespace AdSitesGrabber
         /// <summary>
         /// Конструктор.
         /// </summary>
+        public Grabber()
+        {
+            adverts = new List<Advert>();
+        }
+
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
         /// <param name="locationName">Имя места, для которого выбираются объявления.</param>
         /// <param name="startUrl">Отправной адрес, с которого начинается работа граббера.</param>
-        public Grabber(string locationName = null, string startUrl = null)
+        public Grabber(string locationName = null, string startUrl = null) 
+            : this()
         {
             this.locationName = locationName ?? defaultLocationName;
             this.startUrl = startUrl ?? defaultStartUrl;
-            adverts = new List<Advert>();
         }
 
         /// <summary>

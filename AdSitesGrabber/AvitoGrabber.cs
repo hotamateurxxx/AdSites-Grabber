@@ -14,7 +14,8 @@ namespace AdSitesGrabber
     /// <summary>
     /// Граббер сайта Avito.
     /// </summary>
-    class AvitoGrabber : Grabber
+    class AvitoGrabber 
+        : Grabber
     {
 
         /// <summary>
@@ -65,7 +66,7 @@ namespace AdSitesGrabber
                 IWebElement link = driver.FindElement(By.LinkText(locationName));
                 link.Click();
             }
-            catch (OpenQA.Selenium.NoSuchElementException e)
+            catch (NoSuchElementException e)
             {
                 throw new Exception("Заданное место не найдено", e);
             }
@@ -76,127 +77,13 @@ namespace AdSitesGrabber
         /// </summary>
         protected void processPageAdverts()
         {
-            System.Collections.ObjectModel.ReadOnlyCollection<IWebElement> divs = driver.FindElements(By.CssSelector(".catalog-list div.item-table"));
+            System.Collections.ObjectModel.ReadOnlyCollection<IWebElement> divs = driver.FindElements(By.CssSelector(".catalog-list div.item_table"));
             if (divs.Count == 0)
                 throw new Exception("На странице не найдено объявлений.");
             foreach (IWebElement div in divs)
             {
-                // id объявления
-                int id = Convert.ToInt16(div.GetAttribute("id").Substring(1));
-                
-                // Тип объявления (2 - сверху, 1 - обычное)
-                string dataType = div.GetAttribute("data-type");
-
-                // Заголовок объявления (наименование товара)
-                string title;
-                string url;
-                try
-                {
-                    IWebElement h3 = div.FindElement(By.CssSelector(".item-description-title"));
-                    title = h3.Text;
-
-                    // Ссылка на объявление
-                    try
-                    {
-                        IWebElement a = h3.FindElement(By.CssSelector("a"));
-                        url = a.GetAttribute("href");
-                    }
-                    catch (OpenQA.Selenium.NoSuchElementException e)
-                    {
-                        throw new Exception("Ссылка на объявление не найдена", e);
-                    }
-                }
-                catch (OpenQA.Selenium.NoSuchElementException e)
-                {
-                    throw new Exception("Заголовок объявления найден", e);
-                }
-
-                // Цена
-                string priceStr;
-                try
-                {
-                    IWebElement about = div.FindElement(By.CssSelector("div.about"));
-                    priceStr = about.Text;
-                }
-                finally
-                {
-                    // Do nothing
-                }
-
-                // Категории, Обновлено
-                List<List<string>> categories = new List<List<string>>();
-                string updatedStr;
-                DateTime updated;
-                try
-                {
-                    IWebElement data = div.FindElement(By.CssSelector("div.data"));
-                    priceStr = data.Text;
-
-                    // Категории
-                    try
-                    {
-                        IWebElement p = div.FindElement(By.CssSelector("p"));
-                        /// <remark>
-                        /// Здесь надо сказать что совсем правильно было бы не брать весь текст параграфа, а потом разбивать 
-                        /// его по делителю. Надо бы обойти каждый текстовый узел в отдельности, но средствами Selenuim это 
-                        /// делается только через выполнение JS.
-                        /// </remark>
-                        string[] tags = p.Text.Split('|');
-                        List<string> category = new List<string>();
-                        foreach (string tag in tags)
-                        {
-                            category.Add(tag);
-                        }
-                        categories.Add(category);
-                    }
-                    finally
-                    {
-                        // Do nothing
-                    }
-
-                    // Обновлено
-                    try
-                    {
-                        IWebElement element = div.FindElement(By.CssSelector("div.clearfix div.date"));
-                        updatedStr = element.Text;
-                        updated = DateTime.Parse(updatedStr);
-                    }
-                    finally
-                    {
-                        // Do nothing
-                    }
-                }
-                finally
-                {
-                    // Do nothing
-                }
-
-                // 
-
-                // Заглавная фотография
-                string imgUrl;
-                try
-                {
-                    IWebElement img = div.FindElement(By.CssSelector(".b-photo img.photo-count-show"));
-                    imgUrl = img.GetAttribute("src");
-                }
-                finally
-                {
-                    // Do nothing
-                }
-
-                // Количество фотографий
-                int photoCount;
-                try
-                {
-                    IWebElement i = div.FindElement(By.CssSelector(".b-photo .photo-icons i"));
-                    photoCount = Convert.ToInt16(i.Text);
-                }
-                finally
-                {
-                    // Do nothing
-                }
-
+                Advert advert = new AvitoAdvertOnList(div);
+                adverts.Add(advert);
             }
             /*
             // Список ссылок на объявления
@@ -209,7 +96,7 @@ namespace AdSitesGrabber
             }
              * */
             /*
-                AvitoAdvert advert = new AvitoAdvert(url, null);
+                AvitoAdvertOnPage advert = new AvitoAdvertOnPage(url, null);
                 advert.Execute();
             */
 

@@ -14,30 +14,28 @@ namespace AdSitesGrabber
     /// <summary>
     /// Объявление на Avito.
     /// </summary>
-    class AvitoAdvert : AvitoAdvertPreview
+    class AvitoAdvertOnPage : AvitoAdvertOnList, IAdvertOnPage
     {
-        /*
+
         /// <summary>
         /// Конструктор.
         /// </summary>
-        /// <param name="url">Адрес объявления.</param>
-        /// <param name="driver">Драйвер.</param>
-        public AvitoAdvert(string url, IWebDriver driver)
+        /// <param name="element">Элемент.</param>
+        public AvitoAdvertOnPage(IWebElement element)
+            : base(element)
         {
-            new Advert(url, driver);
         }
-         * */
 
         /// <summary>
         /// Выполнение рабочей последовательности.
         /// </summary>
-        public void Execute()
+        public void Execute(IWebDriver driver)
         {
             // Если драйвер не был передан
             if (driver == null)
             {
                 driver = new FirefoxDriver();
-                Parse();
+                ParsePage(driver);
                 driver.Close();
             }
             else
@@ -61,20 +59,20 @@ namespace AdSitesGrabber
         /// <summary>
         /// Загрузка и разбор страницы с обявлением.
         /// </summary>
-        protected void Parse()
+        public void ParsePage(IWebDriver driver)
         {
             driver.Navigate().GoToUrl(url);
-            ParseTitle();
-            ParseCategories();
-            ParsePrice();
-            ParseLocation();
-            ParseText();
+            ParseTitle(driver);
+            ParseCategories(driver);
+            ParsePrice(driver);
+            ParseLocation(driver);
+            ParseText(driver);
         }
 
         /// <summary>
         /// Разбор заголовка.
         /// </summary>
-        protected void ParseTitle()
+        protected void ParseTitle(IWebDriver driver)
         {
             IWebElement elem = driver.FindElement(By.CssSelector(".clearfix > .h1[itemprop=name]"));
             title = elem.Text;
@@ -83,16 +81,16 @@ namespace AdSitesGrabber
         /// <summary>
         /// Разбор цены.
         /// </summary>
-        protected void ParsePrice()
+        protected void ParsePrice(IWebDriver driver)
         {
             IWebElement elem = driver.FindElement(By.CssSelector(".description_price > span[itemprop=price]"));
-            price = elem.Text;
+            priceStr = elem.Text;
         }
 
         /// <summary>
         /// Разбор места.
         /// </summary>
-        protected void ParseLocation()
+        protected void ParseLocation(IWebDriver driver)
         {
             IWebElement elem = driver.FindElement(By.CssSelector("#map > span[itemprop=name]"));
             location = elem.Text;
@@ -101,7 +99,7 @@ namespace AdSitesGrabber
         /// <summary>
         /// Разбор текста.
         /// </summary>
-        protected void ParseText()
+        protected void ParseText(IWebDriver driver)
         {
             IWebElement elem = driver.FindElement(By.CssSelector("#desc_text > p"));
             text = elem.Text;
@@ -111,7 +109,7 @@ namespace AdSitesGrabber
         /// <summary>
         /// Разбор категорий.
         /// </summary>
-        protected void ParseCategories()
+        protected void ParseCategories(IWebDriver driver)
         {
             System.Collections.ObjectModel.ReadOnlyCollection<IWebElement> links = driver.FindElements(By.CssSelector(".b-catalog-breadcrumbs .breadcrumb-link"));
             categories = new List<List<string>>();

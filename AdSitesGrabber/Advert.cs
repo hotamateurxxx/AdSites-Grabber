@@ -12,9 +12,47 @@ namespace AdSitesGrabber
 {
 
     /// <summary>
+    /// Объявление на элементе веб-страницы.
+    /// </summary>
+    public interface IAdvertOnElement
+    {
+
+        /// <summary>
+        /// Разбор элемента с объявлением.
+        /// </summary>
+        /// <param name="element">Элемент страницы, содержащий объявление.</param>
+        void ParseElement(IWebElement element);
+
+    }
+
+    /// <summary>
+    /// Объявление на странице объявления.
+    /// </summary>
+    public interface IAdvertOnPage 
+        : IAdvertOnElement
+    {
+
+        /// <summary>
+        /// Разбор страницы с объявлением.
+        /// </summary>
+        /// <param name="driver">Драйвер с загруженной страницей, содержащей объявление.</param>
+        void ParsePage(IWebDriver driver);
+
+    }
+
+    /// <summary>
+    /// Объявление на странице списка объявлений.
+    /// </summary>
+    public interface IAdvertOnList
+        : IAdvertOnElement
+    {
+    }
+
+    /// <summary>
     /// Объявление.
     /// </summary>
-    class Advert
+    abstract class Advert 
+        : IAdvertOnElement
     {
 
         /// <summary>
@@ -23,21 +61,36 @@ namespace AdSitesGrabber
         protected string url;
 
         /// <summary>
-        /// Драйвер.
-        /// </summary>
-        protected IWebDriver driver;
-
-        /// <summary>
         /// Заголовок.
         /// </summary>
         /// <remarks>По сути, наименование товара.</remarks>
         protected string title;
 
         /// <summary>
-        /// Цена.
+        /// Цена строкой.
         /// </summary>
-        /// <remarks>Пока как строка, потому что заморачиваться с валютами накладно.</remarks>
-        protected string price;
+        /// <remarks>Пока как строка, потом будем заморачиваться с валютами.</remarks>
+        protected string priceStr;
+
+        /// <summary>
+        /// Время обновления строкой.
+        /// </summary>
+        protected string updateTimeStr;
+
+        /// <summary>
+        /// Время обновления.
+        /// </summary>
+        protected DateTime updateTime;
+
+        /// <summary>
+        /// Заглавная фотография.
+        /// </summary>
+        protected string titleImgUrl;
+
+        /// <summary>
+        /// Количество фотографий.
+        /// </summary>
+        protected int photosCount;
 
         /// <summary>
         /// Место.
@@ -72,13 +125,19 @@ namespace AdSitesGrabber
         /// <summary>
         /// Конструктор.
         /// </summary>
-        /// <param name="url">Адрес объявления.</param>
-        /// <param name="driver">Драйвер.</param>
-        public Advert(string url, IWebDriver driver = null)
+        /// <param name="element">Элемент.</param>
+        public Advert(IWebElement element)
+            : this()
         {
-            this.url = url;
-            this.driver = driver ?? null;
+            ParseElement(element);
         }
 
+        /// <summary>
+        /// Разбор элемента с объявлением.
+        /// </summary>
+        /// <param name="element">Элемент страницы, содержащий объявление.</param>
+        abstract public void ParseElement(IWebElement element);
+
     }
+
 }

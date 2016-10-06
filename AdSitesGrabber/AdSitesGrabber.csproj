@@ -64,9 +64,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Advert.cs" />
-    <Compile Include="AvitoAdvertPreview.cs" />
+    <Compile Include="AvitoAdvertOnList.cs" />
     <Compile Include="AvitoGrabber.cs" />
-    <Compile Include="AvitoAdvert.cs" />
+    <Compile Include="AvitoAdvertOnPage.cs" />
     <Compile Include="Grabber.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

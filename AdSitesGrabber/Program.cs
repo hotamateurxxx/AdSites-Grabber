@@ -10,7 +10,7 @@ namespace AdSitesGrabber
     {
         static void Main(string[] args)
         {
-            var grabber = new AvitoGrabber("Москва", "http://www.avito.ru/");
+            Grabber grabber = new AvitoGrabber("Москва", "http://www.avito.ru/");
             grabber.Execute();
 
         }
