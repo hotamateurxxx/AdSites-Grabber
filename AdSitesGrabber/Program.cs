@@ -8,11 +8,16 @@ namespace AdSitesGrabber
 {
     class Program
     {
+        
         static void Main(string[] args)
         {
             Grabber grabber = new AvitoGrabber("Москва", "http://www.avito.ru/");
             grabber.Execute();
 
+            Console.WriteLine(grabber);
+            Console.ReadLine();
+
         }
+
     }
 }

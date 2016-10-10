@@ -10,6 +10,8 @@ using OpenQA.Selenium.Support.UI;
 
 namespace AdSitesGrabber
 {
+    
+    #region Interfaces
 
     /// <summary>
     /// Объявление на элементе веб-страницы.
@@ -48,12 +50,16 @@ namespace AdSitesGrabber
     {
     }
 
+    #endregion
+
     /// <summary>
     /// Объявление.
     /// </summary>
     abstract class Advert 
         : IAdvertOnElement
     {
+
+        #region Declarations
 
         /// <summary>
         /// Адрес объявления.
@@ -115,6 +121,10 @@ namespace AdSitesGrabber
         /// <remarks>Двойной список используется для того, чтобы можно было использовать и композицию и пересечение элементов.</remarks>
         protected List<List<string>> categories;
 
+        #endregion
+
+        #region Properties
+
         /// <summary>
         /// Адрес объявления.
         /// </summary>
@@ -125,6 +135,10 @@ namespace AdSitesGrabber
                 return url;
             }
         }
+
+        #endregion
+
+        #region Constructors
 
         /// <summary>
         /// Конструктор.
@@ -143,11 +157,30 @@ namespace AdSitesGrabber
             ParseElement(element);
         }
 
+        #endregion
+
+        #region Abstract Methods
+
         /// <summary>
         /// Разбор элемента с объявлением.
         /// </summary>
         /// <param name="element">Элемент страницы, содержащий объявление.</param>
         abstract public void ParseElement(IWebElement element);
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Представление в строке.
+        /// </summary>
+        /// <returns>Представление в строке.</returns>
+        public override string ToString()
+        {
+            return location + "\n" + title + "\n" + priceStr + "\n" + updateTime.ToString();
+        }
+
+        #endregion
 
     }
 

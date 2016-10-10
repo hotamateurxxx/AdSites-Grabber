@@ -12,11 +12,13 @@ namespace AdSitesGrabber
 {
  
     /// <summary>
-    /// Объявление на Avito.
+    /// Объявление на Avito (каким оно видно на странице объявления).
     /// </summary>
     class AvitoAdvertOnPage 
         : AvitoAdvertOnList, IAdvertOnPage
     {
+
+        #region Constructors
 
         /// <summary>
         /// Конструктор.
@@ -47,6 +49,10 @@ namespace AdSitesGrabber
             }
         }
 
+        #endregion
+
+        #region Public Methods
+
         /// <summary>
         /// Загрузка и разбор страницы с обявлением.
         /// </summary>
@@ -59,6 +65,10 @@ namespace AdSitesGrabber
             ParseLocation(driver);
             ParseText(driver);
         }
+
+        #endregion
+
+        #region Protected Methods
 
         /// <summary>
         /// Разбор заголовка.
@@ -79,7 +89,7 @@ namespace AdSitesGrabber
                 IWebElement elem = driver.FindElement(By.CssSelector(".description_price > span[itemprop=price]"));
                 priceStr = elem.Text;
             }
-            catch (NoSuchElementException e)
+            catch (NoSuchElementException)
             {
                 // Do nothing
             }
@@ -105,7 +115,7 @@ namespace AdSitesGrabber
                 text = elem.Text;
                 htmlText = elem.ToString();
             }
-            catch (NoSuchElementException e)
+            catch (NoSuchElementException)
             {
                 IWebElement elem = driver.FindElement(By.CssSelector(".description.description-expanded"));
                 text = elem.Text;
@@ -141,6 +151,8 @@ namespace AdSitesGrabber
                 categories.Add(newCategory);
             }
         }
+
+        #endregion
 
     }
 }

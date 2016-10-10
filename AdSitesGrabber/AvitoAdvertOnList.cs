@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using OpenQA.Selenium;
@@ -12,11 +13,13 @@ namespace AdSitesGrabber
 {
 
     /// <summary>
-    /// Предпросмотр объявления на Avito (что видно в списке обявлений).
+    /// Объявление на Avito (каким оно видно в списке обявлений).
     /// </summary>    
     class AvitoAdvertOnList 
         : Advert, IAdvertOnList
     {
+
+        #region Declarations
 
         /// <summary>
         /// Id объявления.
@@ -27,6 +30,10 @@ namespace AdSitesGrabber
         /// Тип объявления.
         /// </summary>
         protected int dataType;
+
+        #endregion
+
+        #region Constructors
 
         /// <summary>
         /// Конструктор.
@@ -43,6 +50,10 @@ namespace AdSitesGrabber
             : base(element)
         {
         }
+
+        #endregion
+
+        #region Public Methods
 
         /// <summary>
         /// Разбор элемента с объявлением.
@@ -124,11 +135,21 @@ namespace AdSitesGrabber
                 {
                     IWebElement div = element.FindElement(By.CssSelector("div.clearfix div.date"));
                     updateTimeStr = div.Text;
-                    updateTime = DateTime.Parse(updateTimeStr);
+
+                    // Готовим строку к разбору методом DateTime.Parse
+                    string timeStr = updateTimeStr;
+                    DateTime timeNow = new DateTime();
+                    timeNow = DateTime.Now;
+                    timeStr = Regex.Replace(timeStr, "Сегодня", timeNow.ToShortDateString(), RegexOptions.IgnoreCase);
+                    timeNow = timeNow.AddDays(-1);
+                    timeStr = Regex.Replace(timeStr, "Вчера", timeNow.ToShortDateString(), RegexOptions.IgnoreCase);
+                    // Разбираем строку методом DateTime.Parse
+                    updateTime = DateTime.Parse(timeStr);
+
                 }
-                catch (FormatException e)
+                catch (FormatException)
                 {
-                    // Do nothing
+                    throw;
                 }
             }
             finally
@@ -144,7 +165,7 @@ namespace AdSitesGrabber
                 IWebElement img = element.FindElement(By.CssSelector(".b-photo img.photo-count-show"));
                 titleImgUrl = img.GetAttribute("src");
             }
-            catch (NoSuchElementException e)
+            catch (NoSuchElementException)
             {
                 // Do nothing
             }
@@ -155,12 +176,23 @@ namespace AdSitesGrabber
                 IWebElement i = element.FindElement(By.CssSelector(".b-photo .photo-icons i"));
                 photosCount = Convert.ToInt16(i.Text);
             }
-            catch (NoSuchElementException e)
+            catch (NoSuchElementException)
             {
                 // Do nothing
             }
 
         }
+
+        /// <summary>
+        /// Представление в строке.
+        /// </summary>
+        /// <returns>Представление в строке.</returns>
+        public override string ToString()
+        {
+            return base.ToString() + "\n" + "id " + id.ToString();
+        }
+
+        #endregion
 
     }
 }

@@ -18,6 +18,8 @@ namespace AdSitesGrabber
         : Grabber
     {
 
+        #region Properties
+
         /// <summary>
         /// Значение по-умолчанию отправного адреса, с которого начинается работа граббера.
         /// </summary>
@@ -29,6 +31,10 @@ namespace AdSitesGrabber
             }
         }
 
+        #endregion
+
+        #region Constructors
+
         /// <summary>
         /// Конструктор.
         /// </summary>
@@ -38,6 +44,10 @@ namespace AdSitesGrabber
             : base(locationName, startUrl)
         {
         }
+
+        #endregion
+
+        #region Public Methods
 
         /// <summary>
         /// Выполнение рабочей последовательности (загрузка стартовой страницы, выбор параметров и захват объявлений).
@@ -60,6 +70,10 @@ namespace AdSitesGrabber
             // Сейчас 
             driver.Close();
         }
+
+        #endregion
+
+        #region Protected Methods
 
         /// <summary>
         /// Выбор географического места (города) объявлений.
@@ -91,22 +105,10 @@ namespace AdSitesGrabber
                 Advert advert = new AvitoAdvertOnList(div);
                 adverts.Add(advert);
             }
-            /*
-            // Список ссылок на объявления
-            List<string> urls = new List<string>();
-            System.Collections.ObjectModel.ReadOnlyCollection<IWebElement> links = driver.FindElements(By.CssSelector(".catalog-list a.item-description-title-link"));
-            foreach (IWebElement link in links)
-            {
-                string url = link.GetAttribute("href");
-                urls.Add(url);
-            }
-             * */
-            /*
-                AvitoAdvertOnPage advert = new AvitoAdvertOnPage(url, null);
-                advert.Execute();
-            */
-
         }
 
+        #endregion
+
     }
+
 }
