@@ -40,8 +40,9 @@ namespace AdSitesGrabber
         /// </summary>
         /// <param name="locationName">Имя места, для которого выбираются объявления.</param>
         /// <param name="startUrl">Отправной адрес, с которого начинается работа граббера.</param>
-        public AvitoGrabber(string locationName = null, string startUrl = null) 
-            : base(locationName, startUrl)
+        /// <param name="driverManager">Мэнеджер веб-драйверов.</param>
+        public AvitoGrabber(string locationName = null, string startUrl = null, IWebDriverManager driverManager = null)
+            : base(locationName, startUrl, driverManager)
         {
         }
 
@@ -55,20 +56,20 @@ namespace AdSitesGrabber
         public override void Execute()
         {
             // Создаем драйвер
-            driver = new FirefoxDriver();
+            IWebDriver driver = driverManager.OccupyDriver(this);
             // Загружаем отправную страницу
             driver.Navigate().GoToUrl(startUrl);
             // Выбираем город
-            selectLocation();
+            selectLocation(driver);
             // Обрабатываем объявления на текущей странице
-            processPageAdverts();
+            processPageAdverts(driver);
             // Когда закончили читать объявления в списках - заходим по ссылке на каждое объявление и дочитываем его
             for (int idx = 0; idx < adverts.Count; idx++)
             {
                 adverts[idx] = new AvitoAdvertOnPage(adverts[idx] as AvitoAdvertOnList, driver);
             }
             // Сейчас 
-            driver.Close();
+            driverManager.ReleaseDriver(driver);
         }
 
         #endregion
@@ -78,8 +79,9 @@ namespace AdSitesGrabber
         /// <summary>
         /// Выбор географического места (города) объявлений.
         /// </summary>
+        /// <param name="driver">Веб-драйвер с загруженной главной страницей.</param>
         /// <exception cref="Exception">Если указанное место не найдено.</exception>
-        protected void selectLocation()
+        protected void selectLocation(IWebDriver driver)
         {
             try
             {
@@ -95,7 +97,8 @@ namespace AdSitesGrabber
         /// <summary>
         /// Обработка объявлений на текущей странице.
         /// </summary>
-        protected void processPageAdverts()
+        /// <param name="driver">Веб-драйвер с загруженной страницей со списком объявлений.</param>
+        protected void processPageAdverts(IWebDriver driver)
         {
             System.Collections.ObjectModel.ReadOnlyCollection<IWebElement> divs = driver.FindElements(By.CssSelector(".catalog-list div.item_table"));
             if (divs.Count == 0)

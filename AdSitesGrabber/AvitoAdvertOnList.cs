@@ -189,7 +189,7 @@ namespace AdSitesGrabber
         /// <returns>Представление в строке.</returns>
         public override string ToString()
         {
-            return base.ToString() + "\n" + "id " + id.ToString();
+            return base.ToString() + "\n" + "Номер: " + id.ToString();
         }
 
         #endregion

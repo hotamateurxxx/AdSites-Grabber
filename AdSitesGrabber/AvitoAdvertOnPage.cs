@@ -33,20 +33,12 @@ namespace AdSitesGrabber
         /// Апгрейд объявления со списка объявлением со страницы.
         /// </summary>
         /// <param name="advert">Объявление на странице списка.</param>
-        public AvitoAdvertOnPage(AvitoAdvertOnList advert, IWebDriver driver = null)
+        public AvitoAdvertOnPage(AvitoAdvertOnList advert, IWebDriver driver)
             : base()
         {
             url = advert.Url;
-            if (driver == null)
-            {
-                driver = new FirefoxDriver();
-                ParsePage(driver);
-                driver.Close();
-            }
-            else
-            {
-                ParsePage(driver);
-            }
+            updateTime = advert.UpdateTime;
+            ParsePage(driver);
         }
 
         #endregion
@@ -60,10 +52,7 @@ namespace AdSitesGrabber
         {
             driver.Navigate().GoToUrl(url);
             ParseTitle(driver);
-            ParseCategories(driver);
-            ParsePrice(driver);
-            ParseLocation(driver);
-            ParseText(driver);
+            ParseBody(driver);
         }
 
         #endregion
@@ -75,18 +64,52 @@ namespace AdSitesGrabber
         /// </summary>
         protected void ParseTitle(IWebDriver driver)
         {
-            IWebElement elem = driver.FindElement(By.CssSelector(".clearfix > .h1[itemprop=name]"));
-            title = elem.Text;
+            IWebElement titleElement = driver.FindElement(By.CssSelector("h1.h1[itemprop=name]"));
+            title = titleElement.Text;
+        }
+
+        /// <summary>
+        /// Разбор тела.
+        /// </summary>
+        protected void ParseBody(IWebDriver driver)
+        {
+            IWebElement bodyElement = driver.FindElement(By.CssSelector("div.g_92"));
+            //IWebElement bodyElement = driver.FindElement(By.CssSelector("h1.h1[itemprop=name]::div"));
+            //IWebElement bodyElement = (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return $('h1.h1[itemprop=name]').next()");
+            ParseCategories(bodyElement);
+            ParsePrice(bodyElement);
+            ParseLocation(bodyElement);
+            ParseText(bodyElement);
+            ParseId(bodyElement);
+            //ParseUpdateTime(bodyElement);
+        }
+
+        protected void ParseUpdateTime(IWebElement bodyElement)
+        {
+            throw new Exception("Метод пока не реализован.");
+        }
+
+        protected void ParseId(IWebElement bodyElement)
+        {
+            try
+            {
+                IWebElement elem = bodyElement.FindElement(By.CssSelector("#item_id"));
+                id = Convert.ToUInt64(elem.Text);
+            }
+            catch (NoSuchElementException)
+            {
+                // Do nothing
+            }
         }
 
         /// <summary>
         /// Разбор цены.
         /// </summary>
-        protected void ParsePrice(IWebDriver driver)
+        protected void ParsePrice(IWebElement bodyElement)
         {
             try
             {
-                IWebElement elem = driver.FindElement(By.CssSelector(".description_price > span[itemprop=price]"));
+                IWebElement elem = bodyElement.FindElement(By.CssSelector(".description_price .p_i_price span[itemprop=price]"));
                 priceStr = elem.Text;
             }
             catch (NoSuchElementException)
@@ -98,26 +121,26 @@ namespace AdSitesGrabber
         /// <summary>
         /// Разбор места.
         /// </summary>
-        protected void ParseLocation(IWebDriver driver)
+        protected void ParseLocation(IWebElement bodyElement)
         {
-            IWebElement elem = driver.FindElement(By.CssSelector("#map > span[itemprop=name]"));
+            IWebElement elem = bodyElement.FindElement(By.CssSelector("#map > span[itemprop=name]"));
             location = elem.Text;
         }
 
         /// <summary>
         /// Разбор текста.
         /// </summary>
-        protected void ParseText(IWebDriver driver)
+        protected void ParseText(IWebElement bodyElement)
         {
             try
             {
-                IWebElement elem = driver.FindElement(By.CssSelector("#desc_text > p"));
+                IWebElement elem = bodyElement.FindElement(By.CssSelector("#desc_text > p"));
                 text = elem.Text;
                 htmlText = elem.ToString();
             }
             catch (NoSuchElementException)
             {
-                IWebElement elem = driver.FindElement(By.CssSelector(".description.description-expanded"));
+                IWebElement elem = bodyElement.FindElement(By.CssSelector(".description.description-expanded"));
                 text = elem.Text;
                 htmlText = elem.ToString();
             }
@@ -127,9 +150,9 @@ namespace AdSitesGrabber
         /// <summary>
         /// Разбор категорий.
         /// </summary>
-        protected void ParseCategories(IWebDriver driver)
+        protected void ParseCategories(IWebElement bodyElement)
         {
-            System.Collections.ObjectModel.ReadOnlyCollection<IWebElement> links = driver.FindElements(By.CssSelector(".b-catalog-breadcrumbs .breadcrumb-link"));
+            System.Collections.ObjectModel.ReadOnlyCollection<IWebElement> links = bodyElement.FindElements(By.CssSelector(".b-catalog-breadcrumbs .breadcrumb-link"));
             categories = new List<List<string>>();
             foreach (IWebElement link in links)
             {

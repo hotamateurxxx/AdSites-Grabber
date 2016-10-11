@@ -136,6 +136,17 @@ namespace AdSitesGrabber
             }
         }
 
+        /// <summary>
+        /// Обновлено.
+        /// </summary>
+        public DateTime UpdateTime
+        {
+            get
+            {
+                return updateTime;
+            }
+        }
+
         #endregion
 
         #region Constructors
@@ -177,7 +188,7 @@ namespace AdSitesGrabber
         /// <returns>Представление в строке.</returns>
         public override string ToString()
         {
-            return location + "\n" + title + "\n" + priceStr + "\n" + updateTime.ToString();
+            return title + "\n" + "Цена: " + priceStr + "\n" + "Обновлено: " + updateTime.ToString();
         }
 
         #endregion

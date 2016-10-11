@@ -30,9 +30,9 @@ namespace AdSitesGrabber
         protected string locationName;
 
         /// <summary>
-        /// Драйвер.
+        /// Мэнеджер веб-драйверов.
         /// </summary>
-        protected IWebDriver driver;
+        protected IWebDriverManager driverManager;
 
         /// <summary>
         /// Объявления.
@@ -80,10 +80,21 @@ namespace AdSitesGrabber
         /// <summary>
         /// Конструктор.
         /// </summary>
+        /// <param name="driverManager">Мэнеджер веб-драйверов.</param>
+        public Grabber(IWebDriverManager driverManager = null)
+            : this()
+        {
+            this.driverManager = driverManager ?? WebDriverManager.GetInstance();
+        }
+
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
         /// <param name="locationName">Имя места, для которого выбираются объявления.</param>
         /// <param name="startUrl">Отправной адрес, с которого начинается работа граббера.</param>
-        public Grabber(string locationName = null, string startUrl = null) 
-            : this()
+        /// <param name="driverManager">Мэнеджер веб-драйверов.</param>
+        public Grabber(string locationName = null, string startUrl = null, IWebDriverManager driverManager = null)
+            : this(driverManager)
         {
             this.locationName = locationName ?? defaultLocationName;
             this.startUrl = startUrl ?? defaultStartUrl;
@@ -107,11 +118,11 @@ namespace AdSitesGrabber
             string advertsStr = "";
             foreach (Advert advert in adverts)
             {
-                advertsStr += "\n" + advert;
+                advertsStr += "\n\n" + advert;
             }
-            advertsStr.Replace("\n", "\t\n");
+            advertsStr = advertsStr.Replace("\n", "\n\t");
 
-            return startUrl + "\n" + locationName + "\n" + "adverts:" + "\n" + advertsStr;
+            return startUrl + "\n" + locationName + "\n" + "Объявления:" + advertsStr;
         }
 
         #endregion
