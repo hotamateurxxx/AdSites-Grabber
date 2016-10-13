@@ -65,9 +65,16 @@ namespace AdSitesGrabber
             // Когда закончили читать объявления в списках - заходим по ссылке на каждое объявление и дочитываем его
             for (int idx = 0; idx < adverts.Count; idx++)
             {
-                adverts[idx] = new AvitoAdvertOnPage(adverts[idx] as AvitoAdvertOnList, driver);
+                try
+                {
+                    adverts[idx] = new AvitoAdvertOnPage(adverts[idx] as AvitoAdvertOnList, driver);
+                }
+                catch (Exception)
+                {
+                    // Do nothing
+                }
             }
-            // Сейчас 
+            // Освобождение драйвера 
             driverManager.ReleaseDriver(driver);
         }
 
@@ -104,9 +111,15 @@ namespace AdSitesGrabber
                 throw new Exception("На странице не найдено объявлений.");
             foreach (IWebElement div in divs)
             {
-                
-                Advert advert = new AvitoAdvertOnList(div);
-                adverts.Add(advert);
+                try
+                {
+                    Advert advert = new AvitoAdvertOnList(div);
+                    adverts.Add(advert);
+                }
+                catch (Exception) 
+                {
+                    // Do nothing
+                }
             }
         }
 

@@ -82,6 +82,7 @@
     <Compile Include="Controller\WebDriverManager.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Database.mssql" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

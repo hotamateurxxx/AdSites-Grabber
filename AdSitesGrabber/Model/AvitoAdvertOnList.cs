@@ -101,33 +101,10 @@ namespace AdSitesGrabber
             }
 
             // Категории, Обновлено
-            List<List<string>> categories = new List<List<string>>();
             try
             {
                 IWebElement data = element.FindElement(By.CssSelector("div.data"));
                 priceStr = data.Text;
-
-                // Категории
-                try
-                {
-                    IWebElement p = element.FindElement(By.CssSelector("p"));
-                    /// <remark>
-                    /// Здесь надо сказать что совсем правильно было бы не брать весь текст параграфа, а потом разбивать 
-                    /// его по делителю. Надо бы обойти каждый текстовый узел в отдельности, но средствами Selenuim это 
-                    /// делается только через выполнение JS.
-                    /// </remark>
-                    string[] tags = p.Text.Split('|');
-                    List<string> category = new List<string>();
-                    foreach (string tag in tags)
-                    {
-                        category.Add(tag);
-                    }
-                    categories.Add(category);
-                }
-                finally
-                {
-                    // Do nothing
-                }
 
                 // Обновлено
                 try
@@ -193,6 +170,20 @@ namespace AdSitesGrabber
         public override string ToString()
         {
             return base.ToString() + "\n" + "Номер: " + id.ToString();
+        }
+
+        #endregion
+
+        #region Protected Methods
+
+        /// <summary>
+        /// Разбор категорий.
+        /// </summary>
+        /// <param name="bodyElement">Элемент с телом объявления.</param>
+        /// <remarks>Видимо, пока писал на Avito убрали отображение категорий в списке оъявлений.</remarks>
+        protected virtual void ParseCategories(IWebElement bodyElement)
+        {
+            // Do nothing
         }
 
         #endregion

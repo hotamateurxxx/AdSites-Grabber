@@ -83,7 +83,11 @@ namespace AdSitesGrabber
             //ParseUpdateTime(bodyElement);
         }
 
-        protected void ParseUpdateTime(IWebElement bodyElement)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bodyElement"></param>
+        protected override void ParseUpdateTime(IWebElement bodyElement)
         {
             throw new Exception("Метод пока не реализован.");
         }
@@ -94,22 +98,6 @@ namespace AdSitesGrabber
             {
                 IWebElement elem = bodyElement.FindElement(By.CssSelector("#item_id"));
                 id = Convert.ToUInt64(elem.Text);
-            }
-            catch (NoSuchElementException)
-            {
-                // Do nothing
-            }
-        }
-
-        /// <summary>
-        /// Разбор цены.
-        /// </summary>
-        protected void ParsePrice(IWebElement bodyElement)
-        {
-            try
-            {
-                IWebElement elem = bodyElement.FindElement(By.CssSelector(".description_price .p_i_price span[itemprop=price]"));
-                priceStr = elem.Text;
             }
             catch (NoSuchElementException)
             {
@@ -147,13 +135,32 @@ namespace AdSitesGrabber
         }
 
         /// <summary>
+        /// Разбор цены.
+        /// </summary>
+        /// <param name="bodyElement">Элемент с телом объявления.</param>
+        protected void ParsePrice(IWebElement bodyElement)
+        {
+            try
+            {
+                IWebElement elem = bodyElement.FindElement(By.CssSelector(".description_price .p_i_price span[itemprop=price]"));
+                priceStr = elem.Text;
+            }
+            catch (NoSuchElementException)
+            {
+                // Do nothing
+            }
+        }
+
+        /// <summary>
         /// Разбор категорий.
         /// </summary>
-        protected void ParseCategories(IWebElement bodyElement)
+        /// <param name="bodyElement">Элемент с телом объявления.</param>
+        /// <remarks>Метод имеет косяк в том, что Avito сокращает список элементов категорий, заменяя текст ссылки на "...". Пока нормально, но нужно помнить.</remarks>
+        protected override void ParseCategories(IWebElement bodyElement)
         {
             System.Collections.ObjectModel.ReadOnlyCollection<IWebElement> links = bodyElement.FindElements(By.CssSelector(".b-catalog-breadcrumbs .breadcrumb-link"));
             // Создаем новую категорию
-            List<string> category = new List<string>();
+            AdvertCategory category = new AdvertCategory();
             foreach (IWebElement link in links)
             {
                 // Добавляем новый элемент категории
