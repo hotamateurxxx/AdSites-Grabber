@@ -15,8 +15,7 @@ namespace AdSitesGrabber
     /// <summary>
     /// Объявление на Avito (каким оно видно в списке обявлений).
     /// </summary>    
-    class AvitoAdvertOnList 
-        : Advert, IAdvertOnList
+    class AvitoAdvertOnList : Advert, IAdvertOnList
     {
 
         #region Declarations
@@ -177,6 +176,10 @@ namespace AdSitesGrabber
                 photosCount = Convert.ToInt16(i.Text);
             }
             catch (NoSuchElementException)
+            {
+                // Do nothing
+            }
+            catch (FormatException)
             {
                 // Do nothing
             }

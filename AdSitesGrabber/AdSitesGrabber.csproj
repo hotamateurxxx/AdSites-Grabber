@@ -38,6 +38,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -71,17 +72,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Advert.cs" />
-    <Compile Include="AvitoAdvertOnList.cs" />
-    <Compile Include="AvitoGrabber.cs" />
-    <Compile Include="AvitoAdvertOnPage.cs" />
-    <Compile Include="Grabber.cs" />
+    <Compile Include="Model\Advert.cs" />
+    <Compile Include="Model\AvitoAdvertOnList.cs" />
+    <Compile Include="Controller\AvitoGrabber.cs" />
+    <Compile Include="Model\AvitoAdvertOnPage.cs" />
+    <Compile Include="Controller\Grabber.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WebDriverManager.cs" />
+    <Compile Include="Controller\WebDriverManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

@@ -30,8 +30,7 @@ namespace AdSitesGrabber
     /// <summary>
     /// Объявление на странице объявления.
     /// </summary>
-    public interface IAdvertOnPage 
-        : IAdvertOnElement
+    public interface IAdvertOnPage : IAdvertOnElement
     {
 
         /// <summary>
@@ -45,8 +44,7 @@ namespace AdSitesGrabber
     /// <summary>
     /// Объявление на странице списка объявлений.
     /// </summary>
-    public interface IAdvertOnList
-        : IAdvertOnElement
+    public interface IAdvertOnList : IAdvertOnElement
     {
     }
 
@@ -55,8 +53,7 @@ namespace AdSitesGrabber
     /// <summary>
     /// Объявление.
     /// </summary>
-    abstract class Advert 
-        : IAdvertOnElement
+    abstract class Advert : IAdvertOnElement
     {
 
         #region Declarations
@@ -156,6 +153,7 @@ namespace AdSitesGrabber
         /// </summary>
         public Advert()
         {
+            categories = new List<List<string>>();
         }
 
         /// <summary>

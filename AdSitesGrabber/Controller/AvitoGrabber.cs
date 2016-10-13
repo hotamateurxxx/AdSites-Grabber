@@ -14,8 +14,7 @@ namespace AdSitesGrabber
     /// <summary>
     /// Граббер сайта Avito.
     /// </summary>
-    class AvitoGrabber 
-        : Grabber
+    class AvitoGrabber : Grabber
     {
 
         #region Properties
@@ -105,6 +104,7 @@ namespace AdSitesGrabber
                 throw new Exception("На странице не найдено объявлений.");
             foreach (IWebElement div in divs)
             {
+                
                 Advert advert = new AvitoAdvertOnList(div);
                 adverts.Add(advert);
             }

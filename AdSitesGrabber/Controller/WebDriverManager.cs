@@ -44,8 +44,14 @@ namespace AdSitesGrabber
     class WebDriverRecord
     {
 
+        #region Public Declarations
+
         public IWebDriver driver;
         public Object owner;
+
+        #endregion
+
+        #region Public Methods
 
         /// <summary>
         /// Конструктор.
@@ -58,6 +64,8 @@ namespace AdSitesGrabber
             this.owner = owner;
         }
 
+        #endregion
+
     }
 
     /// <summary>
@@ -65,8 +73,7 @@ namespace AdSitesGrabber
     /// 
     /// Нужен для того, чтобы во всех местах проекта использовались единые методы работы с веб-драйвером.
     /// </summary>
-    class WebDriverManager
-        : IWebDriverManager
+    class WebDriverManager : IWebDriverManager, IDisposable
     {
 
         #region Static Declarations
@@ -146,14 +153,8 @@ namespace AdSitesGrabber
         /// </summary>
         ~WebDriverManager()
         {
-            // Закрываем открытые окна
-            foreach (WebDriverRecord driverRec in driversRecords)
-            {
-                if (driverRec.driver is IWebDriver)
-                {
-                    driverRec.driver.Close();
-                }
-            }
+            // Закрытие драйверов
+            CloseDrivers();
             // Надо дать время на взаимодействие с браузером, а то не успеет закрыть
             Thread.Sleep(1000);
         }
@@ -205,9 +206,35 @@ namespace AdSitesGrabber
             }
         }
 
+        /// <summary>
+        /// Освобождение.
+        /// </summary>
+        public virtual void Dispose()
+        {
+            // Закрытие драйверов
+            CloseDrivers();
+            // Говорим не вызывать метод завершения объекта
+            GC.SuppressFinalize(this);
+        }
+
         #endregion
 
         #region Protected Methods
+
+        /// <summary>
+        /// Закрытие драйверов.
+        /// </summary>
+        protected virtual void CloseDrivers()
+        {
+            // Закрываем открытые окна
+            foreach (WebDriverRecord driverRec in driversRecords)
+            {
+                if (driverRec.driver is IWebDriver)
+                {
+                    driverRec.driver.Close();
+                }
+            }
+        }
 
         /// <summary>
         /// Создание нового веб-драйвера.

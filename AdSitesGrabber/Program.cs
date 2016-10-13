@@ -13,14 +13,18 @@ namespace AdSitesGrabber
         static void Main(string[] args)
         {
 
-            WebDriverManager manager = new WebDriverManager();
-            manager.FirefoxBinPath = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
+            using (WebDriverManager manager = new WebDriverManager())
+            {
+                manager.FirefoxBinPath = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
 
-            Grabber grabber = new AvitoGrabber("Москва", "http://www.avito.ru/", manager);
-            grabber.Execute();
+                Grabber grabber = new AvitoGrabber("Москва", "http://www.avito.ru/", manager);
+                grabber.Execute();
 
-            Console.WriteLine(grabber);
-            Console.ReadLine();
+                Console.WriteLine(grabber);
+                Console.ReadLine();
+
+                manager.Dispose();
+            }
 
         }
 

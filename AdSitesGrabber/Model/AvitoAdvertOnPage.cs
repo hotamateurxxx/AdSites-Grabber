@@ -14,8 +14,7 @@ namespace AdSitesGrabber
     /// <summary>
     /// Объявление на Avito (каким оно видно на странице объявления).
     /// </summary>
-    class AvitoAdvertOnPage 
-        : AvitoAdvertOnList, IAdvertOnPage
+    class AvitoAdvertOnPage : AvitoAdvertOnList, IAdvertOnPage
     {
 
         #region Constructors
@@ -153,26 +152,15 @@ namespace AdSitesGrabber
         protected void ParseCategories(IWebElement bodyElement)
         {
             System.Collections.ObjectModel.ReadOnlyCollection<IWebElement> links = bodyElement.FindElements(By.CssSelector(".b-catalog-breadcrumbs .breadcrumb-link"));
-            categories = new List<List<string>>();
+            // Создаем новую категорию
+            List<string> category = new List<string>();
             foreach (IWebElement link in links)
             {
-                // Создаем новую категорию
-                List<string> newCategory = new List<string>();
-                // Новая категория на Avito есть углубление предидущей категории
-                if (categories.Count > 0)
-                {
-                    List<string> lastCategory = categories.Last();
-                    foreach (string item in lastCategory)
-                    {
-                        newCategory.Add(item);
-                    }
-                }
                 // Добавляем новый элемент категории
-                string catItem = link.Text;
-                newCategory.Add(catItem);
-                // Добавляем категорию в список
-                categories.Add(newCategory);
+                category.Add(link.Text);
             }
+            // Добавляем категорию в список
+            categories.Add(category);
         }
 
         #endregion
