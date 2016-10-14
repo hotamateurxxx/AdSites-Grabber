@@ -13,10 +13,12 @@ namespace Log4Net_Tests
     {
         static void Main(string[] args)
         {
-            BasicConfigurator.Configure();
 
-            ILog log = LogManager.GetLogger("InfoLogger");
-            log.Info("Starting application.");
+            ILog infoLogger = LogManager.GetLogger("InfoLogger");
+            infoLogger.Info("Starting application.");
+
+            ILog errorLogger = LogManager.GetLogger("ErrorLogger");
+            errorLogger.Error("error occured", new Exception("some error"));
 
             Console.WriteLine("Done.");
             Console.ReadLine();
