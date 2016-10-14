@@ -10,7 +10,7 @@ using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
 
 
-namespace AdSitesGrabber
+namespace AdSitesGrabber.Controller
 {
 
     #region Interfaces
@@ -242,17 +242,20 @@ namespace AdSitesGrabber
         /// <returns>Новый веб-драйвер.</returns>
         protected virtual IWebDriver CreateDriver()
         {
+            FirefoxDriver driver;
             if (firefoxBinPath == null)
             {
-                FirefoxDriver driver = new FirefoxDriver();
-                return driver;
+                 driver = new FirefoxDriver();
             }
             else
             {
                 FirefoxBinary binary = new FirefoxBinary(firefoxBinPath);
                 FirefoxProfile profile = new FirefoxProfile();
-                return new FirefoxDriver(binary, profile);
+                driver = new FirefoxDriver(binary, profile);
             }
+
+            driver.Manage().Window.Maximize();
+            return driver;
         }
 
         #endregion

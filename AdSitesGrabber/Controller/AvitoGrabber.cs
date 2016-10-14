@@ -8,7 +8,9 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
 
-namespace AdSitesGrabber
+using AdSitesGrabber.Model;
+
+namespace AdSitesGrabber.Controller
 {
 
     /// <summary>
@@ -68,10 +70,11 @@ namespace AdSitesGrabber
                 try
                 {
                     adverts[idx] = new AvitoAdvertOnPage(adverts[idx] as AvitoAdvertOnList, driver);
+                    Logger.Events.Info("Добавлено объявление со страницы:\n" + adverts[idx]);
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    // Do nothing
+                    Logger.Warns.Error("Ошибка добавления объявения со страницы", e);
                 }
             }
             // Освобождение драйвера 
@@ -96,7 +99,8 @@ namespace AdSitesGrabber
             }
             catch (NoSuchElementException e)
             {
-                throw new Exception("Заданное место не найдено", e);
+                Logger.Warns.Error("Заданное место не найдено", e);
+                throw e;
             }
         }
 
@@ -115,10 +119,11 @@ namespace AdSitesGrabber
                 {
                     Advert advert = new AvitoAdvertOnList(div);
                     adverts.Add(advert);
+                    Logger.Events.Info("Объявление со списка добавлено:\n" + advert);
                 }
-                catch (Exception) 
+                catch (Exception e) 
                 {
-                    // Do nothing
+                    Logger.Warns.Error("Ошибка добавления объявления со списка", e);
                 }
             }
         }

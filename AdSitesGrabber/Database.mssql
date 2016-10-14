@@ -23,6 +23,8 @@ go
 create table [Prices] (
     [recId]     uniqueidentifier not null rowguidcol default newid(),
     [str]       varchar(256) not null,
+    [unit]      varchar(256) null,
+    [value]     float null,
     constraint [PK_Prices] primary key ([recId])
 )
 go

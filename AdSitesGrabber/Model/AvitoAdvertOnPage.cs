@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
 
-namespace AdSitesGrabber
+namespace AdSitesGrabber.Model
 {
  
     /// <summary>
@@ -22,7 +23,7 @@ namespace AdSitesGrabber
         /// <summary>
         /// Конструктор.
         /// </summary>
-        /// <param name="element">Элемент.</param>
+        /// <param name="bodyElement">Элемент.</param>
         public AvitoAdvertOnPage(IWebElement element)
             : base(element)
         {
@@ -32,6 +33,7 @@ namespace AdSitesGrabber
         /// Апгрейд объявления со списка объявлением со страницы.
         /// </summary>
         /// <param name="advert">Объявление на странице списка.</param>
+        /// <param name="driver">Веб-драйвер с загруженной страницей.</param>
         public AvitoAdvertOnPage(AvitoAdvertOnList advert, IWebDriver driver)
             : base()
         {
@@ -47,52 +49,86 @@ namespace AdSitesGrabber
         /// <summary>
         /// Загрузка и разбор страницы с обявлением.
         /// </summary>
+        /// <param name="driver">Веб-драйвер с загруженной страницей.</param>
         public void ParsePage(IWebDriver driver)
         {
             driver.Navigate().GoToUrl(url);
-            ParseTitle(driver);
-            ParseBody(driver);
+            IWebElement body = driver.FindElement(By.TagName("body"));
+            ParseElement(body);
+        }
+
+        /// <summary>
+        /// Разбор элемента с объявлением.
+        /// </summary>
+        /// <param name="bodyElement">Элемент с телом объявления.</param>
+        public override void ParseElement(IWebElement bodyElement)
+        {
+            ParseTitle(bodyElement);
+            ParseCategories(bodyElement);
+            ParseBody(bodyElement);
         }
 
         #endregion
 
-        #region Protected Methods
+        #region Private Methods
 
         /// <summary>
         /// Разбор заголовка.
         /// </summary>
-        protected void ParseTitle(IWebDriver driver)
+        /// <param name="bodyElement">Элемент с телом объявления.</param>
+        private void ParseTitle(IWebElement bodyElement)
         {
-            IWebElement titleElement = driver.FindElement(By.CssSelector("h1.h1[itemprop=name]"));
-            title = titleElement.Text;
+            IWebElement h1 = bodyElement.FindElement(By.CssSelector("h1.h1[itemprop=name]"));
+            title = h1.Text;
+        }
+
+        /// <summary>
+        /// Разбор категорий.
+        /// </summary>
+        /// <param name="bodyElement">Элемент с телом объявления.</param>
+        /// <remarks>Метод имеет косяк в том, что Avito сокращает список элементов категорий, заменяя текст ссылки на "...". Пока нормально, но нужно помнить.</remarks>
+        private void ParseCategories(IWebElement bodyElement)
+        {
+            System.Collections.ObjectModel.ReadOnlyCollection<IWebElement> links = bodyElement.FindElements(By.CssSelector(".b-catalog-breadcrumbs .breadcrumb-link"));
+            // Создаем новую категорию
+            Category category = new Category();
+            foreach (IWebElement link in links)
+            {
+                // Добавляем новый элемент категории
+                category.Add(link.Text);
+            }
+            // Добавляем категорию в список
+            categories.Add(category);
         }
 
         /// <summary>
         /// Разбор тела.
         /// </summary>
-        protected void ParseBody(IWebDriver driver)
+        /// <param name="bodyElement">Элемент с телом объявления.</param>
+        private void ParseBody(IWebElement bodyElement)
         {
-            IWebElement bodyElement = driver.FindElement(By.CssSelector("div.g_92"));
-            //IWebElement bodyElement = driver.FindElement(By.CssSelector("h1.h1[itemprop=name]::div"));
-            //IWebElement bodyElement = (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return $('h1.h1[itemprop=name]').next()");
-            ParseCategories(bodyElement);
-            ParsePrice(bodyElement);
-            ParseLocation(bodyElement);
-            ParseText(bodyElement);
-            ParseId(bodyElement);
-            //ParseUpdateTime(bodyElement);
+            IWebElement div = bodyElement.FindElement(By.CssSelector("div.g_92"));
+            ParsePrice(div);
+            ParseLocation(div);
+            ParseText(div);
+            ParseId(div);
+            //ParseUpdateTime(div);
         }
 
         /// <summary>
-        /// 
+        /// Разбор штампа времени.
         /// </summary>
-        /// <param name="bodyElement"></param>
-        protected override void ParseUpdateTime(IWebElement bodyElement)
+        /// <param name="bodyElement">Элемент с телом объявления.</param>
+        private void ParseUpdateTime(IWebElement bodyElement)
         {
             throw new Exception("Метод пока не реализован.");
         }
 
-        protected void ParseId(IWebElement bodyElement)
+        /// <summary>
+        /// Разбор идентификатора объявления.
+        /// </summary>
+        /// <param name="bodyElement">Элемент с телом объявления.</param>
+        private void ParseId(IWebElement bodyElement)
         {
             try
             {
@@ -108,16 +144,18 @@ namespace AdSitesGrabber
         /// <summary>
         /// Разбор места.
         /// </summary>
-        protected void ParseLocation(IWebElement bodyElement)
+        /// <param name="bodyElement">Элемент с телом объявления.</param>
+        private void ParseLocation(IWebElement bodyElement)
         {
-            IWebElement elem = bodyElement.FindElement(By.CssSelector("#map > span[itemprop=name]"));
+            IWebElement elem = bodyElement.FindElement(By.CssSelector("#map span[itemprop=name]"));
             location = elem.Text;
         }
 
         /// <summary>
         /// Разбор текста.
         /// </summary>
-        protected void ParseText(IWebElement bodyElement)
+        /// <param name="bodyElement">Элемент с телом объявления.</param>
+        private void ParseText(IWebElement bodyElement)
         {
             try
             {
@@ -138,36 +176,23 @@ namespace AdSitesGrabber
         /// Разбор цены.
         /// </summary>
         /// <param name="bodyElement">Элемент с телом объявления.</param>
-        protected void ParsePrice(IWebElement bodyElement)
+        private void ParsePrice(IWebElement bodyElement)
         {
             try
             {
                 IWebElement elem = bodyElement.FindElement(By.CssSelector(".description_price .p_i_price span[itemprop=price]"));
                 priceStr = elem.Text;
+
+                if (Regex.Match(priceStr, "руб.").Success)
+                {
+                    priceUnit = "руб.";
+                    priceValue = Convert.ToDecimal(Regex.Replace(priceStr, "руб.", ""));
+                }
             }
             catch (NoSuchElementException)
             {
                 // Do nothing
             }
-        }
-
-        /// <summary>
-        /// Разбор категорий.
-        /// </summary>
-        /// <param name="bodyElement">Элемент с телом объявления.</param>
-        /// <remarks>Метод имеет косяк в том, что Avito сокращает список элементов категорий, заменяя текст ссылки на "...". Пока нормально, но нужно помнить.</remarks>
-        protected override void ParseCategories(IWebElement bodyElement)
-        {
-            System.Collections.ObjectModel.ReadOnlyCollection<IWebElement> links = bodyElement.FindElements(By.CssSelector(".b-catalog-breadcrumbs .breadcrumb-link"));
-            // Создаем новую категорию
-            AdvertCategory category = new AdvertCategory();
-            foreach (IWebElement link in links)
-            {
-                // Добавляем новый элемент категории
-                category.Add(link.Text);
-            }
-            // Добавляем категорию в список
-            categories.Add(category);
         }
 
         #endregion
