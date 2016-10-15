@@ -9,6 +9,8 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
 
+using AdSitesGrabber.Controller;
+
 namespace AdSitesGrabber.Model
 {
  
@@ -185,9 +187,13 @@ namespace AdSitesGrabber.Model
 
                 if (Regex.Match(priceStr, "руб.").Success)
                 {
-                    priceUnit = "руб.";
                     priceValue = Convert.ToDecimal(Regex.Replace(priceStr, "руб.", ""));
+                    priceUnit = "руб.";
                 }
+            }
+            catch (FormatException e)
+            {
+                Logger.Warns.Error("Ошибка разбора цены:\n" + priceStr, e);
             }
             catch (NoSuchElementException)
             {

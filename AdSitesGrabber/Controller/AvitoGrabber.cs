@@ -74,7 +74,7 @@ namespace AdSitesGrabber.Controller
                 }
                 catch (Exception e)
                 {
-                    Logger.Warns.Error("Ошибка добавления объявения со страницы", e);
+                    Logger.Warns.Error("Ошибка добавления объявения со страницы:\n" + adverts[idx].Url, e);
                 }
             }
             // Освобождение драйвера 
@@ -123,7 +123,7 @@ namespace AdSitesGrabber.Controller
                 }
                 catch (Exception e) 
                 {
-                    Logger.Warns.Error("Ошибка добавления объявления со списка", e);
+                    Logger.Warns.Error("Ошибка добавления объявления со списка:\n\n" + div.ToString(), e);
                 }
             }
         }

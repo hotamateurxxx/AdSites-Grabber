@@ -208,7 +208,7 @@ namespace AdSitesGrabber.Model
             return
             (
                 categoriesStr
-                + "\n" + title 
+                + ((categoriesStr == "") ? "" : "\n") + title 
                 + "\n" + "Цена: " + ((priceUnit == null) ? priceStr : priceValue.ToString() + " " + priceUnit)
                 + "\n" + "Обновлено: " + updateTime.ToString()
             );

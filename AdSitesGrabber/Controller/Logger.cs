@@ -16,14 +16,15 @@ namespace AdSitesGrabber.Controller
     class Logger
     {
 
-        public static readonly ILog Events = LogManager.GetLogger("Events");
-        public static readonly ILog Warns = LogManager.GetLogger("Warns");
+        /// <summary>
+        /// Отдельный лог информационный.
+        /// </summary>
+        public static readonly ILog Events = LogManager.GetLogger("InfoLogger");
 
-        public static void InitLogger()
-        {
-            //BasicConfigurator.Configure();
-            //XmlConfigurator.Configure();
-        }
-
+        /// <summary>
+        /// Отдельный лог для ошибок.
+        /// </summary>
+        public static readonly ILog Warns = LogManager.GetLogger("ErrorLogger");
     }
+
 }
