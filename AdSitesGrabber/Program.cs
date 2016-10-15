@@ -22,8 +22,6 @@ namespace AdSitesGrabber
                 grabber.Execute();
             }
 
-            Console.WriteLine("Done.");
-            Console.ReadLine();
         }
 
     }

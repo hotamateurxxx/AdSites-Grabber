@@ -207,8 +207,10 @@ namespace AdSitesGrabber.Model
 
             return
             (
-                categoriesStr
-                + ((categoriesStr == "") ? "" : "\n") + title 
+                url
+                + "\n" + location
+                + ((categoriesStr == "") ? "" : "\n") + categoriesStr
+                + "\n" + title 
                 + "\n" + "Цена: " + ((priceUnit == null) ? priceStr : priceValue.ToString() + " " + priceUnit)
                 + "\n" + "Обновлено: " + updateTime.ToString()
             );

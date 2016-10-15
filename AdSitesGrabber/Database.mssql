@@ -23,8 +23,6 @@ go
 create table [Prices] (
     [recId]     uniqueidentifier not null rowguidcol default newid(),
     [str]       varchar(256) not null,
-    [unit]      varchar(256) null,
-    [value]     float null,
     constraint [PK_Prices] primary key ([recId])
 )
 go
@@ -129,3 +127,38 @@ create table [AdvertContacts] (
 go
 
 -- Тестовая запись данных
+/*
+Добавлено объявление со страницы:
+https://www.avito.ru/moskva/sobaki/klubnye_schenki_dzhek_rassel_terer_832598917
+Москва
+Все объявления в Москве | Животные | Собаки | Джек Рассел терьер
+Клубные щенки Джек Рассел терьер
+Цена: 18000 руб.
+Обновлено: 2016-10-15 06:29:00
+Номер: 832598917 
+*/
+
+declare @categoryId uniqueidentifier
+declare @locationId uniqueidentifier
+declare @priceId uniqueidentifier
+declare @advertId uniqueidentifier
+set @categoryId = newid()
+set @locationId = newid()
+set @priceId = newid()
+set @advertId = newid()
+
+insert into [Locations] ([recId], [region], [town]) values (@locationId, 'Москва', 'Москва')
+insert into [Prices] ([recId], [str]) values (@priceId, '18000 руб.')
+insert into [Categories] ([recId]) values (@categoryId)
+insert into [CategoryItems] ([category], [order], [name]) values (@categoryId, 0, 'Все объявления в Москве')
+insert into [CategoryItems] ([category], [order], [name]) values (@categoryId, 1, 'Животные')
+insert into [CategoryItems] ([category], [order], [name]) values (@categoryId, 2, 'Собаки')
+insert into [CategoryItems] ([category], [order], [name]) values (@categoryId, 3, 'Джек Рассел терьер')
+insert into [Adverts] ([recId], [url], [title], [location]) values (
+    @advertId,
+    'https://www.avito.ru/moskva/sobaki/klubnye_schenki_dzhek_rassel_terer_832598917',
+    'Клубные щенки Джек Рассел терьер',
+    @locationId,
+    @priceId,
+    @categories
+)
