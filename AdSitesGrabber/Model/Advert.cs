@@ -153,6 +153,17 @@ namespace AdSitesGrabber.Model
             }
         }
 
+        /// <summary>
+        /// Категории.
+        /// </summary>
+        public List<Category> Categories
+        {
+            get
+            {
+                return categories;
+            }
+        }
+
         #endregion
 
         #region Constructors

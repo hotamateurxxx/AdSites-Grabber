@@ -1,0 +1,15 @@
+﻿<?xml version="1.0"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="AdSitesGrabber.Model" assembly="AdSitesGrabber">
+
+  <!-- Mappings for class 'Category' -->
+  <class name="Category" table="Categories">
+
+    <!-- Identity mapping -->
+    <id name="RecId">
+      <column name="recId" />
+      <generator class="native" />
+    </id>
+
+  </class>
+
+</hibernate-mapping>

@@ -8,6 +8,9 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
 
+using NHibernate;
+using NHibernate.Cfg;
+
 using AdSitesGrabber.Model;
 
 namespace AdSitesGrabber.Controller
@@ -76,6 +79,16 @@ namespace AdSitesGrabber.Controller
                 {
                     Logger.Warns.Error("Ошибка добавления объявения со страницы:\n" + adverts[idx].Url, e);
                 }
+
+                ISessionFactory sessionFactory = new Configuration().Configure().BuildSessionFactory();
+                ISession currentSession = sessionFactory.OpenSession();
+                ITransaction tx = currentSession.BeginTransaction();
+                foreach (Category category in adverts[idx].Categories)
+                {
+                    currentSession.Save(category);
+                }
+                tx.Commit();
+                currentSession.Close();
             }
             // Освобождение драйвера 
             driverManager.ReleaseDriver(driver);

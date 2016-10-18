@@ -1,0 +1,12 @@
+﻿use [AdSitesGrabber]
+
+select *
+from [Adverts] as [a]
+inner join [Locations] as [l] on
+[l].[recId] = [a].[location]
+inner join [Prices] as [p] on
+[p].[recId] = [a].[price]
+
+select * from [Items]
+
+use [master]

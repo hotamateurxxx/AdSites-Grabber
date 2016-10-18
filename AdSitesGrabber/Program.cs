@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
+using NHibernate;
+using NHibernate.Cfg;
+
 using AdSitesGrabber.Controller;
 
 namespace AdSitesGrabber
@@ -14,6 +17,21 @@ namespace AdSitesGrabber
 
         static void Main(string[] args)
         {
+
+            ISessionFactory sessionFactory = new Configuration().Configure().BuildSessionFactory();
+
+            ISession currentSession = sessionFactory.OpenSession();
+
+            Item item = new Item();
+            item.Name = "Some Name";
+
+            ITransaction tx = currentSession.BeginTransaction();
+            currentSession.Save(item);
+            tx.Commit();
+            currentSession.Close();
+
+            Console.WriteLine("Done.");
+            Console.ReadLine();
 
             using (WebDriverManager manager = new WebDriverManager())
             {

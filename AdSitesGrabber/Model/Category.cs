@@ -13,6 +13,8 @@ namespace AdSitesGrabber.Model
     class Category : List<string>
     {
 
+        public Guid RecId { get; set; }
+
         #region Public Methods
 
         /// <summary>

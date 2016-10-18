@@ -83,8 +83,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controller\Logger.cs" />
+    <Compile Include="Item.cs" />
     <Compile Include="Model\Advert.cs" />
-    <Compile Include="Model\AdvertCategory.cs" />
+    <Compile Include="Model\Category.cs" />
     <Compile Include="Model\AvitoAdvertOnList.cs" />
     <Compile Include="Controller\AvitoGrabber.cs" />
     <Compile Include="Model\AvitoAdvertOnPage.cs" />
@@ -95,8 +96,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Database.mssql" />
+    <None Include="Queries\Create Database.mssql" />
     <None Include="packages.config" />
+    <None Include="Queries\Insert Records.mssql" />
+    <None Include="Queries\Select Records.mssql" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
@@ -114,6 +117,10 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Item.hbm.xml" />
+    <Content Include="Model\Category.hbm.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
