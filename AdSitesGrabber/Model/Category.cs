@@ -10,10 +10,14 @@ namespace AdSitesGrabber.Model
     /// <summary>
     /// Категория объявления.
     /// </summary>
-    class Category : List<string>
+    class Category
     {
 
-        public Guid RecId { get; set; }
+        public virtual Guid Id { get; set; }
+        public virtual string Name { get; set; }
+
+        public virtual Guid RecId { get; set; }
+        public virtual List<string> Tags { get; set; }
 
         #region Public Methods
 
@@ -21,8 +25,8 @@ namespace AdSitesGrabber.Model
         /// Конструктор
         /// </summary>
         public Category()
-            : base()
         {
+            Tags = new List<string>();
         }
 
         /// <summary>
@@ -32,7 +36,7 @@ namespace AdSitesGrabber.Model
         public override string ToString()
         {
             string result = "";
-            foreach (string tag in this)
+            foreach (string tag in Tags)
             {
                 result +=
                 (

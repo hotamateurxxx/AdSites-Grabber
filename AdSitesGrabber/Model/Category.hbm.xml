@@ -5,10 +5,13 @@
   <class name="Category" table="Categories">
 
     <!-- Identity mapping -->
-    <id name="RecId">
+    <id name="Id">
       <column name="recId" />
-      <generator class="native" />
+      <generator class="guid.comb" />
     </id>
+
+    <!-- Simple mappings -->
+    <property name="Name" column="name" />
 
   </class>
 
