@@ -9,6 +9,7 @@ using NHibernate;
 using NHibernate.Cfg;
 
 using AdSitesGrabber.Controller;
+using AdSitesGrabber.Tests;
 
 namespace AdSitesGrabber
 {
@@ -18,20 +19,20 @@ namespace AdSitesGrabber
         static void Main(string[] args)
         {
 
+            Random random = new Random();
+            Item item;
+
             ISessionFactory sessionFactory = new Configuration().Configure().BuildSessionFactory();
-
             ISession currentSession = sessionFactory.OpenSession();
-
-            Item item = new Item();
-            item.Name = "Some Name";
-
             ITransaction tx = currentSession.BeginTransaction();
-            currentSession.Save(item);
+            for (int idx = 0; idx < 10; idx++)
+            {
+                item = new Item();
+                item.Name = random.Next().ToString();
+                currentSession.Save(item);
+            }
             tx.Commit();
             currentSession.Close();
-
-            Console.WriteLine("Done.");
-            Console.ReadLine();
 
             using (WebDriverManager manager = new WebDriverManager())
             {

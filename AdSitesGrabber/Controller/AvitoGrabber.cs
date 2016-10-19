@@ -80,6 +80,7 @@ namespace AdSitesGrabber.Controller
                     Logger.Warns.Error("Ошибка добавления объявения со страницы:\n" + adverts[idx].Url, e);
                 }
 
+                /*
                 ISessionFactory sessionFactory = new Configuration().Configure().BuildSessionFactory();
                 ISession currentSession = sessionFactory.OpenSession();
                 ITransaction tx = currentSession.BeginTransaction();
@@ -89,6 +90,8 @@ namespace AdSitesGrabber.Controller
                 }
                 tx.Commit();
                 currentSession.Close();
+                */
+
             }
             // Освобождение драйвера 
             driverManager.ReleaseDriver(driver);
