@@ -5,14 +5,11 @@
   <class name="Category" table="Categories">
 
     <!-- Identity mapping -->
-    <id name="Id">
+    <id name="RecId">
       <column name="recId" />
       <generator class="guid.comb" />
     </id>
-
-    <!-- Simple mappings -->
-    <property name="Name" column="name" />
-
+    
   </class>
 
 </hibernate-mapping>

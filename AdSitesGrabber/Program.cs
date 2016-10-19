@@ -35,15 +35,18 @@ namespace AdSitesGrabber
             for (int idx = 0; idx < 10; idx++)
             {
                 Category category = new Category();
-                //category.Tags.Add(random.Next().ToString());
-                //category.Tags.Add(random.Next().ToString());
-                //category.Tags.Add(random.Next().ToString());
-                category.Name = random.Next().ToString();
+                category.Tags.Add(random.Next().ToString());
+                category.Tags.Add(random.Next().ToString());
+                category.Tags.Add(random.Next().ToString());
                 currentSession.Save(category);
+
             }
 
             tx.Commit();
             currentSession.Close();
+
+            Console.WriteLine("Done.");
+            Console.ReadLine();
 
             /*
             using (WebDriverManager manager = new WebDriverManager())
