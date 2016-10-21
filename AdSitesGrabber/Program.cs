@@ -29,9 +29,9 @@ namespace AdSitesGrabber
             // мой вызов LogManager или какая-то из инструкций NHibernate.
             XmlConfigurator.Configure();
 
-            Configuration configuration = new Configuration();
-            SchemaMetadataUpdater.QuoteTableAndColumns(configuration);
-            ISessionFactory sessionFactory = configuration.Configure().BuildSessionFactory();
+            Configuration configuration = new Configuration().Configure();
+            MySchemaMetadataUpdater.QuoteTableAndColumns(configuration);
+            ISessionFactory sessionFactory = configuration.BuildSessionFactory();
             ISession currentSession = sessionFactory.OpenSession();
             ITransaction tx = currentSession.BeginTransaction();
 

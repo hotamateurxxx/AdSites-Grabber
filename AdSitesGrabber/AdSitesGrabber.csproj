@@ -84,6 +84,7 @@
   <ItemGroup>
     <Compile Include="Controller\Logger.cs" />
     <Compile Include="Model\CategoryItem.cs" />
+    <Compile Include="MySchemaMetadataUpdater.cs" />
     <Compile Include="Tests\Item.cs" />
     <Compile Include="Model\Advert.cs" />
     <Compile Include="Model\Category.cs" />
