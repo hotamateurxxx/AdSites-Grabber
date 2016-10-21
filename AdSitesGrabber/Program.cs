@@ -8,12 +8,13 @@ using System.IO;
 using NHibernate;
 using NHibernate.Cfg;
 using NHibernate.Tool.hbm2ddl;
+using NHibernate.Engine;
+using NHibernate.Mapping;
 
 using log4net;
 using log4net.Config;
 
 using AdSitesGrabber.Controller;
-using AdSitesGrabber.Tests;
 using AdSitesGrabber.Model;
 
 namespace AdSitesGrabber
@@ -30,7 +31,6 @@ namespace AdSitesGrabber
             XmlConfigurator.Configure();
 
             Configuration configuration = new Configuration().Configure();
-            MySchemaMetadataUpdater.QuoteTableAndColumns(configuration);
             ISessionFactory sessionFactory = configuration.BuildSessionFactory();
             ISession currentSession = sessionFactory.OpenSession();
             ITransaction tx = currentSession.BeginTransaction();
