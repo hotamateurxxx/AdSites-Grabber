@@ -10,7 +10,6 @@
 
     <list name="Items" table="CategoryItems" cascade="all" lazy="false">
       <key column="category" />
-      
       <!-- 
         Объясняю почему это здесь поле order экранировано. NHibernate тупо не умеет нормально экранировать имена. 
         Во-первых, он не умеет экранировать все имена вообще, он умеет экранировать только заложенные в диалекте
@@ -19,10 +18,7 @@
         экранирования. Во-вторых, слово "order" не зарегистрировано в диалекте MSSQL2000.
       -->
       <index column="[order]" />
-      
-      <composite-element class="CategoryItem">
-        <property name="Name" column="name"/>
-      </composite-element>
+      <element column="name" type="String" />
     </list>
     
   </class>

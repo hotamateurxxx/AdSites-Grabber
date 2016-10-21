@@ -21,14 +21,14 @@ namespace AdSitesGrabber.Model
         /// <summary>
         /// Упорядоченный список элементов, составляющий категорию.
         /// </summary>
-        public virtual IList<CategoryItem> Items { get; set; }
+        public virtual IList<String> Items { get; set; }
 
         /// <summary>
         /// Конструктор
         /// </summary>
         public Category()
         {
-            Items = new List<CategoryItem>();
+            Items = new List<String>();
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace AdSitesGrabber.Model
         public override string ToString()
         {
             string result = "";
-            foreach (CategoryItem item in Items)
+            foreach (String item in Items)
             {
                 result +=
                 (

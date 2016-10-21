@@ -38,25 +38,25 @@ namespace AdSitesGrabber
             Category category;
             
             category = new Category();
-            category.Items.Add(new CategoryItem("Недвижимость"));
-            category.Items.Add(new CategoryItem("Квартиры"));
-            category.Items.Add(new CategoryItem("Новостройки"));
+            category.Items.Add("Недвижимость");
+            category.Items.Add("Квартиры");
+            category.Items.Add("Новостройки");
             currentSession.Save(category);
 
             category = new Category();
-            category.Items.Add(new CategoryItem("Недвижимость"));
-            category.Items.Add(new CategoryItem("Квартиры"));
-            category.Items.Add(new CategoryItem("Вторичка"));
+            category.Items.Add("Недвижимость");
+            category.Items.Add("Квартиры");
+            category.Items.Add("Вторичка");
             currentSession.Save(category);
 
             category = new Category();
-            category.Items.Add(new CategoryItem("Недвижимость"));
-            category.Items.Add(new CategoryItem("Частные дома"));
+            category.Items.Add("Недвижимость");
+            category.Items.Add("Частные дома");
             currentSession.Save(category);
 
             category = new Category();
-            category.Items.Add(new CategoryItem("Недвижимость"));
-            category.Items.Add(new CategoryItem("Земельные участки"));
+            category.Items.Add("Недвижимость");
+            category.Items.Add("Земельные участки");
             currentSession.Save(category);
 
             tx.Commit();

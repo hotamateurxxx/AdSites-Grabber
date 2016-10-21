@@ -83,7 +83,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controller\Logger.cs" />
-    <Compile Include="Model\CategoryItem.cs" />
     <Compile Include="Model\Advert.cs" />
     <Compile Include="Model\Category.cs" />
     <Compile Include="Model\AvitoAdvertOnList.cs" />
