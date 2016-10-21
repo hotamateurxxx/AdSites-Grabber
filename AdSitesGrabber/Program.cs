@@ -7,6 +7,7 @@ using System.IO;
 
 using NHibernate;
 using NHibernate.Cfg;
+using NHibernate.Tool.hbm2ddl;
 
 using log4net;
 using log4net.Config;
@@ -17,6 +18,7 @@ using AdSitesGrabber.Model;
 
 namespace AdSitesGrabber
 {
+
     class Program
     {
 
@@ -27,20 +29,35 @@ namespace AdSitesGrabber
             // мой вызов LogManager или какая-то из инструкций NHibernate.
             XmlConfigurator.Configure();
 
-            ISessionFactory sessionFactory = new Configuration().Configure().BuildSessionFactory();
+            Configuration configuration = new Configuration();
+            SchemaMetadataUpdater.QuoteTableAndColumns(configuration);
+            ISessionFactory sessionFactory = configuration.Configure().BuildSessionFactory();
             ISession currentSession = sessionFactory.OpenSession();
             ITransaction tx = currentSession.BeginTransaction();
 
-            Random random = new Random();
-            for (int idx = 0; idx < 10; idx++)
-            {
-                Category category = new Category();
-                category.Tags.Add(random.Next().ToString());
-                category.Tags.Add(random.Next().ToString());
-                category.Tags.Add(random.Next().ToString());
-                currentSession.Save(category);
+            Category category;
+            
+            category = new Category();
+            category.Items.Add(new CategoryItem("Недвижимость"));
+            category.Items.Add(new CategoryItem("Квартиры"));
+            category.Items.Add(new CategoryItem("Новостройки"));
+            currentSession.Save(category);
 
-            }
+            category = new Category();
+            category.Items.Add(new CategoryItem("Недвижимость"));
+            category.Items.Add(new CategoryItem("Квартиры"));
+            category.Items.Add(new CategoryItem("Вторичка"));
+            currentSession.Save(category);
+
+            category = new Category();
+            category.Items.Add(new CategoryItem("Недвижимость"));
+            category.Items.Add(new CategoryItem("Частные дома"));
+            currentSession.Save(category);
+
+            category = new Category();
+            category.Items.Add(new CategoryItem("Недвижимость"));
+            category.Items.Add(new CategoryItem("Земельные участки"));
+            currentSession.Save(category);
 
             tx.Commit();
             currentSession.Close();

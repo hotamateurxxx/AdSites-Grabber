@@ -8,9 +8,9 @@ namespace AdSitesGrabber.Model
 {
 
     /// <summary>
-    /// Категория объявления.
+    /// Элемент категории.
     /// </summary>
-    class Category
+    class CategoryItem
     {
 
         /// <summary>
@@ -19,16 +19,26 @@ namespace AdSitesGrabber.Model
         public virtual Guid RecId { get; set; }
 
         /// <summary>
-        /// Упорядоченный список элементов, составляющий категорию.
+        /// Имя элемента.
         /// </summary>
-        public virtual IList<CategoryItem> Items { get; set; }
+        public virtual String Name { get; set; }
 
         /// <summary>
-        /// Конструктор
+        /// Конструктор.
         /// </summary>
-        public Category()
+        public CategoryItem()
+            : base()
         {
-            Items = new List<CategoryItem>();
+        }
+
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
+        /// <param name="name">Имя элемента.</param>
+        public CategoryItem(string name) 
+            : this()
+        {
+            Name = name;
         }
 
         /// <summary>
@@ -37,18 +47,8 @@ namespace AdSitesGrabber.Model
         /// <returns>Представление в строке.</returns>
         public override string ToString()
         {
-            string result = "";
-            foreach (CategoryItem item in Items)
-            {
-                result +=
-                (
-                    ((result == "") ? "" : " | ") 
-                    + item
-                );
-            }
-            return result;
+            return Name;
         }
 
     }
-
 }

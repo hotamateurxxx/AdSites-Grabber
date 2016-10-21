@@ -97,7 +97,7 @@ namespace AdSitesGrabber.Model
             foreach (IWebElement link in links)
             {
                 // Добавляем новый элемент категории
-                category.Tags.Add(link.Text);
+                category.Items.Add(new CategoryItem(link.Text));
             }
             // Добавляем категорию в список
             categories.Add(category);

@@ -9,6 +9,16 @@
       <column name="recId" />
       <generator class="guid.comb" />
     </id>
+
+    <!-- One-to-many mapping: Items -->
+    <list name="Items" table="CategoryItems" cascade="all" lazy="false">
+      <key column="category" />
+      <index column="order" />
+      <!--<one-to-many class="CategoryItem" />-->
+      <composite-element class="CategoryItem">
+        <property name="Name" column="name"/>
+      </composite-element>
+    </list>
     
   </class>
 

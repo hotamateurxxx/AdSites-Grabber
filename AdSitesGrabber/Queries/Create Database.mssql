@@ -38,7 +38,7 @@ go
 create table [CategoryItems] (
     [recId]     uniqueidentifier not null rowguidcol default newid(),
     [category]  uniqueidentifier not null,
-    [order]     int not null,
+    [order]     int null,
     [name]      varchar(256) not null,
     constraint [PK_CategoryItems] primary key ([recId]),
     constraint [FK_CategoryItems_category] foreign key ([category]) 
@@ -120,27 +120,6 @@ create table [AdvertContacts] (
         on update cascade,
     constraint [FK_AdvertContacts_advert] foreign key ([advert]) 
         references [Adverts] ([recId])
-        on delete cascade
-        on update cascade
-)
-go
-
-create table [Items] (
-    [recId]		uniqueidentifier not null rowguidcol default newid(),
-    [recTime]   datetime not null default getdate(),
-    [name]		varchar(64) not null,
-    constraint [PK_Items] primary key ([recId])
-)
-go
-
-create table [SubItems] (
-    [recId]		uniqueidentifier not null rowguidcol default newid(),
-    [recTime]   datetime not null default getdate(),
-	[item]		uniqueidentifier not null,
-    [name]		varchar(64) not null,
-    constraint [PK_SubItems] primary key ([recId]),
-    constraint [FK_SubItems_item] foreign key ([item]) 
-        references [Items] ([recId])
         on delete cascade
         on update cascade
 )

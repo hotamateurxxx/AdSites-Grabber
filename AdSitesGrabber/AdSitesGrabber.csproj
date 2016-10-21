@@ -83,6 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controller\Logger.cs" />
+    <Compile Include="Model\CategoryItem.cs" />
     <Compile Include="Tests\Item.cs" />
     <Compile Include="Model\Advert.cs" />
     <Compile Include="Model\Category.cs" />
@@ -121,6 +122,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Tests\Item.hbm.xml" />
     <EmbeddedResource Include="Model\Category.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Model\CategoryItem.hbm.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

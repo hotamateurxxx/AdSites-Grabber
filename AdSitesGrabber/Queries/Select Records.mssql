@@ -7,6 +7,12 @@ inner join [Locations] as [l] on
 inner join [Prices] as [p] on
 [p].[recId] = [a].[price]
 
-select * from [Items]
+select
+	[ci].*
+from [Categories] as [c]
+inner join [CategoryItems] as [ci] on
+	[c].[recId] = [ci].[category]
+order by
+	[c].[recId], [ci].[order]
 
 use [master]
