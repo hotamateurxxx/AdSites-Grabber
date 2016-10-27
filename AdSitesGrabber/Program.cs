@@ -30,6 +30,8 @@ namespace AdSitesGrabber
             // мой вызов LogManager или какая-то из инструкций NHibernate.
             XmlConfigurator.Configure();
 
+            /*
+
             Configuration configuration = new Configuration().Configure();
             ISessionFactory sessionFactory = configuration.BuildSessionFactory();
             ISession currentSession = sessionFactory.OpenSession();
@@ -64,15 +66,16 @@ namespace AdSitesGrabber
 
             Console.WriteLine("Done.");
             Console.ReadLine();
+            */
 
-            /*
+            
             using (WebDriverManager manager = new WebDriverManager())
             {
                 manager.FirefoxBinPath = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
+                manager.FactoryDriver = WebDriverManager.DriverType.PhantomJS;
                 Grabber grabber = new AvitoGrabber("Москва", "http://www.avito.ru/", manager);
                 grabber.Execute();
             }
-            */
 
         }
 

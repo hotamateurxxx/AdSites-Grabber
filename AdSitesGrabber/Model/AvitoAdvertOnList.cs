@@ -131,7 +131,7 @@ namespace AdSitesGrabber.Model
             try
             {
                 IWebElement h3 = bodyElement.FindElement(By.CssSelector(".item-description-title"));
-                title = h3.Text;
+                Title = h3.Text;
             }
             catch (NoSuchElementException e)
             {
@@ -148,7 +148,7 @@ namespace AdSitesGrabber.Model
             try
             {
                 IWebElement a = bodyElement.FindElement(By.CssSelector(".item-description-title a"));
-                url = a.GetAttribute("href");
+                Url = a.GetAttribute("href");
             }
             catch (NoSuchElementException e)
             {
@@ -165,17 +165,17 @@ namespace AdSitesGrabber.Model
             try
             {
                 IWebElement div = bodyElement.FindElement(By.CssSelector("div.clearfix div.date"));
-                updateTimeStr = div.Text;
+                UpdateTimeStr = div.Text;
 
                 // Готовим строку к разбору методом DateTime.Parse
-                string timeStr = updateTimeStr;
+                string timeStr = UpdateTimeStr;
                 DateTime timeNow = new DateTime();
                 timeNow = DateTime.Now;
                 timeStr = Regex.Replace(timeStr, "Сегодня", timeNow.ToShortDateString(), RegexOptions.IgnoreCase);
                 timeNow = timeNow.AddDays(-1);
                 timeStr = Regex.Replace(timeStr, "Вчера", timeNow.ToShortDateString(), RegexOptions.IgnoreCase);
                 // Разбираем строку методом DateTime.Parse
-                updateTime = DateTime.Parse(timeStr);
+                UpdateTime = DateTime.Parse(timeStr);
 
             }
             catch (FormatException e)
@@ -193,7 +193,7 @@ namespace AdSitesGrabber.Model
             try
             {
                 IWebElement about = bodyElement.FindElement(By.CssSelector("div.about"));
-                priceStr = about.Text;
+                Price.RawValue = about.Text;
             }
             finally
             {
@@ -210,7 +210,7 @@ namespace AdSitesGrabber.Model
             try
             {
                 IWebElement img = bodyElement.FindElement(By.CssSelector(".b-photo img.photo-count-show"));
-                titleImgUrl = img.GetAttribute("src");
+                Media.TitleImgUrl = img.GetAttribute("src");
             }
             catch (NoSuchElementException)
             {
@@ -227,12 +227,12 @@ namespace AdSitesGrabber.Model
             try
             {
                 IWebElement i = bodyElement.FindElement(By.CssSelector(".b-photo .photo-icons i"));
-                photosCount = Convert.ToInt16(i.Text);
+                Media.PhotosCount = Convert.ToInt16(i.Text);
             }
             catch (FormatException)
             {
-                if (titleImgUrl != null)
-                    photosCount = 1;
+                if (Media.TitleImgUrl != null)
+                    Media.PhotosCount = 1;
             }
             catch (NoSuchElementException)
             {

@@ -24,7 +24,7 @@ namespace AdSitesGrabber.Model
         public virtual IList<String> Items { get; set; }
 
         /// <summary>
-        /// Конструктор
+        /// Конструктор.
         /// </summary>
         public Category()
         {

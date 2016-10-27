@@ -79,19 +79,6 @@ namespace AdSitesGrabber.Controller
                 {
                     Logger.Warns.Error("Ошибка добавления объявения со страницы:\n" + adverts[idx].Url, e);
                 }
-
-                /*
-                ISessionFactory sessionFactory = new Configuration().Configure().BuildSessionFactory();
-                ISession currentSession = sessionFactory.OpenSession();
-                ITransaction tx = currentSession.BeginTransaction();
-                foreach (Category category in adverts[idx].Categories)
-                {
-                    currentSession.Save(category);
-                }
-                tx.Commit();
-                currentSession.Close();
-                */
-
             }
             // Освобождение драйвера 
             driverManager.ReleaseDriver(driver);
@@ -134,6 +121,7 @@ namespace AdSitesGrabber.Controller
                 try
                 {
                     Advert advert = new AvitoAdvertOnList(div);
+                    advert.Location.Region = locationName;
                     adverts.Add(advert);
                     Logger.Events.Info("Объявление со списка добавлено:\n" + advert);
                 }

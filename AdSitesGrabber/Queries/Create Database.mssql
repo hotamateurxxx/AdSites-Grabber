@@ -76,14 +76,14 @@ create table [Adverts] (
     [url]           varchar(256) not null,
     [title]         varchar(256) not null,
     [location]      uniqueidentifier null,
-    [price]         uniqueidentifier null,
+    [Price]         uniqueidentifier null,
     [updated]       datetime null,
     constraint [PK_Adverts] primary key ([recId]),
     constraint [FK_Adverts_location] foreign key ([location]) 
         references [Locations] ([recId])
         on delete cascade
         on update cascade,
-    constraint [FK_Adverts_price] foreign key ([price])
+    constraint [FK_Adverts_Price] foreign key ([Price])
         references [Prices] ([recId])
         on delete cascade
         on update cascade,

@@ -58,75 +58,6 @@ namespace AdSitesGrabber.Model
 
         #region Declarations
 
-        /// <summary>
-        /// Адрес объявления.
-        /// </summary>
-        protected string url;
-
-        /// <summary>
-        /// Заголовок.
-        /// </summary>
-        /// <remarks>По сути, наименование товара.</remarks>
-        protected string title;
-
-        /// <summary>
-        /// Цена строкой.
-        /// </summary>
-        /// <remarks>Пока как строка, потом будем заморачиваться с валютами.</remarks>
-        protected string priceStr;
-
-        /// <summary>
-        /// Наименование валюты в цене.
-        /// </summary>
-        protected string priceUnit;
-
-        /// <summary>
-        /// Количество валюты в цене.
-        /// </summary>
-        protected decimal priceValue;
-
-        /// <summary>
-        /// Время обновления строкой.
-        /// </summary>
-        protected string updateTimeStr;
-
-        /// <summary>
-        /// Время обновления.
-        /// </summary>
-        protected DateTime updateTime;
-
-        /// <summary>
-        /// Заглавная фотография.
-        /// </summary>
-        protected string titleImgUrl;
-
-        /// <summary>
-        /// Количество фотографий.
-        /// </summary>
-        protected int photosCount;
-
-        /// <summary>
-        /// Место.
-        /// </summary>
-        protected string location;
-
-        /// <summary>
-        /// Текст.
-        /// </summary>
-        /// <remarks>Без HTML.</remarks>
-        protected string text;
-
-        /// <summary>
-        /// Текст с HTML.
-        /// </summary>
-        /// <remarks>Текст с HTML-форматированием.</remarks>
-        protected string htmlText;
-
-        /// <summary>
-        /// Категории.
-        /// </summary>
-        protected List<Category> categories;
-
         #endregion
 
         #region Properties
@@ -134,35 +65,55 @@ namespace AdSitesGrabber.Model
         /// <summary>
         /// Адрес объявления.
         /// </summary>
-        public string Url
-        {
-            get
-            {
-                return url;
-            }
-        }
+        public string Url { get; set; }
+
+        /// <summary>
+        /// Заголовок.
+        /// </summary>
+        /// <remarks>По сути, наименование товара.</remarks>
+        public string Title { get; set; }
+
+        /// <summary>
+        /// Текст.
+        /// </summary>
+        /// <remarks>Без HTML.</remarks>
+        public string Text {get; set; }
+
+        /// <summary>
+        /// Текст с HTML.
+        /// </summary>
+        /// <remarks>Текст с HTML-форматированием.</remarks>
+        public string HtmlText { get; set; }
+
+        /// <summary>
+        /// Время обновления строкой.
+        /// </summary>
+        public string UpdateTimeStr { get; set; }
 
         /// <summary>
         /// Обновлено.
         /// </summary>
-        public DateTime UpdateTime
-        {
-            get
-            {
-                return updateTime;
-            }
-        }
+        public DateTime UpdateTime { get; set; }
 
         /// <summary>
         /// Категории.
         /// </summary>
-        public List<Category> Categories
-        {
-            get
-            {
-                return categories;
-            }
-        }
+        public List<Category> Categories { get; set; }
+
+        /// <summary>
+        /// Место.
+        /// </summary>
+        public Location Location { get; set; }
+
+        /// <summary>
+        /// Цена.
+        /// </summary>
+        public Price Price { get; set; }
+
+        /// <summary>
+        /// Медиа-содержимое.
+        /// </summary>
+        public Media Media { get; set; }
 
         #endregion
 
@@ -173,7 +124,10 @@ namespace AdSitesGrabber.Model
         /// </summary>
         public Advert()
         {
-            categories = new List<Category>();
+            Categories = new List<Category>();
+            Location = new Location();
+            Price = new Price();
+            Media = new Media();
         }
 
         /// <summary>
@@ -206,24 +160,24 @@ namespace AdSitesGrabber.Model
         /// <returns>Представление в строке.</returns>
         public override string ToString()
         {
-            string categoriesStr = "";
-            foreach (Category category in categories)
+            string CategoriesStr = "";
+            foreach (Category category in Categories)
             {
-                categoriesStr +=
+                CategoriesStr +=
                 (
-                    ((categoriesStr == "") ? "" : "\n") 
+                    ((CategoriesStr == "") ? "" : "\n") 
                     + category.ToString()
                 );
             }
 
             return
             (
-                url
-                + "\n" + location
-                + ((categoriesStr == "") ? "" : "\n") + categoriesStr
-                + "\n" + title 
-                + "\n" + "Цена: " + ((priceUnit == null) ? priceStr : priceValue.ToString() + " " + priceUnit)
-                + "\n" + "Обновлено: " + updateTime.ToString()
+                Url
+                + "\n" + Location
+                + ((CategoriesStr == "") ? "" : "\n") + CategoriesStr
+                + "\n" + Title 
+                + "\n" + "Цена: " + Price
+                + "\n" + "Обновлено: " + UpdateTime.ToString()
             );
         }
 

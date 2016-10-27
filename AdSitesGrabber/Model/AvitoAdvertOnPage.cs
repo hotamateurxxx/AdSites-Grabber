@@ -39,8 +39,8 @@ namespace AdSitesGrabber.Model
         public AvitoAdvertOnPage(AvitoAdvertOnList advert, IWebDriver driver)
             : base()
         {
-            url = advert.Url;
-            updateTime = advert.UpdateTime;
+            Url = advert.Url;
+            UpdateTime = advert.UpdateTime;
             ParsePage(driver);
         }
 
@@ -54,7 +54,7 @@ namespace AdSitesGrabber.Model
         /// <param name="driver">Веб-драйвер с загруженной страницей.</param>
         public void ParsePage(IWebDriver driver)
         {
-            driver.Navigate().GoToUrl(url);
+            driver.Navigate().GoToUrl(Url);
             IWebElement body = driver.FindElement(By.TagName("body"));
             ParseElement(body);
         }
@@ -81,7 +81,7 @@ namespace AdSitesGrabber.Model
         private void ParseTitle(IWebElement bodyElement)
         {
             IWebElement h1 = bodyElement.FindElement(By.CssSelector("h1.h1[itemprop=name]"));
-            title = h1.Text;
+            Title = h1.Text;
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace AdSitesGrabber.Model
                 category.Items.Add(link.Text);
             }
             // Добавляем категорию в список
-            categories.Add(category);
+            Categories.Add(category);
         }
 
         /// <summary>
@@ -150,7 +150,7 @@ namespace AdSitesGrabber.Model
         private void ParseLocation(IWebElement bodyElement)
         {
             IWebElement elem = bodyElement.FindElement(By.CssSelector("#map span[itemprop=name]"));
-            location = elem.Text;
+            Location.Region = elem.Text;
         }
 
         /// <summary>
@@ -162,14 +162,14 @@ namespace AdSitesGrabber.Model
             try
             {
                 IWebElement elem = bodyElement.FindElement(By.CssSelector("#desc_text > p"));
-                text = elem.Text;
-                htmlText = elem.ToString();
+                Text = elem.Text;
+                HtmlText = elem.ToString();
             }
             catch (NoSuchElementException)
             {
                 IWebElement elem = bodyElement.FindElement(By.CssSelector(".description.description-expanded"));
-                text = elem.Text;
-                htmlText = elem.ToString();
+                Text = elem.Text;
+                HtmlText = elem.ToString();
             }
 
         }
@@ -182,18 +182,18 @@ namespace AdSitesGrabber.Model
         {
             try
             {
-                IWebElement elem = bodyElement.FindElement(By.CssSelector(".description_price .p_i_price span[itemprop=price]"));
-                priceStr = elem.Text;
+                IWebElement elem = bodyElement.FindElement(By.CssSelector(".description_Price .p_i_Price span[itemprop=Price]"));
+                Price.RawValue = elem.Text;
 
-                if (Regex.Match(priceStr, "руб.").Success)
+                if (Regex.Match(Price.RawValue, "руб.").Success)
                 {
-                    priceValue = Convert.ToDecimal(Regex.Replace(priceStr, "руб.", ""));
-                    priceUnit = "руб.";
+                    Price.Value = Convert.ToDecimal(Regex.Replace(Price.RawValue, "руб.", ""));
+                    Price.Unit = "руб.";
                 }
             }
             catch (FormatException e)
             {
-                Logger.Warns.Error("Ошибка разбора цены:\n" + priceStr, e);
+                Logger.Warns.Error("Ошибка разбора цены:\n" + Price.RawValue, e);
             }
             catch (NoSuchElementException)
             {

@@ -7,8 +7,8 @@ using System.Threading;
 
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.PhantomJS;
 using OpenQA.Selenium.Support.UI;
-
 
 namespace AdSitesGrabber.Controller
 {
@@ -76,30 +76,17 @@ namespace AdSitesGrabber.Controller
     class WebDriverManager : IWebDriverManager, IDisposable
     {
 
-        #region Static Declarations
+        #region Declarations
 
         /// <summary>
-        /// Используемые веб-драйвера.
+        /// Используемый тип драйвера.
+        /// </summary>
+        public enum DriverType { Firefox, PhantomJS }
+
+        /// <summary>
+        /// Инстанция.
         /// </summary>
         private static IWebDriverManager _instance;
-
-        #endregion
-
-        #region Public Static Methods
-
-        /// <summary>
-        /// Создать если экземпляр не создан. Вернуть ссылку на экземпляр.
-        /// </summary>
-        /// <returns>Ссылка на экземпляр.</returns>
-        public static IWebDriverManager GetInstance()
-        {
-            _instance = _instance ?? new WebDriverManager();
-            return _instance;
-        }
-
-        #endregion
-
-        #region Protected Declarations
 
         /// <summary>
         /// Используемые веб-драйвера.
@@ -110,27 +97,15 @@ namespace AdSitesGrabber.Controller
 
         #region Properties
 
-        public string FirefoxBinPath
-        {
-            get
-            {
-                return firefoxBinPath;
-            }
-
-            set
-            {
-                firefoxBinPath = value;
-            }
-        }
-
-        #endregion
-
-        #region Public Declarations
+        /// <summary>
+        /// Используемый тип драйвера.
+        /// </summary>
+        public DriverType FactoryDriver { get; set; }
 
         /// <summary>
-        /// Путь к исполняемому файлу браузера FireFox.
+        /// Путь к исполняемому файлу Mozzilla Firefox.
         /// </summary>
-        protected string firefoxBinPath;
+        public string FirefoxBinPath { get; set; }
 
         #endregion
 
@@ -162,6 +137,16 @@ namespace AdSitesGrabber.Controller
         #endregion
 
         #region Public Methods
+
+        /// <summary>
+        /// Создать если экземпляр не создан. Вернуть ссылку на экземпляр.
+        /// </summary>
+        /// <returns>Ссылка на экземпляр.</returns>
+        public static IWebDriverManager GetInstance()
+        {
+            _instance = _instance ?? new WebDriverManager();
+            return _instance;
+        }
 
         /// <summary>
         /// Получить свободный драйвер.
@@ -242,19 +227,29 @@ namespace AdSitesGrabber.Controller
         /// <returns>Новый веб-драйвер.</returns>
         protected virtual IWebDriver CreateDriver()
         {
-            FirefoxDriver driver;
-            if (firefoxBinPath == null)
+            IWebDriver driver;
+            switch (FactoryDriver)
             {
-                 driver = new FirefoxDriver();
-            }
-            else
-            {
-                FirefoxBinary binary = new FirefoxBinary(firefoxBinPath);
-                FirefoxProfile profile = new FirefoxProfile();
-                driver = new FirefoxDriver(binary, profile);
-            }
 
-            driver.Manage().Window.Maximize();
+                case DriverType.Firefox:
+                    if (FirefoxBinPath == null)
+                    {
+                         driver = new FirefoxDriver();
+                    }
+                    else
+                    {
+                        FirefoxBinary binary = new FirefoxBinary(FirefoxBinPath);
+                        FirefoxProfile profile = new FirefoxProfile();
+                        driver = new FirefoxDriver(binary, profile);
+                    }
+                    driver.Manage().Window.Maximize();
+                    break;
+
+                default:
+                    driver = new PhantomJSDriver();
+                    break;
+
+            }
             return driver;
         }
 
