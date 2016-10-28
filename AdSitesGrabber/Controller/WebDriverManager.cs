@@ -245,9 +245,14 @@ namespace AdSitesGrabber.Controller
                     driver.Manage().Window.Maximize();
                     break;
 
-                default:
-                    driver = new PhantomJSDriver();
+                case DriverType.PhantomJS:
+                    var driverService = PhantomJSDriverService.CreateDefaultService();
+                    driverService.HideCommandPromptWindow = true;
+                    driver = new PhantomJSDriver(driverService);
                     break;
+                
+                default:
+                    throw new Exception("Неизвестный фабричный тип веб-драйвера.");
 
             }
             return driver;
