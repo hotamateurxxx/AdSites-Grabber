@@ -1,0 +1,16 @@
+﻿<?xml version="1.0"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="AdSitesGrabber.Model" assembly="AdSitesGrabber">
+
+  <class name="Location" table="Locations">
+
+    <id name="RecId">
+      <column name="recId" />
+      <generator class="guid.comb" />
+    </id>
+
+    <property name="Region" column="region"/>
+    <property name="Address" column="Address"/>
+    
+  </class>
+
+</hibernate-mapping>

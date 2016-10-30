@@ -13,8 +13,8 @@ go
 -- Локации
 create table [Locations] (
     [recId]     uniqueidentifier not null rowguidcol default newid(),
-    [region]    varchar(256) not null,
-    [town]      varchar(256) not null,
+    [region]    nvarchar(256) not null,
+    [address]   nvarchar(256) not null,
     constraint [PK_Locations] primary key ([recId])
 )
 go
@@ -22,7 +22,9 @@ go
 -- Цены
 create table [Prices] (
     [recId]     uniqueidentifier not null rowguidcol default newid(),
-    [str]       varchar(256) not null,
+    [rawValue]  nvarchar(256) not null,
+    [unit]		nvarchar(256) not null,
+    [value]		decimal(9) not null,
     constraint [PK_Prices] primary key ([recId])
 )
 go
@@ -39,7 +41,7 @@ create table [CategoryItems] (
     [recId]     uniqueidentifier not null rowguidcol default newid(),
     [category]  uniqueidentifier not null,
     [order]     int null,
-    [name]      varchar(256) not null,
+    [name]      nvarchar(256) not null,
     constraint [PK_CategoryItems] primary key ([recId]),
     constraint [FK_CategoryItems_category] foreign key ([category]) 
         references [Categories] ([recId])
@@ -60,8 +62,8 @@ create table [ContactItems] (
     [recId]     uniqueidentifier not null rowguidcol default newid(),
     [contact]   uniqueidentifier not null,
     [order]     int not null,
-    [type]      varchar(256) not null,
-    [name]      varchar(256) not null,
+    [type]      nvarchar(256) not null,
+    [name]      nvarchar(256) not null,
     constraint [PK_ContactItems] primary key ([recId]),
     constraint [FK_ContactItems_contact] foreign key ([contact]) 
         references [Contacts] ([recId])
@@ -73,10 +75,10 @@ go
 -- Объявления
 create table [Adverts] (
     [recId]         uniqueidentifier not null rowguidcol default newid(),
-    [url]           varchar(256) not null,
-    [title]         varchar(256) not null,
+    [url]           nvarchar(256) not null,
+    [title]         nvarchar(256) not null,
     [location]      uniqueidentifier null,
-    [Price]         uniqueidentifier null,
+    [price]         uniqueidentifier null,
     [updated]       datetime null,
     constraint [PK_Adverts] primary key ([recId]),
     constraint [FK_Adverts_location] foreign key ([location]) 
@@ -88,6 +90,18 @@ create table [Adverts] (
         on delete cascade
         on update cascade,
     constraint [UK_Adverts_url] unique ([url])
+)
+go
+
+-- Тексты объявлений
+create table [Texts] (
+    [advert]        uniqueidentifier not null,
+    [html]          ntext not null,
+    constraint [PK_Texts] primary key ([advert]),
+    constraint [FK_Texts_advert] foreign key ([advert]) 
+        references [Adverts] ([recId])
+        on delete cascade
+        on update cascade
 )
 go
 

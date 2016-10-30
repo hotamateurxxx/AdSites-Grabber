@@ -56,10 +56,6 @@ namespace AdSitesGrabber.Model
     abstract class Advert : IAdvertOnElement
     {
 
-        #region Declarations
-
-        #endregion
-
         #region Properties
 
         /// <summary>

@@ -69,7 +69,7 @@ namespace AdSitesGrabber
             */
 
             
-            using (WebDriverManager manager = new WebDriverManager())
+            using (WebDriverManager manager = WebDriverManager.GetInstance())
             {
                 manager.FirefoxBinPath = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
                 manager.FactoryDriver = WebDriverManager.DriverType.PhantomJS;

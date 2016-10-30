@@ -13,8 +13,6 @@ using OpenQA.Selenium.Support.UI;
 namespace AdSitesGrabber.Controller
 {
 
-    #region Interfaces
-
     /// <summary>
     /// Менеджер веб-драйверов.
     /// </summary>
@@ -36,38 +34,6 @@ namespace AdSitesGrabber.Controller
 
     }
 
-    #endregion
-
-    /// <summary>
-    /// Запись с информацией о веб-драйвере.
-    /// </summary>
-    class WebDriverRecord
-    {
-
-        #region Public Declarations
-
-        public IWebDriver driver;
-        public Object owner;
-
-        #endregion
-
-        #region Public Methods
-
-        /// <summary>
-        /// Конструктор.
-        /// </summary>
-        /// <param name="driver">Драйвер.</param>
-        /// <param name="owner">Владелец.</param>
-        public WebDriverRecord(IWebDriver driver, Object owner)
-        {
-            this.driver = driver;
-            this.owner = owner;
-        }
-
-        #endregion
-
-    }
-
     /// <summary>
     /// Менеджер веб-драйверов.
     /// 
@@ -76,26 +42,49 @@ namespace AdSitesGrabber.Controller
     class WebDriverManager : IWebDriverManager, IDisposable
     {
 
-        #region Declarations
-
         /// <summary>
         /// Используемый тип драйвера.
         /// </summary>
         public enum DriverType { Firefox, PhantomJS }
 
         /// <summary>
+        /// Запись с информацией о веб-драйвере.
+        /// </summary>
+        protected class WebDriverRecord
+        {
+
+            /// <summary>
+            /// Сам веб-драйвер.
+            /// </summary>
+            public IWebDriver driver;
+
+            /// <summary>
+            /// Пользующийся этим веб-драйвером владелец.
+            /// </summary>
+            public Object owner;
+
+            /// <summary>
+            /// Конструктор.
+            /// </summary>
+            /// <param name="driver">Драйвер.</param>
+            /// <param name="owner">Владелец.</param>
+            public WebDriverRecord(IWebDriver driver, Object owner)
+            {
+                this.driver = driver;
+                this.owner = owner;
+            }
+
+        }
+
+        /// <summary>
         /// Инстанция.
         /// </summary>
-        private static IWebDriverManager _instance;
+        private static WebDriverManager _instance;
 
         /// <summary>
         /// Используемые веб-драйвера.
         /// </summary>
         protected List<WebDriverRecord> driversRecords;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         /// Используемый тип драйвера.
@@ -107,21 +96,14 @@ namespace AdSitesGrabber.Controller
         /// </summary>
         public string FirefoxBinPath { get; set; }
 
-        #endregion
-
-        #region Constructors
-
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public WebDriverManager()
+        private WebDriverManager()
         {
             driversRecords = new List<WebDriverRecord>();
+            _instance = this;
         }
-
-        #endregion
-
-        #region Destructors
 
         /// <summary>
         /// Деструктор.
@@ -132,17 +114,15 @@ namespace AdSitesGrabber.Controller
             CloseDrivers();
             // Надо дать время на взаимодействие с браузером, а то не успеет закрыть
             Thread.Sleep(1000);
+            // Очистка инстанции
+            _instance = null;
         }
-
-        #endregion
-
-        #region Public Methods
 
         /// <summary>
         /// Создать если экземпляр не создан. Вернуть ссылку на экземпляр.
         /// </summary>
         /// <returns>Ссылка на экземпляр.</returns>
-        public static IWebDriverManager GetInstance()
+        public static WebDriverManager GetInstance()
         {
             _instance = _instance ?? new WebDriverManager();
             return _instance;
@@ -202,10 +182,6 @@ namespace AdSitesGrabber.Controller
             GC.SuppressFinalize(this);
         }
 
-        #endregion
-
-        #region Protected Methods
-
         /// <summary>
         /// Закрытие драйверов.
         /// </summary>
@@ -257,8 +233,6 @@ namespace AdSitesGrabber.Controller
             }
             return driver;
         }
-
-        #endregion
 
     }
 
