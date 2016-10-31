@@ -16,10 +16,20 @@ namespace AdSitesGrabber.Controller
     /// <summary>
     /// Абстрастный граббер сайта.
     /// </summary>
-    abstract class Grabber
+    abstract class Grabber : IDisposable
     {
 
-        #region Declarations
+        /// <summary>
+        /// Параметры запуска граббера.
+        /// </summary>
+        public class ExecuteParams {
+
+            /// <summary>
+            /// Количество загружаемых объявлений.
+            /// </summary>
+            public int Count;
+
+        }
 
         /// <summary>
         /// Отправной адрес, с которого начинается работа граббера.
@@ -32,18 +42,9 @@ namespace AdSitesGrabber.Controller
         protected string locationName;
 
         /// <summary>
-        /// Мэнеджер веб-драйверов.
-        /// </summary>
-        protected IWebDriverManager driverManager;
-
-        /// <summary>
         /// Объявления.
         /// </summary>
         protected List<Advert> adverts;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         /// Значение по-умолчанию отправного адреса, с которого начинается работа граббера.
@@ -67,10 +68,6 @@ namespace AdSitesGrabber.Controller
             }
         }
 
-        #endregion
-
-        #region Constructors
-
         /// <summary>
         /// Конструктор.
         /// </summary>
@@ -82,34 +79,22 @@ namespace AdSitesGrabber.Controller
         /// <summary>
         /// Конструктор.
         /// </summary>
-        /// <param name="driverManager">Мэнеджер веб-драйверов.</param>
-        public Grabber(IWebDriverManager driverManager = null)
-            : this()
-        {
-            this.driverManager = driverManager ?? WebDriverManager.GetInstance();
-        }
-
-        /// <summary>
-        /// Конструктор.
-        /// </summary>
         /// <param name="locationName">Имя места, для которого выбираются объявления.</param>
         /// <param name="startUrl">Отправной адрес, с которого начинается работа граббера.</param>
-        /// <param name="driverManager">Мэнеджер веб-драйверов.</param>
-        public Grabber(string locationName = null, string startUrl = null, IWebDriverManager driverManager = null)
-            : this(driverManager)
+        public Grabber(string locationName = null, string startUrl = null)
+            : this()
         {
             this.locationName = locationName ?? defaultLocationName;
             this.startUrl = startUrl ?? defaultStartUrl;
         }
 
-        #endregion
-
-        #region Public Methods
-
         /// <summary>
-        /// Выполнение рабочей последовательности (загрузка стартовой страницы, выбор параметров и захват объявлений).
+        /// Освобождение.
         /// </summary>
-        abstract public void Execute();
+        public virtual void Dispose()
+        {
+            // do nothing yet
+        }
 
         /// <summary>
         /// Представление в строке.
@@ -127,7 +112,11 @@ namespace AdSitesGrabber.Controller
             return startUrl + "\n" + locationName + "\n" + "Объявления:" + advertsStr;
         }
 
-        #endregion
+        /// <summary>
+        /// Выполнение рабочей последовательности (загрузка стартовой страницы, выбор параметров и захват объявлений).
+        /// </summary>
+        /// <param name="execParams">Параметры выполнения граббера.</param>
+        abstract public void Execute(ExecuteParams execParams);
 
     }
 

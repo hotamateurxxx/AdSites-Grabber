@@ -56,6 +56,10 @@
     </StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CommandLine, Version=2.0.0.0, Culture=neutral, PublicKeyToken=de6f01bd326f8c32, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommandLineParser20.2.0.0.0\lib\net40\CommandLine.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Iesi.Collections">
       <HintPath>..\packages\Iesi.Collections.4.0.1.4000\lib\net40\Iesi.Collections.dll</HintPath>
     </Reference>
@@ -95,7 +99,7 @@
     <Compile Include="Model\Price.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Controller\WebDriverManager.cs" />
+    <Compile Include="Controller\WebManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

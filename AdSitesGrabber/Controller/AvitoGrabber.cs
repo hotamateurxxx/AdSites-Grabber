@@ -22,8 +22,6 @@ namespace AdSitesGrabber.Controller
     class AvitoGrabber : Grabber
     {
 
-        #region Properties
-
         /// <summary>
         /// Значение по-умолчанию отправного адреса, с которого начинается работа граббера.
         /// </summary>
@@ -35,58 +33,50 @@ namespace AdSitesGrabber.Controller
             }
         }
 
-        #endregion
-
-        #region Constructors
-
         /// <summary>
         /// Конструктор.
         /// </summary>
         /// <param name="locationName">Имя места, для которого выбираются объявления.</param>
         /// <param name="startUrl">Отправной адрес, с которого начинается работа граббера.</param>
-        /// <param name="driverManager">Мэнеджер веб-драйверов.</param>
-        public AvitoGrabber(string locationName = null, string startUrl = null, IWebDriverManager driverManager = null)
-            : base(locationName, startUrl, driverManager)
+        /// <param name="webManager">Мэнеджер веб-драйверов.</param>
+        public AvitoGrabber(string locationName = null, string startUrl = null)
+            : base(locationName, startUrl)
         {
         }
-
-        #endregion
-
-        #region Public Methods
 
         /// <summary>
         /// Выполнение рабочей последовательности (загрузка стартовой страницы, выбор параметров и захват объявлений).
         /// </summary>
-        public override void Execute()
+        /// <param name="execParams">Параметры выполнения граббера.</param>
+        public override void Execute(ExecuteParams execParams)
         {
-            // Создаем драйвер
-            IWebDriver driver = driverManager.OccupyDriver(this);
-            // Загружаем отправную страницу
-            driver.Navigate().GoToUrl(startUrl);
-            // Выбираем город
-            selectLocation(driver);
-            // Обрабатываем объявления на текущей странице
-            processPageAdverts(driver);
-            // Когда закончили читать объявления в списках - заходим по ссылке на каждое объявление и дочитываем его
-            for (int idx = 0; idx < adverts.Count; idx++)
+            using (IWebManager webManager = WebManager.GetInstance())
             {
-                try
+                // Создаем драйвер
+                IWebDriver driver = webManager.OccupyDriver(this);
+                // Загружаем отправную страницу
+                driver.Navigate().GoToUrl(startUrl);
+                // Выбираем город
+                selectLocation(driver);
+                // Обрабатываем объявления на текущей странице
+                processPageAdverts(driver);
+                // Когда закончили читать объявления в списках - заходим по ссылке на каждое объявление и дочитываем его
+                for (int idx = 0; idx < adverts.Count; idx++)
                 {
-                    adverts[idx] = new AvitoAdvertOnPage(adverts[idx] as AvitoAdvertOnList, driver);
-                    Logger.Events.Info("Добавлено объявление со страницы:\n" + adverts[idx]);
+                    try
+                    {
+                        adverts[idx] = new AvitoAdvertOnPage(adverts[idx] as AvitoAdvertOnList, driver);
+                        Logger.Events.Info("Добавлено объявление со страницы:\n" + adverts[idx]);
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Warns.Error("Ошибка добавления объявения со страницы:\n" + adverts[idx].Url, e);
+                    }
                 }
-                catch (Exception e)
-                {
-                    Logger.Warns.Error("Ошибка добавления объявения со страницы:\n" + adverts[idx].Url, e);
-                }
+                // Освобождение драйвера 
+                webManager.ReleaseDriver(driver);
             }
-            // Освобождение драйвера 
-            driverManager.ReleaseDriver(driver);
         }
-
-        #endregion
-
-        #region Protected Methods
 
         /// <summary>
         /// Выбор географического места (города) объявлений.
@@ -131,8 +121,6 @@ namespace AdSitesGrabber.Controller
                 }
             }
         }
-
-        #endregion
 
     }
 

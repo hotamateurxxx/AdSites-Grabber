@@ -17,64 +17,48 @@ using log4net.Config;
 using AdSitesGrabber.Controller;
 using AdSitesGrabber.Model;
 
+using CommandLine;
+using CommandLine.Text;
+
 namespace AdSitesGrabber
 {
 
     class Program
     {
 
+        class Options {
+
+            [Option("FirefoxBinPath", HelpText = "Путь к исполняемому файлу Mozilla Firefox.")]
+            public string FirefoxBinPath { get; set; }
+
+            [Option("Region", HelpText = "Выбираемый регион для загрузки объявлений.")]
+            public string Region { get; set; }
+
+        }
+
         static void Main(string[] args)
         {
 
+            // Парсим входящие аргументы
+            var options = CommandLine.Parser.Default.ParseArguments<Options>(args);
+            
             // Запускаем конфигурацию log4net напрямую, потому что непонятно что будет отрабатывать раньше:
             // мой вызов LogManager или какая-то из инструкций NHibernate.
             XmlConfigurator.Configure();
 
-            /*
-
-            Configuration configuration = new Configuration().Configure();
-            ISessionFactory sessionFactory = configuration.BuildSessionFactory();
-            ISession currentSession = sessionFactory.OpenSession();
-            ITransaction tx = currentSession.BeginTransaction();
-
-            Category category;
-            
-            category = new Category();
-            category.Items.Add("Недвижимость");
-            category.Items.Add("Квартиры");
-            category.Items.Add("Новостройки");
-            currentSession.Save(category);
-
-            category = new Category();
-            category.Items.Add("Недвижимость");
-            category.Items.Add("Квартиры");
-            category.Items.Add("Вторичка");
-            currentSession.Save(category);
-
-            category = new Category();
-            category.Items.Add("Недвижимость");
-            category.Items.Add("Частные дома");
-            currentSession.Save(category);
-
-            category = new Category();
-            category.Items.Add("Недвижимость");
-            category.Items.Add("Земельные участки");
-            currentSession.Save(category);
-
-            tx.Commit();
-            currentSession.Close();
-
-            Console.WriteLine("Done.");
-            Console.ReadLine();
-            */
-
-            
-            using (WebDriverManager manager = WebDriverManager.GetInstance())
+            using (WebManager webManager = WebManager.GetInstance())
             {
-                manager.FirefoxBinPath = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
-                manager.FactoryDriver = WebDriverManager.DriverType.PhantomJS;
-                Grabber grabber = new AvitoGrabber("Москва", "http://www.avito.ru/", manager);
-                grabber.Execute();
+                //webManager.FirefoxBinPath = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
+                webManager.FactoryDriver = WebManager.DriverType.PhantomJS;
+                using (DatabaseManager dbManager = DatabaseManager.GetInstance())
+                {
+                    using (Grabber grabber = new AvitoGrabber(options.Value.Region, "http://www.avito.ru/"))
+                    {
+                        Grabber.ExecuteParams execParams = new Grabber.ExecuteParams();
+                        execParams.Count = 100;
+                        grabber.Execute(execParams);
+                    }
+                }
             }
 
         }

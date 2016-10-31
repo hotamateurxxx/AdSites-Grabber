@@ -23,7 +23,22 @@ namespace AdSitesGrabber.Controller
     /// <summary>
     /// Менеджер для работы с БД.
     /// </summary>
-    class DatabaseManager : IDisposable
+    interface IDatabaseManager : IDisposable
+    {
+
+        /// <summary>
+        /// Сохранение объекта (и всех его членов) в БД.
+        /// </summary>
+        /// <param name="item">Сохраняемый объект.</param>
+        /// <typeparam name="T">Тип сохраняемого объекта.</typeparam>
+        void Save<T>(T item);
+
+    }
+
+    /// <summary>
+    /// Менеджер для работы с БД.
+    /// </summary>
+    class DatabaseManager : IDatabaseManager
     {
 
         /// <summary>
@@ -54,15 +69,6 @@ namespace AdSitesGrabber.Controller
             _instance = this;
             Configuration configuration = new Configuration().Configure();
             sessionFactory = configuration.BuildSessionFactory();
-        }
-
-        /// <summary>
-        /// Деструктор.
-        /// </summary>
-        ~DatabaseManager()
-        {
-            // Очистка инстанции
-            _instance = null;
         }
         
         /// <summary>
@@ -129,21 +135,18 @@ namespace AdSitesGrabber.Controller
         {
             using (ISession session = sessionFactory.OpenSession())
             {
-                // Create a criteria object with the specified criteria
                 ICriteria criteria = session.CreateCriteria(typeof(T));
                 criteria.Add(Expression.Eq(propertyName, propertyValue));
-
-                // Get the matching objects
                 IList<T> matchingObjects = criteria.List<T>();
-
-                // Set return value
                 return matchingObjects;
             }
         }
 
         /// <summary>
-        /// Saves an object and its persistent children.
+        /// Сохранение объекта (и всех его членов) в БД.
         /// </summary>
+        /// <param name="item">Сохраняемый объект.</param>
+        /// <typeparam name="T">Тип сохраняемого объекта.</typeparam>
         public void Save<T>(T item)
         {
             using (ISession session = sessionFactory.OpenSession())
