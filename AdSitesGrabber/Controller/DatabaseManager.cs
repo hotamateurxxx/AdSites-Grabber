@@ -67,8 +67,15 @@ namespace AdSitesGrabber.Controller
         private DatabaseManager()
         {
             _instance = this;
-            Configuration configuration = new Configuration().Configure();
-            sessionFactory = configuration.BuildSessionFactory();
+            try
+            {
+                Configuration configuration = new Configuration().Configure();
+                sessionFactory = configuration.BuildSessionFactory();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Не удается инициализировать драйвер базы данных.", e);
+            }
         }
         
         /// <summary>
