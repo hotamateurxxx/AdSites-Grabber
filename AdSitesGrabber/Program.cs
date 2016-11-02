@@ -28,19 +28,19 @@ namespace AdSitesGrabber
 
         class Options {
 
-            [Option("WebDriverType", DefaultValue = WebManager.DriverType.PhantomJS, HelpText = "Тип используемого веб-драйвера (Firefox или PhantomJS).")]
+            [Option("webDriverType", DefaultValue = WebManager.DriverType.PhantomJS, HelpText = "Тип используемого веб-драйвера (Firefox или PhantomJS).")]
             public WebManager.DriverType WebDriverType { get; set; }
 
-            [Option("FirefoxBinPath", HelpText = "Путь к исполняемому файлу Mozilla Firefox.")]
-            public string FirefoxBinPath { get; set; }
+            [Option("browserPath", HelpText = "Путь к исполняемому файлу браузера.")]
+            public string BrowserPath { get; set; }
 
-            [Option("Region", DefaultValue = "Москва", HelpText = "Регион для загрузки объявлений.")]
+            [Option("region", HelpText = "Регион для загрузки объявлений.")]
             public string Region { get; set; }
 
-            [Option("Url", DefaultValue = "http://avito.ru", HelpText = "Адрес сайта объявлений.")]
+            [Option("url", HelpText = "Адрес сайта объявлений.")]
             public string Url { get; set; }
 
-            [Option("Count", DefaultValue = 10, HelpText = "Количество объявлений для загрузки.")]
+            [Option("count", DefaultValue = 10, HelpText = "Количество объявлений для загрузки.")]
             public int Count { get; set; }
 
         }
@@ -63,9 +63,9 @@ namespace AdSitesGrabber
                     webManager.FactoryDriver = options.Value.WebDriverType;
                     if (webManager.FactoryDriver == WebManager.DriverType.Firefox)
                     {
-                        if (options.Value.FirefoxBinPath != null)
+                        if (options.Value.BrowserPath != null)
                         {
-                            webManager.FirefoxBinPath = options.Value.FirefoxBinPath;
+                            webManager.BrowserPath = options.Value.BrowserPath;
                         }
                     }
 

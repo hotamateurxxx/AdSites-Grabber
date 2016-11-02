@@ -92,9 +92,9 @@ namespace AdSitesGrabber.Controller
         public DriverType FactoryDriver { get; set; }
 
         /// <summary>
-        /// Путь к исполняемому файлу Mozzilla Firefox.
+        /// Путь к исполняемому файлу браузера.
         /// </summary>
-        public string FirefoxBinPath { get; set; }
+        public string BrowserPath { get; set; }
 
         /// <summary>
         /// Конструктор.
@@ -210,13 +210,13 @@ namespace AdSitesGrabber.Controller
             {
 
                 case DriverType.Firefox:
-                    if (FirefoxBinPath == null)
+                    if (BrowserPath == null)
                     {
                          driver = new FirefoxDriver();
                     }
                     else
                     {
-                        FirefoxBinary binary = new FirefoxBinary(FirefoxBinPath);
+                        FirefoxBinary binary = new FirefoxBinary(BrowserPath);
                         FirefoxProfile profile = new FirefoxProfile();
                         driver = new FirefoxDriver(binary, profile);
                     }

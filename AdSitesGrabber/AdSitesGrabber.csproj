@@ -87,6 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controller\DatabaseManager.cs" />
+    <Compile Include="Controller\GrabberFactory.cs" />
     <Compile Include="Controller\Logger.cs" />
     <Compile Include="Model\Advert.cs" />
     <Compile Include="Model\Category.cs" />

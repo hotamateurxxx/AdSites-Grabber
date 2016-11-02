@@ -23,24 +23,12 @@ namespace AdSitesGrabber.Controller
     {
 
         /// <summary>
-        /// Значение по-умолчанию отправного адреса, с которого начинается работа граббера.
-        /// </summary>
-        protected override string defaultStartUrl
-        {
-            get 
-            {
-                return "http://avito.ru/";
-            }
-        }
-
-        /// <summary>
         /// Конструктор.
         /// </summary>
-        /// <param name="locationName">Имя места, для которого выбираются объявления.</param>
-        /// <param name="startUrl">Отправной адрес, с которого начинается работа граббера.</param>
-        /// <param name="webManager">Мэнеджер веб-драйверов.</param>
-        public AvitoGrabber(string locationName = null, string startUrl = null)
-            : base(locationName, startUrl)
+        /// <param name="region">Имя места, для которого выбираются объявления.</param>
+        /// <param name="url">Отправной адрес, с которого начинается работа граббера.</param>
+        public AvitoGrabber(string region, string url)
+            : base(region, url)
         {
         }
 
@@ -55,7 +43,7 @@ namespace AdSitesGrabber.Controller
                 // Создаем драйвер
                 IWebDriver driver = webManager.OccupyDriver(this);
                 // Загружаем отправную страницу
-                driver.Navigate().GoToUrl(startUrl);
+                driver.Navigate().GoToUrl(Url);
                 // Выбираем город
                 selectLocation(driver);
                 // Обрабатываем объявления на текущей странице
@@ -87,7 +75,7 @@ namespace AdSitesGrabber.Controller
         {
             try
             {
-                IWebElement link = driver.FindElement(By.LinkText(locationName));
+                IWebElement link = driver.FindElement(By.LinkText(Region));
                 link.Click();
             }
             catch (NoSuchElementException e)
@@ -111,7 +99,7 @@ namespace AdSitesGrabber.Controller
                 try
                 {
                     Advert advert = new AvitoAdvertOnList(div);
-                    advert.Location.Region = locationName;
+                    advert.Location.Region = Region;
                     adverts.Add(advert);
                     Logger.Events.Info("Объявление со списка добавлено:\n" + advert);
                 }

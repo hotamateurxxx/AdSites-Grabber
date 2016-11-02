@@ -11,8 +11,6 @@ using OpenQA.Selenium.Support.UI;
 namespace AdSitesGrabber.Model
 {
     
-    #region Interfaces
-
     /// <summary>
     /// Объявление на элементе веб-страницы.
     /// </summary>
@@ -48,15 +46,11 @@ namespace AdSitesGrabber.Model
     {
     }
 
-    #endregion
-
     /// <summary>
     /// Объявление.
     /// </summary>
     abstract class Advert : IAdvertOnElement
     {
-
-        #region Properties
 
         /// <summary>
         /// Адрес объявления.
@@ -111,10 +105,6 @@ namespace AdSitesGrabber.Model
         /// </summary>
         public Media Media { get; set; }
 
-        #endregion
-
-        #region Constructors
-
         /// <summary>
         /// Конструктор.
         /// </summary>
@@ -136,19 +126,11 @@ namespace AdSitesGrabber.Model
             ParseElement(element);
         }
 
-        #endregion
-
-        #region Abstract Methods
-
         /// <summary>
         /// Разбор элемента с объявлением.
         /// </summary>
         /// <param name="bodyElement">Элемент страницы, содержащий объявление.</param>
         abstract public void ParseElement(IWebElement element);
-
-        #endregion
-
-        #region Public Methods
 
         /// <summary>
         /// Представление в строке.
@@ -176,8 +158,6 @@ namespace AdSitesGrabber.Model
                 + "\n" + "Обновлено: " + UpdateTime.ToString()
             );
         }
-
-        #endregion
 
     }
 

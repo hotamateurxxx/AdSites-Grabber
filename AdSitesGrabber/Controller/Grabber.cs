@@ -34,12 +34,12 @@ namespace AdSitesGrabber.Controller
         /// <summary>
         /// Отправной адрес, с которого начинается работа граббера.
         /// </summary>
-        protected string startUrl;
+        public virtual string Url { get; set; }
 
         /// <summary>
         /// Имя места, для которого выбираются объявления.
         /// </summary>
-        protected string locationName;
+        public virtual string Region { get; set; }
 
         /// <summary>
         /// Объявления.
@@ -47,45 +47,15 @@ namespace AdSitesGrabber.Controller
         protected List<Advert> adverts;
 
         /// <summary>
-        /// Значение по-умолчанию отправного адреса, с которого начинается работа граббера.
-        /// </summary>
-        protected virtual string defaultStartUrl
-        {
-            get
-            {
-                throw new Exception("Запрошено не определенное свойство.");
-            }
-        }
-
-        /// <summary>
-        /// Значение по-умолчанию имени места, для которого выбираются объявления.
-        /// </summary>
-        protected virtual string defaultLocationName 
-        {
-            get 
-            {
-                return "Санкт-Петербург";
-            }
-        }
-
-        /// <summary>
         /// Конструктор.
         /// </summary>
-        public Grabber()
+        /// <param name="region">Имя места, для которого выбираются объявления.</param>
+        /// <param name="url">Отправной адрес, с которого начинается работа граббера.</param>
+        public Grabber(string region, string url)
         {
             adverts = new List<Advert>();
-        }
-
-        /// <summary>
-        /// Конструктор.
-        /// </summary>
-        /// <param name="locationName">Имя места, для которого выбираются объявления.</param>
-        /// <param name="startUrl">Отправной адрес, с которого начинается работа граббера.</param>
-        public Grabber(string locationName = null, string startUrl = null)
-            : this()
-        {
-            this.locationName = locationName ?? defaultLocationName;
-            this.startUrl = startUrl ?? defaultStartUrl;
+            Region = region;
+            Url = url;
         }
 
         /// <summary>
@@ -109,7 +79,7 @@ namespace AdSitesGrabber.Controller
             }
             advertsStr = advertsStr.Replace("\n", "\n\t");
 
-            return startUrl + "\n" + locationName + "\n" + "Объявления:" + advertsStr;
+            return Url + "\n" + Region + "\n" + "Объявления:" + advertsStr;
         }
 
         /// <summary>
