@@ -34,10 +34,10 @@ namespace AdSitesGrabber
             [Option("browserPath", HelpText = "Путь к исполняемому файлу браузера.")]
             public string BrowserPath { get; set; }
 
-            [Option("region", HelpText = "Регион для загрузки объявлений.")]
+            [Option("region", HelpText = "Регион для загрузки объявлений.", Required = true)]
             public string Region { get; set; }
 
-            [Option("url", HelpText = "Адрес сайта объявлений.")]
+            [Option("url", HelpText = "Адрес сайта объявлений.", Required = true)]
             public string Url { get; set; }
 
             [Option("count", DefaultValue = 10, HelpText = "Количество объявлений для загрузки.")]
@@ -49,7 +49,7 @@ namespace AdSitesGrabber
         {
 
             // Парсим входящие аргументы
-            var options = CommandLine.Parser.Default.ParseArguments<Options>(args);
+            ParserResult<Options> options = CommandLine.Parser.Default.ParseArguments<Options>(args);
             try
             {
                 // Запускаем конфигурацию log4net напрямую, потому что непонятно что будет отрабатывать раньше:
@@ -71,7 +71,7 @@ namespace AdSitesGrabber
 
                     using (DatabaseManager dbManager = DatabaseManager.GetInstance())
                     {
-                        using (Grabber grabber = new AvitoGrabber(options.Value.Region, options.Value.Url))
+                        using (AvitoGrabber grabber = new AvitoGrabber(options.Value.Region, options.Value.Url))
                         {
                             Grabber.ExecuteParams execParams = new Grabber.ExecuteParams();
                             execParams.Count = options.Value.Count;

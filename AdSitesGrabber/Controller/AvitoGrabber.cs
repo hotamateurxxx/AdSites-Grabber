@@ -40,6 +40,8 @@ namespace AdSitesGrabber.Controller
         {
             using (IWebManager webManager = WebManager.GetInstance())
             {
+                // Общий индекс выполнения
+                int idx = 0;
                 // Создаем драйвер
                 IWebDriver driver = webManager.OccupyDriver(this);
                 // Загружаем отправную страницу
@@ -49,7 +51,7 @@ namespace AdSitesGrabber.Controller
                 // Обрабатываем объявления на текущей странице
                 processPageAdverts(driver);
                 // Когда закончили читать объявления в списках - заходим по ссылке на каждое объявление и дочитываем его
-                for (int idx = 0; idx < adverts.Count; idx++)
+                for (; idx < Math.Min(execParams.Count, adverts.Count); idx++)
                 {
                     try
                     {
@@ -91,7 +93,8 @@ namespace AdSitesGrabber.Controller
         /// <param name="driver">Веб-драйвер с загруженной страницей со списком объявлений.</param>
         protected void processPageAdverts(IWebDriver driver)
         {
-            System.Collections.ObjectModel.ReadOnlyCollection<IWebElement> divs = driver.FindElements(By.CssSelector(".catalog-list div.item_table"));
+            System.Collections.ObjectModel.ReadOnlyCollection<IWebElement> divs;
+            divs = driver.FindElements(By.CssSelector(".catalog-list div.item_table"));
             if (divs.Count == 0)
                 throw new Exception("На странице не найдено объявлений.");
             foreach (IWebElement div in divs)
