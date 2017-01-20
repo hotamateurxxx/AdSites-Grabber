@@ -7,8 +7,8 @@
     <ProjectGuid>{4ACE62F2-41CC-4DE8-8ACA-6728ECEA95C4}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AdSitesGrabber</RootNamespace>
-    <AssemblyName>AdSitesGrabber</AssemblyName>
+    <RootNamespace>Grabber</RootNamespace>
+    <AssemblyName>Grabber</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
