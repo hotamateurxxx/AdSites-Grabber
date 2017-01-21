@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Express 2012 for Windows Desktop
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdSitesGrabber", "AdSitesGrabber\AdSitesGrabber.csproj", "{4ACE62F2-41CC-4DE8-8ACA-6728ECEA95C4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grabber", "Grabber\Grabber.csproj", "{4ACE62F2-41CC-4DE8-8ACA-6728ECEA95C4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{2A33D177-199F-447D-A844-68973364CF73}"
 	ProjectSection(SolutionItems) = preProject
