@@ -83,6 +83,8 @@ namespace AdSitesGrabber
             catch (Exception e)
             {
                 Logger.Warns.Error("Ошибка выполнения программы.", e);
+                Console.WriteLine("Для продолжения нажмите Enter.");
+                Console.ReadLine();
             }
 
         }
