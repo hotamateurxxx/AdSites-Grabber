@@ -71,7 +71,7 @@ namespace AdSitesGrabber
 
                     using (DatabaseManager dbManager = DatabaseManager.GetInstance())
                     {
-                        using (Grabber grabber = new AvitoGrabber(options.Value.Region, options.Value.Url))
+                        using (AvitoGrabber grabber = new AvitoGrabber(options.Value.Region, options.Value.Url))
                         {
                             Grabber.ExecuteParams execParams = new Grabber.ExecuteParams();
                             execParams.Count = options.Value.Count;
