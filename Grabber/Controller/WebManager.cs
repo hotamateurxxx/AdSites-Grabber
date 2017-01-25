@@ -39,7 +39,7 @@ namespace AdSitesGrabber.Controller
     /// 
     /// Нужен для того, чтобы во всех местах проекта использовались единые методы работы с веб-драйвером.
     /// </summary>
-    class WebManager : IWebManager
+    public class WebManager : IWebManager
     {
 
         /// <summary>
@@ -114,8 +114,6 @@ namespace AdSitesGrabber.Controller
             CloseDrivers();
             // Надо дать время на взаимодействие с браузером, а то не успеет закрыть
             Thread.Sleep(1000);
-            // Очистка инстанции
-            _instance = null;
         }
 
         /// <summary>
@@ -178,10 +176,10 @@ namespace AdSitesGrabber.Controller
         {
             // Закрытие драйверов
             CloseDrivers();
+            // Надо дать время на взаимодействие с браузером, а то не успеет закрыть
+            Thread.Sleep(1000);
             // Говорим не вызывать метод завершения объекта
             GC.SuppressFinalize(this);
-            // Очистка инстанции
-            _instance = null;
         }
 
         /// <summary>

@@ -20,6 +20,11 @@ using AdSitesGrabber.Model;
 using CommandLine;
 using CommandLine.Text;
 
+using OpenQA.Selenium;
+using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.PhantomJS;
+using OpenQA.Selenium.Support.UI;
+
 namespace AdSitesGrabber
 {
 
@@ -69,24 +74,32 @@ namespace AdSitesGrabber
                         }
                     }
 
-                    using (DatabaseManager dbManager = DatabaseManager.GetInstance())
-                    {
+                    //using (DatabaseManager dbManager = DatabaseManager.GetInstance())
+                    //{
                         using (AvitoGrabber grabber = new AvitoGrabber(options.Value.Region, options.Value.Url))
                         {
                             Grabber.ExecuteParams execParams = new Grabber.ExecuteParams();
                             execParams.Count = options.Value.Count;
-                            grabber.Execute(execParams);
+                            //grabber.Execute(execParams);
+                            //webManager.OccupyDriver(grabber);
+
+                            IWebDriver driver;
+                            driver = new FirefoxDriver();
+                            //FirefoxBinary binary = new FirefoxBinary(options.Value.BrowserPath);
+                            //FirefoxProfile profile = new FirefoxProfile();
+                            //driver = new FirefoxDriver(binary, profile);
+                            //driver.Manage().Window.Maximize();
                         }
-                    }
+                    //}
                 }
             }
             catch (Exception e)
             {
                 Logger.Warns.Error("Ошибка выполнения программы.", e);
-                Console.WriteLine("Для продолжения нажмите Enter.");
-                Console.ReadLine();
             }
-
+            Console.WriteLine("Для продолжения нажмите Enter.");
+            Console.ReadLine();
+            Console.WriteLine("Здесь должно все закончиться.");
         }
 
     }

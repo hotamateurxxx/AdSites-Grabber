@@ -10,6 +10,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{2A33D1
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebDriver_Firefox", "Tests\WebDriver_Firefox\WebDriver_Firefox.csproj", "{453FBA90-627F-4DBE-890C-3A5607C8BD4C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandLine", "Tests\CommandLine\CommandLine.csproj", "{4AABD159-CF27-41FE-BCCA-AFD7EAA4B78D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +24,14 @@ Global
 		{4ACE62F2-41CC-4DE8-8ACA-6728ECEA95C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4ACE62F2-41CC-4DE8-8ACA-6728ECEA95C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4ACE62F2-41CC-4DE8-8ACA-6728ECEA95C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{453FBA90-627F-4DBE-890C-3A5607C8BD4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{453FBA90-627F-4DBE-890C-3A5607C8BD4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{453FBA90-627F-4DBE-890C-3A5607C8BD4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{453FBA90-627F-4DBE-890C-3A5607C8BD4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4AABD159-CF27-41FE-BCCA-AFD7EAA4B78D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AABD159-CF27-41FE-BCCA-AFD7EAA4B78D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4AABD159-CF27-41FE-BCCA-AFD7EAA4B78D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4AABD159-CF27-41FE-BCCA-AFD7EAA4B78D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
