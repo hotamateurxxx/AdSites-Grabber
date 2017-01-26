@@ -74,30 +74,24 @@ namespace AdSitesGrabber
                         }
                     }
 
-                    //using (DatabaseManager dbManager = DatabaseManager.GetInstance())
-                    //{
+                    using (DatabaseManager dbManager = DatabaseManager.GetInstance())
+                    {
                         using (AvitoGrabber grabber = new AvitoGrabber(options.Value.Region, options.Value.Url))
                         {
                             Grabber.ExecuteParams execParams = new Grabber.ExecuteParams();
                             execParams.Count = options.Value.Count;
-                            //grabber.Execute(execParams);
-                            //webManager.OccupyDriver(grabber);
-
-                            IWebDriver driver;
-                            driver = new FirefoxDriver();
-                            //FirefoxBinary binary = new FirefoxBinary(options.Value.BrowserPath);
-                            //FirefoxProfile profile = new FirefoxProfile();
-                            //driver = new FirefoxDriver(binary, profile);
-                            //driver.Manage().Window.Maximize();
+                            grabber.Execute(execParams);
                         }
-                    //}
+                    }
                 }
             }
             catch (Exception e)
             {
                 Logger.Warns.Error("Ошибка выполнения программы.", e);
             }
-            Console.WriteLine("Для продолжения нажмите Enter.");
+            
+            Console.WriteLine();
+            Console.WriteLine("Программа выполнена. Для выхода нажмите Enter.");
             Console.ReadLine();
             Console.WriteLine("Здесь должно все закончиться.");
         }

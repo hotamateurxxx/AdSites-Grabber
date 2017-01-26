@@ -183,18 +183,21 @@ namespace AdSitesGrabber.Controller
         }
 
         /// <summary>
-        /// Закрытие драйверов.
+        /// Для каждого драйвера: закрытие окна, освобождение и удаление из списка.
         /// </summary>
         protected virtual void CloseDrivers()
         {
-            // Закрываем открытые окна
+            // Закрываем окна
             foreach (WebDriverRecord driverRec in driversRecords)
             {
                 if (driverRec.driver is IWebDriver)
                 {
                     driverRec.driver.Close();
+                    driverRec.driver.Dispose();
+                    driverRec.driver = null;
                 }
             }
+            driversRecords.RemoveAll(x => x.driver == null);
         }
 
         /// <summary>
@@ -208,16 +211,10 @@ namespace AdSitesGrabber.Controller
             {
 
                 case DriverType.Firefox:
-                    if (BrowserPath == null)
-                    {
-                         driver = new FirefoxDriver();
-                    }
-                    else
-                    {
-                        FirefoxBinary binary = new FirefoxBinary(BrowserPath);
-                        FirefoxProfile profile = new FirefoxProfile();
-                        driver = new FirefoxDriver(binary, profile);
-                    }
+                    FirefoxOptions options = new FirefoxOptions();
+                    if (BrowserPath != null)
+                        options.BrowserExecutableLocation = BrowserPath;
+                    driver = new FirefoxDriver(options);
                     driver.Manage().Window.Maximize();
                     break;
 

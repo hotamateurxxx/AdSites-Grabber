@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 using OpenQA.Selenium;
@@ -48,6 +49,7 @@ namespace AdSitesGrabber.Controller
                 driver.Navigate().GoToUrl(Url);
                 // Выбираем город
                 selectLocation(driver);
+                Thread.Sleep(1000);
                 // Обрабатываем объявления на текущей странице
                 processPageAdverts(driver);
                 // Когда закончили читать объявления в списках - заходим по ссылке на каждое объявление и дочитываем его
