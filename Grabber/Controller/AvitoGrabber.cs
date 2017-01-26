@@ -14,6 +14,8 @@ using NHibernate.Cfg;
 
 using AdSitesGrabber.Model;
 
+using IWebElements = System.Collections.ObjectModel.ReadOnlyCollection<OpenQA.Selenium.IWebElement>;
+
 namespace AdSitesGrabber.Controller
 {
 
@@ -95,9 +97,19 @@ namespace AdSitesGrabber.Controller
         /// <param name="driver">Веб-драйвер с загруженной страницей со списком объявлений.</param>
         protected void processPageAdverts(IWebDriver driver)
         {
-            System.Collections.ObjectModel.ReadOnlyCollection<IWebElement> divs;
+            IWebElements divs;
+
+            // Функция, вычленяющая разделы с объявлениями и сообщающая найдены ли они на странице
+            Func<IWebDriver, Boolean> hasItems = new Func<IWebDriver, Boolean>(drv =>
+                {
+                    divs = driver.FindElements(By.CssSelector(".catalog-list div.item_table"));
+                    return (divs.Count > 0);
+                }
+            );
+
             IWait<IWebDriver> wait = new WebDriverWait(driver, TimeSpan.FromSeconds(3));
-            divs = wait.Until(drv => drv.FindElements(By.CssSelector(".catalog-list div.item_table"));
+            wait.Until(hasItems);
+
             if (divs.Count == 0)
                 throw new Exception("На странице не найдено объявлений.");
             foreach (IWebElement div in divs)

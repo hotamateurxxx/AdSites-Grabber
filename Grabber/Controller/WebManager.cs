@@ -228,6 +228,7 @@ namespace AdSitesGrabber.Controller
                     throw new Exception("Неизвестный фабричный тип веб-драйвера.");
 
             }
+            //driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(10));
             return driver;
         }
 
