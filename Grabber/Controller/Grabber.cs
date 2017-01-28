@@ -88,6 +88,31 @@ namespace AdSitesGrabber.Controller
         /// <param name="execParams">Параметры выполнения граббера.</param>
         abstract public void Execute(ExecuteParams execParams);
 
+
+        /// <summary>
+        /// Ждать элемент.
+        /// </summary>
+        /// <param name="driver">Веб-драйвер.</param>
+        /// <param name="by">Критерий выбора элемента.</param>
+        /// <returns>Ожидаемый элемент.</returns>
+        protected IWebElement waitElement(IWebDriver driver, By by)
+        {
+            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(3));
+            return wait.Until(drv => driver.FindElement(by));
+        }
+
+
+        /// <summary>
+        /// Ждать элемент.
+        /// </summary>
+        /// <param name="driver">Веб-драйвер.</param>
+        /// <param name="cssSelector">CSS-селектор.</param>
+        /// <returns>Ожидаемый элемент.</returns>
+        protected IWebElement waitElement(IWebDriver driver, String cssSelector)
+        {
+            return waitElement(driver, By.CssSelector(cssSelector));
+        }
+
     }
 
 }

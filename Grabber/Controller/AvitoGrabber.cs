@@ -14,6 +14,7 @@ using NHibernate.Cfg;
 
 using AdSitesGrabber.Model;
 
+// Псевдонимы
 using IWebElements = System.Collections.ObjectModel.ReadOnlyCollection<OpenQA.Selenium.IWebElement>;
 
 namespace AdSitesGrabber.Controller
@@ -59,11 +60,11 @@ namespace AdSitesGrabber.Controller
                     try
                     {
                         adverts[idx] = new AvitoAdvertOnPage(adverts[idx] as AvitoAdvertOnList, driver);
-                        Logger.Events.Info("Добавлено объявление со страницы:\n" + adverts[idx]);
+                        Logger.Events.Info("\n\nДобавлено объявление со страницы:\n" + adverts[idx]);
                     }
                     catch (Exception e)
                     {
-                        Logger.Warns.Error("Ошибка добавления объявения со страницы:\n" + adverts[idx].Url, e);
+                        Logger.Warns.Error("\n\nОшибка добавления объявения со страницы:\n" + adverts[idx].Url, e);
                     }
                 }
                 // Освобождение драйвера 
@@ -80,16 +81,15 @@ namespace AdSitesGrabber.Controller
         {
             try
             {
-                IWait<IWebDriver> wait = new WebDriverWait(driver, TimeSpan.FromSeconds(3));
-                IWebElement link = wait.Until(drv => drv.FindElement(By.LinkText(Region)));
+                IWebElement link = waitElement(driver, By.LinkText(Region));
                 link.Click();
             }
-            catch (NoSuchElementException e)
+            catch (WebDriverTimeoutException e)
             {
-                Logger.Warns.Error("Заданное место не найдено", e);
-                throw e;
+                throw new Exception("Заданное место не найдено.", e);
             }
         }
+
 
         /// <summary>
         /// Обработка объявлений на текущей странице.
@@ -97,21 +97,17 @@ namespace AdSitesGrabber.Controller
         /// <param name="driver">Веб-драйвер с загруженной страницей со списком объявлений.</param>
         protected void processPageAdverts(IWebDriver driver)
         {
-            IWebElements divs;
+            String cssSelector = ".catalog-list div.item_table";
+            try
+            {
+                waitElement(driver, By.CssSelector(cssSelector));
+            }
+            catch (WebDriverTimeoutException e)
+            {
+                throw new Exception("На странице не найдено объявлений.", e);
+            }
 
-            // Функция, вычленяющая разделы с объявлениями и сообщающая найдены ли они на странице
-            Func<IWebDriver, Boolean> hasItems = new Func<IWebDriver, Boolean>(drv =>
-                {
-                    divs = driver.FindElements(By.CssSelector(".catalog-list div.item_table"));
-                    return (divs.Count > 0);
-                }
-            );
-
-            IWait<IWebDriver> wait = new WebDriverWait(driver, TimeSpan.FromSeconds(3));
-            wait.Until(hasItems);
-
-            if (divs.Count == 0)
-                throw new Exception("На странице не найдено объявлений.");
+            IWebElements divs = driver.FindElements(By.CssSelector(cssSelector));
             foreach (IWebElement div in divs)
             {
                 try
@@ -119,11 +115,11 @@ namespace AdSitesGrabber.Controller
                     Advert advert = new AvitoAdvertOnList(div);
                     advert.Location.Region = Region;
                     adverts.Add(advert);
-                    Logger.Events.Info("Объявление со списка добавлено:\n" + advert);
+                    Logger.Events.Info("\n\nОбъявление со списка добавлено:\n" + advert);
                 }
-                catch (Exception e) 
+                catch (Exception e)
                 {
-                    Logger.Warns.Error("Ошибка добавления объявления со списка:\n\n" + div.ToString(), e);
+                    Logger.Warns.Error("\n\nОшибка добавления объявления со списка:\n" + div.ToString(), e);
                 }
             }
         }

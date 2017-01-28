@@ -228,6 +228,7 @@ namespace AdSitesGrabber.Controller
                     throw new Exception("Неизвестный фабричный тип веб-драйвера.");
 
             }
+            // Надеюсь этого не потребуется если будет адекватное решение с Fluent Wait
             //driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(10));
             return driver;
         }
