@@ -82,7 +82,7 @@ namespace AdSitesGrabber.Controller.Avito
         {
             try
             {
-                IWebElement h3 = waitElement(".item-description-title");
+                IWebElement h3 = waitElement(".item-description-title", container);
                 advert.Title = h3.Text;
             }
             catch (NoSuchElementException e)
@@ -99,7 +99,7 @@ namespace AdSitesGrabber.Controller.Avito
         {
             try
             {
-                IWebElement a = waitElement(".item-description-title a");
+                IWebElement a = waitElement(".item-description-title a", container);
                 advert.Url = a.GetAttribute("href");
             }
             catch (NoSuchElementException e)
@@ -116,7 +116,7 @@ namespace AdSitesGrabber.Controller.Avito
         {
             try
             {
-                IWebElement div = waitElement("div.clearfix div.date");
+                IWebElement div = waitElement("div.clearfix div.date", container);
                 advert.UpdateTimeStr = div.Text;
 
                 // Готовим строку к разбору методом DateTime.Parse
@@ -144,7 +144,7 @@ namespace AdSitesGrabber.Controller.Avito
         {
             try
             {
-                IWebElement about = waitElement("div.about");
+                IWebElement about = waitElement("div.about", container);
                 advert.Price.RawValue = about.Text;
             }
             finally
@@ -161,7 +161,7 @@ namespace AdSitesGrabber.Controller.Avito
         {
             try
             {
-                IWebElement img = waitElement(".b-photo img.photo-count-show");
+                IWebElement img = waitElement(".b-photo img.photo-count-show", container);
                 advert.Media.TitleImgUrl = img.GetAttribute("src");
             }
             catch (NoSuchElementException)
@@ -178,7 +178,7 @@ namespace AdSitesGrabber.Controller.Avito
         {
             try
             {
-                IWebElement i = waitElement(".b-photo .photo-icons i");
+                IWebElement i = waitElement(".b-photo .photo-icons i", container);
                 advert.Media.PhotosCount = Convert.ToInt16(i.Text);
             }
             catch (FormatException)

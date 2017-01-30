@@ -25,11 +25,13 @@ namespace AdSitesGrabber.Controller
         /// </summary>
         /// <param name="driver">Веб-драйвер.</param>
         /// <param name="by">Критерий выбора элемента.</param>
+        /// <param name="context">Контекст поиска.</param>
         /// <returns>Ожидаемый элемент.</returns>
-        protected static IWebElement waitElement(IWebDriver driver, By by)
+        protected static IWebElement waitElement(IWebDriver driver, By by, ISearchContext context = null)
         {
+            context = context ?? driver;
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(3));
-            return wait.Until(drv => driver.FindElement(by));
+            return wait.Until(drv => context.FindElement(by));
         }
 
         /// <summary>
@@ -37,10 +39,11 @@ namespace AdSitesGrabber.Controller
         /// </summary>
         /// <param name="driver">Веб-драйвер.</param>
         /// <param name="cssSelector">CSS-селектор.</param>
+        /// <param name="context">Контекст поиска.</param>
         /// <returns>Ожидаемый элемент.</returns>
-        protected static IWebElement waitElement(IWebDriver driver, String cssSelector)
+        protected static IWebElement waitElement(IWebDriver driver, String cssSelector, ISearchContext context = null)
         {
-            return waitElement(driver, By.CssSelector(cssSelector));
+            return waitElement(driver, By.CssSelector(cssSelector), context);
         }
 
     }

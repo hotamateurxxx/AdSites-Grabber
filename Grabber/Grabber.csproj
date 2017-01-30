@@ -95,6 +95,7 @@
     <Compile Include="Controller\AdvertGrabber.cs" />
     <Compile Include="Controller\Avito\AvitoAdvertGrabber.cs" />
     <Compile Include="Controller\Avito\AvitoAdvertOnListGrabber.cs" />
+    <Compile Include="Controller\Avito\AvitoAdvertOnPageGrabber.cs" />
     <Compile Include="Controller\DatabaseManager.cs" />
     <Compile Include="Controller\IWebManager.cs" />
     <Compile Include="Controller\PageGrabber.cs" />

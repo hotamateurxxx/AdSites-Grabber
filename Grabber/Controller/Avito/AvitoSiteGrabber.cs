@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenQA.Selenium;
 using AdSitesGrabber.Model;
+using AdSitesGrabber.Model.Avito;
 
 // Псевдонимы
 using IWebElements = System.Collections.ObjectModel.ReadOnlyCollection<OpenQA.Selenium.IWebElement>;
@@ -43,17 +44,24 @@ namespace AdSitesGrabber.Controller.Avito
                 selectLocation(driver);
                 // Обрабатываем объявления на текущей странице
                 processPageAdverts(driver);
-                // Когда закончили читать объявления в списках - заходим по ссылке на каждое объявление и дочитываем его
-                for (; idx < Math.Min(execParams.Count, adverts.Count); idx++)
+                using (AvitoAdvertOnPageGrabber grabber = new AvitoAdvertOnPageGrabber(driver))
                 {
-                    try
+                    // Когда закончили читать объявления в списках - заходим по ссылке на каждое объявление и дочитываем его
+                    for (; idx < Math.Min(execParams.Count, adverts.Count); idx++)
                     {
-                        //adverts[idx] = new AvitoAdvertOnPage(adverts[idx] as AvitoAdvertOnList, driver);
-                        Logger.Events.Info("\n\nДобавлено объявление со страницы:\n" + adverts[idx]);
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.Warns.Error("\n\nОшибка добавления объявения со страницы:\n" + adverts[idx].Url, e);
+                        try
+                        {
+                            Advert advertOnList = adverts[idx];
+                            driver.Navigate().GoToUrl(advertOnList.Url);
+                            IWebElement body = waitElement(driver, By.TagName("body"));
+                            Advert advertOnPage = grabber.Parse(body, ref advertOnList);
+                            adverts[idx] = advertOnPage;
+                            Logger.Events.Info("\n\nДобавлено объявление со страницы:\n" + adverts[idx]);
+                        }
+                        catch (Exception e)
+                        {
+                            Logger.Warns.Error("\n\nОшибка добавления объявения со страницы:\n" + adverts[idx].Url, e);
+                        }
                     }
                 }
                 // Освобождение драйвера 
@@ -97,16 +105,16 @@ namespace AdSitesGrabber.Controller.Avito
             }
 
             IWebElements divs = driver.FindElements(By.CssSelector(cssSelector));
-            using (AvitoAdvertOnListGrabber grabber = new AvitoAdvertOnListGrabber(driver, ))
+            using (AvitoAdvertOnListGrabber grabber = new AvitoAdvertOnListGrabber(driver))
             {
                 foreach (IWebElement div in divs)
                 {
                     try
                     {
-                        //Advert advert = new AvitoAdvertOnList(div);
-                        //advert.Location.Region = Region;
-                        //adverts.Add(advert);
-                        //Logger.Events.Info("\n\nОбъявление со списка добавлено:\n" + advert);
+                        AvitoAdvert advert = grabber.Parse(div);
+                        advert.Location.Region = Region;
+                        adverts.Add(advert);
+                        Logger.Events.Info("\n\nОбъявление со списка добавлено:\n" + advert);
                     }
                     catch (Exception e)
                     {
