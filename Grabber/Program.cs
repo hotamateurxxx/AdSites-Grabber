@@ -1,29 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-
-using NHibernate;
-using NHibernate.Cfg;
-using NHibernate.Tool.hbm2ddl;
-using NHibernate.Engine;
-using NHibernate.Mapping;
-
-using log4net;
 using log4net.Config;
-
 using AdSitesGrabber.Controller;
-using AdSitesGrabber.Model;
-
+using AdSitesGrabber.Controller.Avito;
 using CommandLine;
-using CommandLine.Text;
 
-using OpenQA.Selenium;
-using OpenQA.Selenium.Firefox;
-using OpenQA.Selenium.PhantomJS;
-using OpenQA.Selenium.Support.UI;
 
 namespace AdSitesGrabber
 {
@@ -76,9 +56,9 @@ namespace AdSitesGrabber
 
                     using (DatabaseManager dbManager = DatabaseManager.GetInstance())
                     {
-                        using (AvitoGrabber grabber = new AvitoGrabber(options.Value.Region, options.Value.Url))
+                        using (AvitoSiteGrabber grabber = new AvitoSiteGrabber(options.Value.Region, options.Value.Url))
                         {
-                            Grabber.ExecuteParams execParams = new Grabber.ExecuteParams();
+                            SiteGrabber.ExecuteParams execParams = new SiteGrabber.ExecuteParams();
                             execParams.Count = options.Value.Count;
                             grabber.Execute(execParams);
                         }

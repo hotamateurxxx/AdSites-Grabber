@@ -92,15 +92,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controller\AdvertGrabber.cs" />
+    <Compile Include="Controller\Avito\AvitoAdvertGrabber.cs" />
+    <Compile Include="Controller\Avito\AvitoAdvertOnListGrabber.cs" />
     <Compile Include="Controller\DatabaseManager.cs" />
-    <Compile Include="Controller\GrabberFactory.cs" />
+    <Compile Include="Controller\IWebManager.cs" />
+    <Compile Include="Controller\PageGrabber.cs" />
+    <Compile Include="Controller\SiteGrabberFactory.cs" />
     <Compile Include="Controller\Logger.cs" />
     <Compile Include="Model\Advert.cs" />
+    <Compile Include="Model\Avito\AvitoAdvert.cs" />
     <Compile Include="Model\Category.cs" />
-    <Compile Include="Model\AvitoAdvertOnList.cs" />
-    <Compile Include="Controller\AvitoGrabber.cs" />
-    <Compile Include="Model\AvitoAdvertOnPage.cs" />
-    <Compile Include="Controller\Grabber.cs" />
+    <Compile Include="Model\Avito\AvitoAdvertOnList.cs" />
+    <Compile Include="Controller\Avito\AvitoSiteGrabber.cs" />
+    <Compile Include="Model\Avito\AvitoAdvertOnPage.cs" />
+    <Compile Include="Controller\SiteGrabber.cs" />
     <Compile Include="Model\Location.cs" />
     <Compile Include="Model\Media.cs" />
     <Compile Include="Model\Price.cs" />

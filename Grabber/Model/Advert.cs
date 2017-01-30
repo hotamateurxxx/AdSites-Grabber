@@ -1,55 +1,14 @@
-﻿using System;
+﻿using OpenQA.Selenium;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using OpenQA.Selenium;
-using OpenQA.Selenium.Firefox;
-using OpenQA.Selenium.Support.UI;
 
 namespace AdSitesGrabber.Model
 {
-    
-    /// <summary>
-    /// Объявление на элементе веб-страницы.
-    /// </summary>
-    public interface IAdvertOnElement
-    {
-
-        /// <summary>
-        /// Разбор элемента с объявлением.
-        /// </summary>
-        /// <param name="bodyElement">Элемент страницы, содержащий объявление.</param>
-        void ParseElement(IWebElement element);
-
-    }
-
-    /// <summary>
-    /// Объявление на странице объявления.
-    /// </summary>
-    public interface IAdvertOnPage : IAdvertOnElement
-    {
-
-        /// <summary>
-        /// Разбор страницы с объявлением.
-        /// </summary>
-        /// <param name="driver">Драйвер с загруженной страницей, содержащей объявление.</param>
-        void ParsePage(IWebDriver driver);
-
-    }
-
-    /// <summary>
-    /// Объявление на странице списка объявлений.
-    /// </summary>
-    public interface IAdvertOnList : IAdvertOnElement
-    {
-    }
 
     /// <summary>
     /// Объявление.
     /// </summary>
-    abstract class Advert : IAdvertOnElement
+    abstract class Advert
     {
 
         /// <summary>
@@ -115,22 +74,6 @@ namespace AdSitesGrabber.Model
             Price = new Price();
             Media = new Media();
         }
-
-        /// <summary>
-        /// Конструктор.
-        /// </summary>
-        /// <param name="bodyElement">Элемент.</param>
-        public Advert(IWebElement element)
-            : this()
-        {
-            ParseElement(element);
-        }
-
-        /// <summary>
-        /// Разбор элемента с объявлением.
-        /// </summary>
-        /// <param name="bodyElement">Элемент страницы, содержащий объявление.</param>
-        abstract public void ParseElement(IWebElement element);
 
         /// <summary>
         /// Представление в строке.
