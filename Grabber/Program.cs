@@ -1,8 +1,8 @@
-﻿using System;
-using log4net.Config;
-using AdSitesGrabber.Controller;
+﻿using AdSitesGrabber.Controller;
 using AdSitesGrabber.Controller.Avito;
 using CommandLine;
+using log4net.Config;
+using System;
 
 
 namespace AdSitesGrabber

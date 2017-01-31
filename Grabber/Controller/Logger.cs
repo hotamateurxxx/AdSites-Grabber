@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using log4net;
-using log4net.Config;
+﻿using log4net;
 
 namespace AdSitesGrabber.Controller
 {
@@ -25,6 +18,7 @@ namespace AdSitesGrabber.Controller
         /// Отдельный лог для ошибок.
         /// </summary>
         public static readonly ILog Warns = LogManager.GetLogger("ErrorLogger");
+
     }
 
 }

@@ -104,9 +104,7 @@
     <Compile Include="Model\Advert.cs" />
     <Compile Include="Model\Avito\AvitoAdvert.cs" />
     <Compile Include="Model\Category.cs" />
-    <Compile Include="Model\Avito\AvitoAdvertOnList.cs" />
     <Compile Include="Controller\Avito\AvitoSiteGrabber.cs" />
-    <Compile Include="Model\Avito\AvitoAdvertOnPage.cs" />
     <Compile Include="Controller\SiteGrabber.cs" />
     <Compile Include="Model\Location.cs" />
     <Compile Include="Model\Media.cs" />
