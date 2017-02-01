@@ -24,6 +24,11 @@ namespace AdSitesGrabber.Model
         public virtual string Region { get; set; }
 
         /// <summary>
+        /// Район.
+        /// </summary>
+        public virtual string District { get; set; }
+
+        /// <summary>
         /// Адрес.
         /// </summary>
         public virtual string Address { get; set; }
@@ -41,7 +46,12 @@ namespace AdSitesGrabber.Model
         /// <returns>Представление в строке.</returns>
         public override string ToString()
         {
-            return Region + (Region == null ? "" : "\n") + Address;
+            return
+            (
+                         "Регион: " + Region
+                + "\n" + "Район: " + District
+                + "\n" + "Адрес: " + Address
+            );
         }
 
     }

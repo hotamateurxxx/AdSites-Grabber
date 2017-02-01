@@ -86,17 +86,17 @@ namespace AdSitesGrabber.Model
             {
                 CategoriesStr +=
                 (
-                    ((CategoriesStr == "") ? "" : "\n") 
+                    ((CategoriesStr == "") ? "" : "|") 
                     + category.ToString()
                 );
             }
 
             return
             (
-                Url
-                + "\n" + Location
-                + ((CategoriesStr == "") ? "" : "\n") + CategoriesStr
-                + "\n" + Title 
+                         "Ссылка: " + Url
+                + "\n" + "Локация: " + ("\n" + Location).Replace("\n", "\n\t")
+                + "\n" + "Категории: " + CategoriesStr
+                + "\n" + "Заголовок: " + Title 
                 + "\n" + "Цена: " + Price
                 + "\n" + "Обновлено: " + UpdateTime.ToString()
             );

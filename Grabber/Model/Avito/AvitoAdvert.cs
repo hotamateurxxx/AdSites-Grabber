@@ -27,7 +27,7 @@ namespace AdSitesGrabber.Model.Avito
         /// <returns>Представление в строке.</returns>
         public override string ToString()
         {
-            return base.ToString() + "\n" + "Номер: " + Id.ToString();
+            return base.ToString() + "\n" + "Идентификатор: " + Id.ToString();
         }
 
     }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Support.Extensions;
+using OpenQA.Selenium.Support.UI;
 using AdSitesGrabber.Model;
 using AdSitesGrabber.Model.Avito;
 
@@ -25,10 +27,16 @@ namespace AdSitesGrabber.Controller.Avito
             AvitoAdvert advert = new AvitoAdvert();
 
             // Id
-            ParseId(container, advert);
+            advert.Id = ExtractId(container.GetAttribute("id").Substring(1));
 
             // Тип (2 - сверху, 1 - обычное)
             advert.DataType = Convert.ToInt16(container.GetAttribute("data-type"));
+
+            // Регион списка
+            ParseRegion(ref advert);
+
+            // Раздел описания
+            ParseDesc(container, ref advert);
 
             // Заголовок
             ParseTitle(container, advert);
@@ -36,14 +44,8 @@ namespace AdSitesGrabber.Controller.Avito
             // Ссылка на объявление
             ParseUrl(container, advert);
 
-            // Категории
-            ParseCategories(container, advert);
-
             // Цена
             ParsePrice(container, advert);
-
-            // Обновлено
-            ParseUpdateTime(container, advert);
 
             // Заглавная фотография
             ParseTitlePhoto(container, advert);
@@ -56,12 +58,44 @@ namespace AdSitesGrabber.Controller.Avito
         }
 
         /// <summary>
-        /// Разбор идентификатора объявления.
+        /// Разбор региона.
         /// </summary>
-        /// <param name="advert">Объявление.</param>
-        private void ParseId(IWebElement container, AvitoAdvert advert)
+        /// <remarks>Метод имеет косяк в том, что Avito сокращает список элементов категорий, заменяя текст ссылки на "...". Пока нормально, но нужно помнить.</remarks>
+        private void ParseRegion(ref AvitoAdvert advert)
         {
-            advert.Id = Convert.ToUInt64(container.GetAttribute("id").Substring(1));
+            SelectElement select = new SelectElement(waitElement("select#region"));
+            String regionTitle = select.SelectedOption.Text.Trim();
+            advert.Location.Region = regionTitle;
+        }
+
+        /// <summary>
+        /// Анализ блока описания.
+        /// </summary>
+        /// <param name="container">Контейнер объявления.</param>
+        /// <param name="advert">Объявление.</param>
+        private void ParseDesc(IWebElement container, ref AvitoAdvert advert)
+        {
+            /*
+    <div class="description">
+ 
+    <h3 class="title item-description-title"> <a class="item-description-title-link" href="/izhevsk/planshety_i_elektronnye_knigi/romoss_sense_6_20000_mah_novyy_910493586" title="Romoss Sense 6 20000 mAh новый в Ижевске">
+    Romoss Sense 6 20000 mAh новый
+    </a>
+     </h3> <div class="about">
+    2 500 руб.       </div>
+  
+    <div class="data">
+         <p>Планшеты и электронные книги</p>
+    <p>р-н Первомайский</p>
+     <div class="clearfix ">
+    <div class="date c-2">
+    Сегодня 14:43
+    </div>
+    </div> </div> </div>
+            */
+            IWebElement descElement = waitElement(".description", container);
+            ParseCategories(descElement, ref advert);
+            ParseUpdateTime(descElement, ref advert);
         }
 
         /// <summary>
@@ -69,9 +103,30 @@ namespace AdSitesGrabber.Controller.Avito
         /// </summary>
         /// <param name="advert">Объявление.</param>
         /// <remarks>Видимо, пока писал на Avito убрали отображение категорий в списке оъявлений.</remarks>
-        private void ParseCategories(IWebElement container, AvitoAdvert advert)
+        private void ParseCategories(IWebElement container, ref AvitoAdvert advert)
         {
-            // Do nothing
+            IJavaScriptExecutor js = Driver as IJavaScriptExecutor;
+            String jsText = "$('#i" + advert.Id.ToString() + " .data p').first().prop('firstChild').textContent";
+            jsText = "return " + jsText + ";";
+            String categoryTitle = ((String) js.ExecuteScript(jsText)).Trim();
+            // Создаем новую категорию
+            Category category = new Category();
+            // Добавляем новый элемент категории
+            category.Items.Add(categoryTitle);
+            // Добавляем категорию в список
+            advert.Categories.Add(category);
+        }
+
+        /// <summary>
+        /// Разбор штампа времени.
+        /// </summary>
+        /// <param name="advert">Объявление.</param>
+        private void ParseUpdateTime(IWebElement container, ref AvitoAdvert advert)
+        {
+            IWebElement div = waitElement("div.clearfix div.date", container);
+            String inputStr = div.GetAttribute("innerText");
+            advert.UpdateTimeStr = inputStr;
+            advert.UpdateTime = ExtractDateTime(inputStr);
         }
 
         /// <summary>
@@ -80,15 +135,8 @@ namespace AdSitesGrabber.Controller.Avito
         /// <param name="advert">Объявление.</param>
         private void ParseTitle(IWebElement container, AvitoAdvert advert)
         {
-            try
-            {
-                IWebElement h3 = waitElement(".item-description-title", container);
-                advert.Title = h3.Text;
-            }
-            catch (WebDriverTimeoutException e)
-            {
-                throw new Exception("Заголовок объявления найден", e);
-            }
+            IWebElement h3 = waitElement(".item-description-title", container);
+            advert.Title = h3.GetAttribute("innerText");
         }
 
         /// <summary>
@@ -97,44 +145,8 @@ namespace AdSitesGrabber.Controller.Avito
         /// <param name="advert">Объявление.</param>
         private void ParseUrl(IWebElement container, AvitoAdvert advert)
         {
-            try
-            {
-                IWebElement a = waitElement(".item-description-title a", container);
-                advert.Url = a.GetAttribute("href");
-            }
-            catch (WebDriverTimeoutException e)
-            {
-                throw new Exception("Ссылка на объявление не найдена", e);
-            }
-        }
-
-        /// <summary>
-        /// Разбор штампа времени.
-        /// </summary>
-        /// <param name="advert">Объявление.</param>
-        private void ParseUpdateTime(IWebElement container, AvitoAdvert advert)
-        {
-            try
-            {
-                IWebElement div = waitElement("div.clearfix div.date", container);
-                String innerText = div.GetAttribute("innerText");
-                advert.UpdateTimeStr = innerText;
-
-                // Готовим строку к разбору методом DateTime.Parse
-                string timeStr = advert.UpdateTimeStr;
-                DateTime timeNow = new DateTime();
-                timeNow = DateTime.Now;
-                timeStr = Regex.Replace(timeStr, "Сегодня", timeNow.ToShortDateString(), RegexOptions.IgnoreCase);
-                timeNow = timeNow.AddDays(-1);
-                timeStr = Regex.Replace(timeStr, "Вчера", timeNow.ToShortDateString(), RegexOptions.IgnoreCase);
-                // Разбираем строку методом DateTime.Parse
-                advert.UpdateTime = DateTime.Parse(timeStr);
-
-            }
-            catch (FormatException e)
-            {
-                throw new Exception("Не удается определить время последнего обновления", e);
-            }
+            IWebElement a = waitElement(".item-description-title a", container);
+            advert.Url = a.GetAttribute("href");
         }
 
         /// <summary>
@@ -146,10 +158,10 @@ namespace AdSitesGrabber.Controller.Avito
             try
             {
                 IWebElement about = waitElement("div.about", container);
-                String textContent = about.GetAttribute("textContent");
-                advert.Price.RawValue = textContent;
+                String textContent = about.GetAttribute("innerText");
+                advert.Price.RawValue = textContent.Trim();
             }
-            finally
+            catch (WebDriverTimeoutException)
             {
                 // Do nothing
             }

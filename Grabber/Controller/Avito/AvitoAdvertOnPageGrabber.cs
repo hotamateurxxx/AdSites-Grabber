@@ -74,7 +74,7 @@ namespace AdSitesGrabber.Controller.Avito
         private void ParseCategories(IWebElement body, ref AvitoAdvert advert)
         {
             SelectElement select = new SelectElement(waitElement("select#category", body));
-            String categoryTitle = select.SelectedOption.Text;
+            String categoryTitle = select.SelectedOption.Text.Trim();
             // Создаем новую категорию
             Category category = new Category();
             // Добавляем новый элемент категории
@@ -106,29 +106,24 @@ namespace AdSitesGrabber.Controller.Avito
             ParsePrice(container, ref advert);
             //ParseLocation(container, ref advert);
             ParseText(container, ref advert);
-            //ParseId(container, ref advert);
-            //ParseUpdateTime(container, ref advert);
-        }
-
-        /// <summary>
-        /// Разбор штампа времени.
-        /// </summary>
-        /// <param name="bodyElement">Элемент с телом объявления.</param>
-        private void ParseUpdateTime(IWebElement container, ref AvitoAdvert advert)
-        {
-            throw new Exception("Метод пока не реализован.");
+            ParseSubtitle(container, ref advert);
         }
 
         /// <summary>
         /// Разбор идентификатора объявления.
         /// </summary>
-        /// <param name="bodyElement">Элемент с телом объявления.</param>
-        private void ParseId(IWebElement container, ref AvitoAdvert advert)
+        /// <param name="container">Элемент с телом объявления.</param>
+        private void ParseSubtitle(IWebElement container, ref AvitoAdvert advert)
         {
             try
             {
-                IWebElement elem = waitElement("#item_id", container);
-                advert.Id = Convert.ToUInt64(elem.Text);
+                // <div class="title-info-metadata-item">№ 896393562, размещено сегодня в 13:43  </div>
+                IWebElement elem = waitElement("div.title-info-metadata-item", container);
+                String elemText = elem.GetAttribute("textContent").Trim();
+                Match match = Regex.Match(elemText, "№\\s+(\\d+),\\s+размещено\\s+(.+)");
+                advert.Id = ExtractId(match.Groups[1].Value);
+                advert.UpdateTimeStr = match.Groups[2].Value;
+                advert.UpdateTime = ExtractDateTime(advert.UpdateTimeStr);
             }
             catch (WebDriverTimeoutException)
             {
