@@ -21,27 +21,31 @@ namespace AdSitesGrabber.Controller.Avito
         /// Разбор элемента с объявлением.
         /// </summary>
         /// <returns>Объявление в контейнере.</returns>
-        public AvitoAdvert Parse(IWebElement container)
+        public AvitoAdvert Parse(String url)
         {
-            AvitoAdvert advert = new AvitoAdvert();
-
-            ParseTitle(container, ref advert);
-            ParseCategories(container, ref advert);
-            ParseBody(container, ref advert);
-
-            return advert;
-        }
-
-        /// <summary>
-        /// Разбор элемента с объявлением.
-        /// </summary>
-        /// <returns>Объявление в контейнере.</returns>
-        public AvitoAdvert Parse(IWebElement container, ref Advert advertOnList)
-        {
-            AvitoAdvert advert = Parse(container);
-            advert.Url = advertOnList.Url;
-            advert.UpdateTime = advertOnList.UpdateTime;
-            return advert;
+            try
+            {
+                AvitoAdvert advert = new AvitoAdvert();
+                advert.Url = url;
+                Driver.Navigate().GoToUrl(advert.Url);
+                IWebElement body = waitElement("body");
+                try
+                {
+                    ParseCategories(body, ref advert);
+                    ParseBody(body, ref advert);
+                }
+                catch (Exception e)
+                {
+                    Logger.Warns.Error("\n\nОшибка анализа объявения:\n" + body.GetAttribute("outerHTML"), e);
+                    throw e;
+                }
+                return advert;
+            }
+            catch (Exception e)
+            {
+                Logger.Warns.Error("\n\nОшибка анализа объявения по адресу:\n" + url, e);
+                throw e;
+            }
         }
 
         /// <summary>
@@ -50,43 +54,59 @@ namespace AdSitesGrabber.Controller.Avito
         /// <param name="bodyElement">Элемент с телом объявления.</param>
         private void ParseTitle(IWebElement container, ref AvitoAdvert advert)
         {
-            IWebElement h1 = waitElement("h1.h1[itemprop=name]", container);
-            advert.Title = h1.Text;
+            try
+            {
+                IWebElement h1 = waitElement("div.title-info-main .title-info-title-text", container);
+                advert.Title = h1.GetAttribute("textContent");
+            }
+            catch (WebDriverTimeoutException e)
+            {
+                throw e;
+            }
         }
 
         /// <summary>
         /// Разбор категорий.
         /// </summary>
-        /// <param name="bodyElement">Элемент с телом объявления.</param>
+        /// <param name="body">Элемент с телом объявления.</param>
         /// <remarks>Метод имеет косяк в том, что Avito сокращает список элементов категорий, заменяя текст ссылки на "...". Пока нормально, но нужно помнить.</remarks>
-        private void ParseCategories(IWebElement container, ref AvitoAdvert advert)
+        private void ParseCategories(IWebElement body, ref AvitoAdvert advert)
         {
-            String cssSelector = ".b-catalog-breadcrumbs .breadcrumb-link";
-            waitElement(cssSelector, container);
-            IWebElements links = container.FindElements(By.CssSelector(cssSelector));
+            IWebElement select = waitElement("select#category", body);
+            String categoryTitle = select.GetAttribute("innerText");
             // Создаем новую категорию
             Category category = new Category();
-            foreach (IWebElement link in links)
-            {
-                // Добавляем новый элемент категории
-                category.Items.Add(link.Text);
-            }
+            // Добавляем новый элемент категории
+            category.Items.Add(categoryTitle);
             // Добавляем категорию в список
             advert.Categories.Add(category);
+        }
+
+        /// <summary>
+        /// Разбор навигационной цепочки.
+        /// </summary>
+        /// <param name="bodyElement">Элемент с телом объявления.</param>
+        /// <remarks>Метод имеет косяк в том, что Avito сокращает список элементов категорий, заменяя текст ссылки на "...". Пока нормально, но нужно помнить.</remarks>
+        private void ParseBreadcrumbs(IWebElement body, ref AvitoAdvert advert)
+        {
+            String cssSelector = ".b-catalog-breadcrumbs .breadcrumb-link";
+            waitElement(cssSelector, body);
+            IWebElements links = body.FindElements(By.CssSelector(cssSelector));
         }
 
         /// <summary>
         /// Разбор тела.
         /// </summary>
         /// <param name="bodyElement">Элемент с телом объявления.</param>
-        private void ParseBody(IWebElement container, ref AvitoAdvert advert)
+        private void ParseBody(IWebElement body, ref AvitoAdvert advert)
         {
-            IWebElement div = waitElement("div.g_92", container);
-            ParsePrice(div, ref advert);
-            ParseLocation(div, ref advert);
-            ParseText(div, ref advert);
-            ParseId(div, ref advert);
-            //ParseUpdateTime(div, ref advert);
+            IWebElement container = waitElement("div.item-view", body);
+            ParseTitle(container, ref advert);
+            ParsePrice(container, ref advert);
+            //ParseLocation(container, ref advert);
+            ParseText(container, ref advert);
+            //ParseId(container, ref advert);
+            //ParseUpdateTime(container, ref advert);
         }
 
         /// <summary>
@@ -109,7 +129,7 @@ namespace AdSitesGrabber.Controller.Avito
                 IWebElement elem = waitElement("#item_id", container);
                 advert.Id = Convert.ToUInt64(elem.Text);
             }
-            catch (NoSuchElementException)
+            catch (WebDriverTimeoutException)
             {
                 // Do nothing
             }
@@ -131,19 +151,9 @@ namespace AdSitesGrabber.Controller.Avito
         /// <param name="bodyElement">Элемент с телом объявления.</param>
         private void ParseText(IWebElement container, ref AvitoAdvert advert)
         {
-            try
-            {
-                IWebElement elem = waitElement("#desc_text > p", container);
-                advert.Text = elem.Text;
-                advert.HtmlText = elem.ToString();
-            }
-            catch (NoSuchElementException)
-            {
-                IWebElement elem = waitElement(".description.description-expanded", container);
-                advert.Text = elem.Text;
-                advert.HtmlText = elem.ToString();
-            }
-
+            IWebElement elem = waitElement("div.item-description", container);
+            advert.Text = elem.GetAttribute("textContent");
+            advert.HtmlText = elem.GetAttribute("outerHTML");
         }
 
         /// <summary>
@@ -154,20 +164,27 @@ namespace AdSitesGrabber.Controller.Avito
         {
             try
             {
-                IWebElement elem = waitElement(".description_Price .p_i_Price span[itemprop=Price]", container);
-                advert.Price.RawValue = elem.Text;
+                IWebElement elem = waitElement("#price-value", container);
+                String textContext = elem.GetAttribute("textContent");
+                advert.Price.RawValue = Regex.Replace(textContext, "\\D", "");
+                advert.Price.Value = Convert.ToDecimal(advert.Price.RawValue);
 
-                if (Regex.Match(advert.Price.RawValue, "руб.").Success)
+                // Ищем единицу измерения рубль
+                try
                 {
-                    advert.Price.Value = Convert.ToDecimal(Regex.Replace(advert.Price.RawValue, "руб.", ""));
-                    advert.Price.Unit = "руб.";
+                    IWebElement span = waitElement("span.font_arial-rub", elem);
+                    advert.Price.Unit = "рубль";
+                }
+                catch (WebDriverTimeoutException)
+                {
+                    // Do nothing
                 }
             }
             catch (FormatException e)
             {
                 Logger.Warns.Error("Ошибка разбора цены:\n" + advert.Price.RawValue, e);
             }
-            catch (NoSuchElementException)
+            catch (WebDriverTimeoutException)
             {
                 // Do nothing
             }

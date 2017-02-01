@@ -13,6 +13,12 @@ namespace AdSitesGrabber.Controller
     {
 
         /// <summary>
+        /// Таймаут ожидания веб-элемента после загрузки текста страницы в мс.
+        /// </summary>
+        public static int WaitTimeout { get; set; }
+
+
+        /// <summary>
         /// Освобождение.
         /// </summary>
         public virtual void Dispose()
@@ -30,7 +36,7 @@ namespace AdSitesGrabber.Controller
         protected static IWebElement waitElement(IWebDriver driver, By by, ISearchContext context = null)
         {
             context = context ?? driver;
-            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(3));
+            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromMilliseconds(WaitTimeout));
             return wait.Until(drv => context.FindElement(by));
         }
 

@@ -85,7 +85,7 @@ namespace AdSitesGrabber.Controller.Avito
                 IWebElement h3 = waitElement(".item-description-title", container);
                 advert.Title = h3.Text;
             }
-            catch (NoSuchElementException e)
+            catch (WebDriverTimeoutException e)
             {
                 throw new Exception("Заголовок объявления найден", e);
             }
@@ -102,7 +102,7 @@ namespace AdSitesGrabber.Controller.Avito
                 IWebElement a = waitElement(".item-description-title a", container);
                 advert.Url = a.GetAttribute("href");
             }
-            catch (NoSuchElementException e)
+            catch (WebDriverTimeoutException e)
             {
                 throw new Exception("Ссылка на объявление не найдена", e);
             }
@@ -117,7 +117,8 @@ namespace AdSitesGrabber.Controller.Avito
             try
             {
                 IWebElement div = waitElement("div.clearfix div.date", container);
-                advert.UpdateTimeStr = div.Text;
+                String innerText = div.GetAttribute("innerText");
+                advert.UpdateTimeStr = innerText;
 
                 // Готовим строку к разбору методом DateTime.Parse
                 string timeStr = advert.UpdateTimeStr;
@@ -145,7 +146,8 @@ namespace AdSitesGrabber.Controller.Avito
             try
             {
                 IWebElement about = waitElement("div.about", container);
-                advert.Price.RawValue = about.Text;
+                String textContent = about.GetAttribute("textContent");
+                advert.Price.RawValue = textContent;
             }
             finally
             {
@@ -164,7 +166,7 @@ namespace AdSitesGrabber.Controller.Avito
                 IWebElement img = waitElement(".b-photo img.photo-count-show", container);
                 advert.Media.TitleImgUrl = img.GetAttribute("src");
             }
-            catch (NoSuchElementException)
+            catch (WebDriverTimeoutException)
             {
                 // Do nothing
             }
@@ -179,16 +181,16 @@ namespace AdSitesGrabber.Controller.Avito
             try
             {
                 IWebElement i = waitElement(".b-photo .photo-icons i", container);
-                advert.Media.PhotosCount = Convert.ToInt16(i.Text);
+                String innerText = i.GetAttribute("innerText");
+                advert.Media.PhotosCount = Convert.ToInt16(innerText);
+            }
+            catch (WebDriverTimeoutException)
+            {
+                advert.Media.PhotosCount = (advert.Media.TitleImgUrl != null) ? 1 : 0;
             }
             catch (FormatException)
             {
-                if (advert.Media.TitleImgUrl != null)
-                    advert.Media.PhotosCount = 1;
-            }
-            catch (NoSuchElementException)
-            {
-                // Нет фотографий
+                advert.Media.PhotosCount = (advert.Media.TitleImgUrl != null) ? 1 : 0;
             }
         }
 

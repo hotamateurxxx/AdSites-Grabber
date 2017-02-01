@@ -28,6 +28,9 @@ namespace AdSitesGrabber
             [Option("count", DefaultValue = 10, HelpText = "Количество объявлений для загрузки.")]
             public int Count { get; set; }
 
+            [Option("waitTimeout", DefaultValue = 3000, HelpText = "Таймаут ожидания веб-элемента после загрузки текста страницы в мс.")]
+            public int WaitTimeout { get; set; }
+
         }
 
         static void Main(string[] args)
@@ -35,6 +38,8 @@ namespace AdSitesGrabber
 
             // Парсим входящие аргументы
             var options = CommandLine.Parser.Default.ParseArguments<Options>(args);
+            PageGrabber.WaitTimeout = options.Value.WaitTimeout;
+
             try
             {
                 // Запускаем конфигурацию log4net напрямую, потому что непонятно что будет отрабатывать раньше:

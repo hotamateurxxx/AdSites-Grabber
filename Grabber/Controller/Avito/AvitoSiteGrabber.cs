@@ -52,15 +52,14 @@ namespace AdSitesGrabber.Controller.Avito
                         try
                         {
                             Advert advertOnList = adverts[idx];
-                            driver.Navigate().GoToUrl(advertOnList.Url);
-                            IWebElement body = waitElement(driver, By.TagName("body"));
-                            Advert advertOnPage = grabber.Parse(body, ref advertOnList);
+                            Advert advertOnPage = grabber.Parse(advertOnList.Url);
                             adverts[idx] = advertOnPage;
                             Logger.Events.Info("\n\nДобавлено объявление со страницы:\n" + adverts[idx]);
                         }
                         catch (Exception e)
                         {
                             Logger.Warns.Error("\n\nОшибка добавления объявения со страницы:\n" + adverts[idx].Url, e);
+                            Console.ReadLine();
                         }
                     }
                 }
@@ -118,7 +117,8 @@ namespace AdSitesGrabber.Controller.Avito
                     }
                     catch (Exception e)
                     {
-                        Logger.Warns.Error("\n\nОшибка добавления объявления со списка:\n" + div.ToString(), e);
+                        Logger.Warns.Error("\n\nОшибка добавления объявления со списка:\n" + div.GetAttribute("outerHTML"), e);
+                        Console.ReadLine();
                     }
                 }
             }
