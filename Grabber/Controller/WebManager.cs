@@ -149,8 +149,6 @@ namespace AdSitesGrabber.Controller
         {
             // Закрытие драйверов
             CloseDrivers();
-            // Надо дать время на взаимодействие с браузером, а то не успеет закрыть
-            Thread.Sleep(1000);
             // Говорим не вызывать метод завершения объекта
             GC.SuppressFinalize(this);
         }
@@ -165,7 +163,9 @@ namespace AdSitesGrabber.Controller
             {
                 if (driverRec.driver is IWebDriver)
                 {
-                    driverRec.driver.Close();
+                    driverRec.driver.Quit();
+                    // Надо дать время на взаимодействие с браузером, а то не успеет закрыть
+                    Thread.Sleep(1000);
                     driverRec.driver.Dispose();
                     driverRec.driver = null;
                 }

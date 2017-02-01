@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 using AdSitesGrabber.Model;
 using AdSitesGrabber.Model.Avito;
 
@@ -72,8 +73,8 @@ namespace AdSitesGrabber.Controller.Avito
         /// <remarks>Метод имеет косяк в том, что Avito сокращает список элементов категорий, заменяя текст ссылки на "...". Пока нормально, но нужно помнить.</remarks>
         private void ParseCategories(IWebElement body, ref AvitoAdvert advert)
         {
-            IWebElement select = waitElement("select#category", body);
-            String categoryTitle = select.GetAttribute("innerText");
+            SelectElement select = new SelectElement(waitElement("select#category", body));
+            String categoryTitle = select.SelectedOption.Text;
             // Создаем новую категорию
             Category category = new Category();
             // Добавляем новый элемент категории
@@ -162,17 +163,18 @@ namespace AdSitesGrabber.Controller.Avito
         /// <param name="bodyElement">Элемент с телом объявления.</param>
         private void ParsePrice(IWebElement container, ref AvitoAdvert advert)
         {
+            IWebElement elem = waitElement("#price-value", container);
             try
             {
-                IWebElement elem = waitElement("#price-value", container);
                 String textContext = elem.GetAttribute("textContent");
-                advert.Price.RawValue = Regex.Replace(textContext, "\\D", "");
-                advert.Price.Value = Convert.ToDecimal(advert.Price.RawValue);
+                advert.Price.RawValue = textContext.Trim();
 
                 // Ищем единицу измерения рубль
                 try
                 {
                     IWebElement span = waitElement("span.font_arial-rub", elem);
+                    String numbersOnly = Regex.Replace(textContext, "\\D", "");
+                    advert.Price.Value = Convert.ToDecimal(numbersOnly);
                     advert.Price.Unit = "рубль";
                 }
                 catch (WebDriverTimeoutException)
@@ -182,7 +184,8 @@ namespace AdSitesGrabber.Controller.Avito
             }
             catch (FormatException e)
             {
-                Logger.Warns.Error("Ошибка разбора цены:\n" + advert.Price.RawValue, e);
+                Logger.Warns.Error("Ошибка разбора цены:\n" + advert.Price.RawValue + "\n" + elem.GetAttribute("outerHTML"), e);
+                Console.ReadLine();
             }
             catch (WebDriverTimeoutException)
             {
