@@ -65,6 +65,11 @@ namespace AdSitesGrabber.Model
         public Media Media { get; set; }
 
         /// <summary>
+        /// Контакт.
+        /// </summary>
+        public Contact Contact { get; set; }
+
+        /// <summary>
         /// Конструктор.
         /// </summary>
         public Advert()
@@ -73,6 +78,7 @@ namespace AdSitesGrabber.Model
             Location = new Location();
             Price = new Price();
             Media = new Media();
+            Contact = new Contact();
         }
 
         /// <summary>
@@ -98,6 +104,7 @@ namespace AdSitesGrabber.Model
                 + "\n" + "Категории: " + CategoriesStr
                 + "\n" + "Заголовок: " + Title 
                 + "\n" + "Цена: " + Price
+                + "\n" + "Контакт: " + ("\n" + Contact).Replace("\n", "\n\t")
                 + "\n" + "Обновлено: " + UpdateTime.ToString()
             );
         }

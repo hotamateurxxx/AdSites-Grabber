@@ -21,36 +21,29 @@ namespace AdSitesGrabber.Model
         /// <summary>
         /// Регион.
         /// </summary>
-        public virtual string Region { get; set; }
+        public virtual String Region { get; set; }
+
+        /// <summary>
+        /// Город.
+        /// </summary>
+        public virtual String City { get; set; }
 
         /// <summary>
         /// Район.
         /// </summary>
-        public virtual string District { get; set; }
-
-        /// <summary>
-        /// Адрес.
-        /// </summary>
-        public virtual string Address { get; set; }
-
-        /// <summary>
-        /// Конструктор.
-        /// </summary>
-        public Location()
-        {
-        }
+        public virtual String District { get; set; }
 
         /// <summary>
         /// Представление в строке.
         /// </summary>
         /// <returns>Представление в строке.</returns>
-        public override string ToString()
+        public override String ToString()
         {
             return
             (
                          "Регион: " + Region
+                + "\n" + "Город: " + District
                 + "\n" + "Район: " + District
-                + "\n" + "Адрес: " + Address
             );
         }
 

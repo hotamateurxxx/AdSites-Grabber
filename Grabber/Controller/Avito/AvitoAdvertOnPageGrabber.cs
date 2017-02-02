@@ -107,6 +107,33 @@ namespace AdSitesGrabber.Controller.Avito
             //ParseLocation(container, ref advert);
             ParseText(container, ref advert);
             ParseSubtitle(container, ref advert);
+            ParseActions(container, ref advert);
+            ParseSeller(container, ref advert);
+        }
+
+        private void ParseActions(IWebElement container, ref AvitoAdvert advert)
+        {
+            IWebElement elem = waitElement("div.item-actions", container);
+            IWebElement elemPhone = waitElement("div.item-phone-number", elem);
+            IWebElement button = waitElement("button", elemPhone);
+            button.Click();
+            ParsePopupPhone(ref advert);
+        }
+
+        /// <summary>
+        /// Разбор всплывающего окна с телефоном.
+        /// </summary>
+        /// <param name="advert">Объявление.</param>
+        private void ParsePopupPhone(ref AvitoAdvert advert)
+        {
+            IWebElement popupContent = waitElement("div.js-item-phone-popup-content");
+            String phoneSrc = waitElement("div.item-phone-big-number img", popupContent).GetAttribute("src");
+            advert.Contact.Phone.Src = phoneSrc;
+        }
+
+        private void ParseSeller(IWebElement container, ref AvitoAdvert advert)
+        {
+            IWebElement elem = waitElement("div.seller-info", container);
         }
 
         /// <summary>

@@ -106,8 +106,10 @@
     <Compile Include="Model\Category.cs" />
     <Compile Include="Controller\Avito\AvitoSiteGrabber.cs" />
     <Compile Include="Controller\SiteGrabber.cs" />
+    <Compile Include="Model\Contact.cs" />
     <Compile Include="Model\Location.cs" />
     <Compile Include="Model\Media.cs" />
+    <Compile Include="Model\Phone.cs" />
     <Compile Include="Model\Price.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
