@@ -25,6 +25,21 @@ namespace AdSitesGrabber.Model
         public virtual String Address { get; set; }
 
         /// <summary>
+        /// Продавец или контактное лицо.
+        /// </summary>
+        public virtual String Person { get; set; }
+
+        /// <summary>
+        /// Компания.
+        /// </summary>
+        public virtual String Company { get; set; }
+
+        /// <summary>
+        /// Ссылка на профиль.
+        /// </summary>
+        public virtual String Url { get; set; }
+
+        /// <summary>
         /// Представление в строке.
         /// </summary>
         /// <returns>Представление в строке.</returns>

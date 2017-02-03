@@ -1,5 +1,6 @@
 ﻿using AdSitesGrabber.Controller;
 using AdSitesGrabber.Controller.Avito;
+using AdSitesGrabber.Extensions;
 using CommandLine;
 using log4net.Config;
 using System;
@@ -38,7 +39,7 @@ namespace AdSitesGrabber
 
             // Парсим входящие аргументы
             var options = CommandLine.Parser.Default.ParseArguments<Options>(args);
-            PageGrabber.WaitTimeout = options.Value.WaitTimeout;
+            IWebDriverExtension.WaitTimeout = options.Value.WaitTimeout;
 
             try
             {

@@ -9,8 +9,8 @@
     </id>
 
     <property name="Region" column="region"/>
-    <property name="Address" column="Address"/>
-    
+    <property name="District" column="district"/>
+
   </class>
 
 </hibernate-mapping>

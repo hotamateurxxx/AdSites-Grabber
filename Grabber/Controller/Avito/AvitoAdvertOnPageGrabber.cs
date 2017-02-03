@@ -4,6 +4,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using AdSitesGrabber.Model;
 using AdSitesGrabber.Model.Avito;
+using AdSitesGrabber.Extensions;
 
 // Псевдонимы
 using IWebElements = System.Collections.ObjectModel.ReadOnlyCollection<OpenQA.Selenium.IWebElement>;
@@ -30,16 +31,8 @@ namespace AdSitesGrabber.Controller.Avito
                 advert.Url = url;
                 Driver.Navigate().GoToUrl(advert.Url);
                 IWebElement body = waitElement("body");
-                try
-                {
-                    ParseCategories(body, ref advert);
-                    ParseBody(body, ref advert);
-                }
-                catch (Exception e)
-                {
-                    Logger.Warns.Error("\n\nОшибка анализа объявения:\n" + body.GetAttribute("outerHTML"), e);
-                    throw e;
-                }
+                ParseCategories(body, ref advert);
+                ParseBody(body, ref advert);
                 return advert;
             }
             catch (Exception e)
@@ -107,10 +100,15 @@ namespace AdSitesGrabber.Controller.Avito
             //ParseLocation(container, ref advert);
             ParseText(container, ref advert);
             ParseSubtitle(container, ref advert);
-            ParseActions(container, ref advert);
             ParseSeller(container, ref advert);
+            ParseActions(container, ref advert);
         }
 
+        /// <summary>
+        /// Разбор раздела действий (области с кнопкой "Показать телефон").
+        /// </summary>
+        /// <param name="container">Контейнер объявления.</param>
+        /// <param name="advert">Объявление.</param>
         private void ParseActions(IWebElement container, ref AvitoAdvert advert)
         {
             IWebElement elem = waitElement("div.item-actions", container);
@@ -126,11 +124,65 @@ namespace AdSitesGrabber.Controller.Avito
         /// <param name="advert">Объявление.</param>
         private void ParsePopupPhone(ref AvitoAdvert advert)
         {
+            // Содержимое всплывающего окна
             IWebElement popupContent = waitElement("div.js-item-phone-popup-content");
-            String phoneSrc = waitElement("div.item-phone-big-number img", popupContent).GetAttribute("src");
-            advert.Contact.Phone.Src = phoneSrc;
+
+            // Телефон продавца картинкой
+            advert.Contact.Phone.Src = waitAttrValue("div.item-phone-big-number img", "src", popupContent);
+
+            // Раздел информации о продавце
+            IWebElement divSeller = popupContent.FindElement("div.seller-info");
+
+            // Ссылка на профиль продавца (ее может не быть)
+            try
+            {
+                advert.Contact.Url = divSeller.FindAttrValue("div.seller-info-avatar a", "href").Trim();
+            }
+            catch (NoSuchElementException)
+            {
+                try
+                {
+                    advert.Contact.Url = divSeller.FindAttrValue("div.seller-info-name a", "href").Trim();
+                }
+                catch (NoSuchElementException e)
+                {
+                    throw e;
+                }
+            }
+            
+            IWebElements divProps = divSeller.FindElements(By.CssSelector("seller-info-prop"));
+            foreach (IWebElement divProp in divProps)
+            {
+                String label = divProp.FindAttrValue("div.seller-info-label", "textContent").Trim();
+                String value;
+                switch (label)
+                {
+                    case "Компания":
+                    case "Магазин":
+                    case "Агентство":
+                    case "Работодатель":
+                        value = divProp.FindAttrValue("div.seller-info-name", "textContent").Trim();
+                        advert.Contact.Company = value;
+                        break;
+
+                    case "Контактное лицо":
+                        value = divProp.FindAttrValue("div.seller-info-value", "textContent").Trim();
+                        advert.Contact.Person = value;
+                        break;
+
+                    case "Адрес":
+                        value = divProp.FindAttrValue("div.seller-info-value", "textContent").Trim();
+                        advert.Contact.Address = value;
+                        break;
+                }
+            }
         }
 
+        /// <summary>
+        /// Разбор раздела информации о продавце (под кнопкой "Показать телефон").
+        /// </summary>
+        /// <param name="container">Контейнер объявления.</param>
+        /// <param name="advert">Объявление.</param>
         private void ParseSeller(IWebElement container, ref AvitoAdvert advert)
         {
             IWebElement elem = waitElement("div.seller-info", container);
@@ -139,7 +191,8 @@ namespace AdSitesGrabber.Controller.Avito
         /// <summary>
         /// Разбор идентификатора объявления.
         /// </summary>
-        /// <param name="container">Элемент с телом объявления.</param>
+        /// <param name="container">Контейнер объявления.</param>
+        /// <param name="advert">Объявление.</param>
         private void ParseSubtitle(IWebElement container, ref AvitoAdvert advert)
         {
             try

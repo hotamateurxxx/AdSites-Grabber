@@ -2,6 +2,7 @@
 using OpenQA.Selenium;
 using AdSitesGrabber.Model;
 using AdSitesGrabber.Model.Avito;
+using AdSitesGrabber.Extensions;
 
 // Псевдонимы
 using IWebElements = System.Collections.ObjectModel.ReadOnlyCollection<OpenQA.Selenium.IWebElement>;
@@ -77,7 +78,7 @@ namespace AdSitesGrabber.Controller.Avito
         {
             try
             {
-                IWebElement link = waitElement(driver, By.LinkText(Region));
+                IWebElement link = driver.WaitElement(By.LinkText(Region));
                 link.Click();
             }
             catch (WebDriverTimeoutException e)
@@ -93,10 +94,14 @@ namespace AdSitesGrabber.Controller.Avito
         /// <param name="driver">Веб-драйвер с загруженной страницей со списком объявлений.</param>
         protected void processPageAdverts(IWebDriver driver)
         {
+            // Ждем загрузки jQuery
+            IWebElement element = (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return $('body')[0]");
+            Console.WriteLine("element.id == " + element.GetAttribute("id"));
+
             String cssSelector = ".catalog-list div.item_table";
             try
             {
-                waitElement(driver, By.CssSelector(cssSelector));
+                driver.WaitElement(By.CssSelector(cssSelector));
             }
             catch (WebDriverTimeoutException e)
             {
@@ -106,18 +111,20 @@ namespace AdSitesGrabber.Controller.Avito
             IWebElements divs = driver.FindElements(By.CssSelector(cssSelector));
             using (AvitoAdvertOnListGrabber grabber = new AvitoAdvertOnListGrabber(driver))
             {
-                foreach (IWebElement div in divs)
+                //foreach (IWebElement div in divs)
+                for (int i = 0; i < divs.Count; i++)
                 {
+                    IWebElement div = divs[i];
                     try
                     {
                         AvitoAdvert advert = grabber.Parse(div);
                         advert.Location.Region = Region;
                         adverts.Add(advert);
-                        Logger.Events.Info("\n\nОбъявление со списка добавлено:\n" + advert);
+                        Logger.Events.Info(String.Format("\n\nОбъявление со списка добавлено {0}/{1}:", i, divs.Count) + "\n" + advert);
                     }
                     catch (Exception e)
                     {
-                        Logger.Warns.Error("\n\nОшибка добавления объявления со списка:\n" + div.GetAttribute("outerHTML"), e);
+                        Logger.Warns.Error(String.Format("\n\nОшибка добавления объявления со списка {0}/{1}:", i, divs.Count) + "\n" + div.ToStringExt(), e);
                         Console.ReadLine();
                     }
                 }

@@ -14,7 +14,7 @@ go
 create table [Locations] (
     [recId]     uniqueidentifier not null rowguidcol default newid(),
     [region]    nvarchar(256) not null,
-    [address]   nvarchar(256) not null,
+    [district]  nvarchar(256) not null,
     constraint [PK_Locations] primary key ([recId])
 )
 go
