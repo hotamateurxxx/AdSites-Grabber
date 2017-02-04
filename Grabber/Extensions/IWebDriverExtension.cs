@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Support.Extensions;
 using OpenQA.Selenium.Support.UI;
 using System;
 
@@ -42,37 +43,15 @@ namespace AdSitesGrabber.Extensions
         /// Ждать окончания загрузки JavaScript и jQuery.
         /// </summary>
         /// <param name="driver">Веб-драйвер.</param>
-        /// <returns>Завершена ли загрузка.</returns>
-        public static Boolean WaitForJSandJQueryToLoad(this IWebDriver driver)
+        public static void WaitForJSandJQueryToLoad(this IWebDriver driver)
         {
-
-            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromMilliseconds(WaitTimeout));
-
-            // wait for jQuery to load
-            ExpectedConditions<Boolean> jQueryLoad = new ExpectedConditions<Boolean>() {
-              @Override
-              public Boolean apply(WebDriver driver) {
-                try {
-                  return ((Long)((JavascriptExecutor)getDriver()).executeScript("return jQuery.active") == 0);
-                }
-                catch (Exception e) {
-                  // no jQuery present
-                  return true;
-                }
-              }
-            };
-
-            // wait for Javascript to load
-            ExpectedConditions<Boolean> jsLoad = new ExpectedConditions<Boolean>() {
-              @Override
-              public Boolean apply(WebDriver driver) {
-                return ((JavascriptExecutor)getDriver()).executeScript("return document.readyState")
-                .toString().equals("complete");
-              }
-            };
-
-          return wait.until(jQueryLoad) && wait.until(jsLoad);
-        
+            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
+            wait.Until(
+                drv => ((Int64) (drv as IJavaScriptExecutor).ExecuteScript("return jQuery.active;")).Equals(0)
+            );
+            wait.Until(
+                drv => ((String) (drv as IJavaScriptExecutor).ExecuteScript("return document.readyState;").ToString()).Equals("complete")
+            );
         }
 
     }

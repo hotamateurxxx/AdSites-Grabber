@@ -8,8 +8,15 @@ namespace AdSitesGrabber.Controller
     class AdvertGrabber : PageGrabber
     {
 
+        /// <summary>
+        /// Веб-драйвер.
+        /// </summary>
         public IWebDriver Driver { get; set; }
 
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
+        /// <param name="driver">Вэб-драйвер.</param>
         public AdvertGrabber(IWebDriver driver) : 
             base()
         {

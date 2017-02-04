@@ -40,6 +40,14 @@ namespace AdSitesGrabber.Model
         public virtual String Url { get; set; }
 
         /// <summary>
+        /// Конструктор.
+        /// </summary>
+        public Contact()
+        {
+            Phone = new Phone();
+        }
+
+        /// <summary>
         /// Представление в строке.
         /// </summary>
         /// <returns>Представление в строке.</returns>
@@ -47,7 +55,7 @@ namespace AdSitesGrabber.Model
         {
             return
             (
-                         "Телефон: " + Phone
+                         "Телефон: " + ("\n" + Phone).Replace("\n", "\n\t")
                 + "\n" + "Адрес: " + Address
             );
         }

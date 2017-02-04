@@ -43,23 +43,28 @@ namespace AdSitesGrabber.Controller.Avito
                 driver.Navigate().GoToUrl(Url);
                 // Выбираем город
                 selectLocation(driver);
+                // Ждем окончания загрузки JS и jQuery
+                driver.WaitForJSandJQueryToLoad();
                 // Обрабатываем объявления на текущей странице
                 processPageAdverts(driver);
+                int count = Math.Min(execParams.Count, adverts.Count);
                 using (AvitoAdvertOnPageGrabber grabber = new AvitoAdvertOnPageGrabber(driver))
                 {
                     // Когда закончили читать объявления в списках - заходим по ссылке на каждое объявление и дочитываем его
-                    for (; idx < Math.Min(execParams.Count, adverts.Count); idx++)
+                    for (; idx < count; idx++)
                     {
                         try
                         {
                             Advert advertOnList = adverts[idx];
                             Advert advertOnPage = grabber.Parse(advertOnList.Url);
                             adverts[idx] = advertOnPage;
-                            Logger.Events.Info("\n\nДобавлено объявление со страницы:\n" + adverts[idx]);
+                            String msg = String.Format("\n\nДобавлено объявление со страницы {0}/{1}:", idx + 1, count) + "\n" + adverts[idx];
+                            Logger.Events.Info(msg);
+                            Console.WriteLine(msg);
                         }
                         catch (Exception e)
                         {
-                            Logger.Warns.Error("\n\nОшибка добавления объявения со страницы:\n" + adverts[idx].Url, e);
+                            Logger.Warns.Error(String.Format("\n\nОшибка добавления объявения со страницы {0}/{1}:", idx + 1, count) + "\n" + adverts[idx].Url, e);
                             Console.ReadLine();
                         }
                     }
@@ -94,24 +99,12 @@ namespace AdSitesGrabber.Controller.Avito
         /// <param name="driver">Веб-драйвер с загруженной страницей со списком объявлений.</param>
         protected void processPageAdverts(IWebDriver driver)
         {
-            // Ждем загрузки jQuery
-            IWebElement element = (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return $('body')[0]");
-            Console.WriteLine("element.id == " + element.GetAttribute("id"));
-
             String cssSelector = ".catalog-list div.item_table";
-            try
-            {
-                driver.WaitElement(By.CssSelector(cssSelector));
-            }
-            catch (WebDriverTimeoutException e)
-            {
-                throw new Exception("На странице не найдено объявлений.", e);
-            }
+            driver.WaitElement(cssSelector);
+            IWebElements divs = driver.FindElements(cssSelector);
 
-            IWebElements divs = driver.FindElements(By.CssSelector(cssSelector));
             using (AvitoAdvertOnListGrabber grabber = new AvitoAdvertOnListGrabber(driver))
             {
-                //foreach (IWebElement div in divs)
                 for (int i = 0; i < divs.Count; i++)
                 {
                     IWebElement div = divs[i];
@@ -120,11 +113,13 @@ namespace AdSitesGrabber.Controller.Avito
                         AvitoAdvert advert = grabber.Parse(div);
                         advert.Location.Region = Region;
                         adverts.Add(advert);
-                        Logger.Events.Info(String.Format("\n\nОбъявление со списка добавлено {0}/{1}:", i, divs.Count) + "\n" + advert);
+                        String msg = String.Format("\n\nОбъявление со списка добавлено {0}/{1}:", i + 1, divs.Count) + "\n" + advert;
+                        Logger.Events.Info(msg);
+                        Console.WriteLine(msg);
                     }
                     catch (Exception e)
                     {
-                        Logger.Warns.Error(String.Format("\n\nОшибка добавления объявления со списка {0}/{1}:", i, divs.Count) + "\n" + div.ToStringExt(), e);
+                        Logger.Warns.Error(String.Format("\n\nОшибка добавления объявления со списка {0}/{1}:", i + 1, divs.Count) + "\n" + div.ToStringExt(), e);
                         Console.ReadLine();
                     }
                 }

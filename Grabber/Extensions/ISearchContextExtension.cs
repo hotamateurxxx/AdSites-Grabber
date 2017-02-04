@@ -2,6 +2,9 @@
 using OpenQA.Selenium.Support.UI;
 using System;
 
+// Псевдонимы
+using IWebElements = System.Collections.ObjectModel.ReadOnlyCollection<OpenQA.Selenium.IWebElement>;
+
 namespace AdSitesGrabber.Extensions
 {
 
@@ -32,6 +35,17 @@ namespace AdSitesGrabber.Extensions
         public static String FindAttrValue(this ISearchContext context, String cssSelector, String attrName)
         {
             return FindElement(context, cssSelector).GetAttribute(attrName);
+        }
+
+        /// <summary>
+        /// Поиск элементов по CSS-селектору.
+        /// </summary>
+        /// <param name="context">Контекст поиска.</param>
+        /// <param name="cssSelector">Селектор.</param>
+        /// <returns>Элемент.</returns>
+        public static IWebElements FindElements(this ISearchContext context, String cssSelector)
+        {
+            return context.FindElements(By.CssSelector(cssSelector));
         }
 
     }

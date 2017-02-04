@@ -1,17 +1,23 @@
-﻿using System;
-using System.Text.RegularExpressions;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Support.Extensions;
-using OpenQA.Selenium.Support.UI;
+﻿using AdSitesGrabber.Extensions;
 using AdSitesGrabber.Model;
 using AdSitesGrabber.Model.Avito;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
+using System;
 
 namespace AdSitesGrabber.Controller.Avito
 {
 
+    /// <summary>
+    /// Граббер объявления со списка на странице.
+    /// </summary>
     class AvitoAdvertOnListGrabber : AvitoAdvertGrabber
     {
 
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
+        /// <param name="driver">Вэб-драйвер.</param>
         public AvitoAdvertOnListGrabber(IWebDriver driver) : 
             base(driver)
         {
@@ -20,6 +26,7 @@ namespace AdSitesGrabber.Controller.Avito
         /// <summary>
         /// Разбор элемента с объявлением.
         /// </summary>
+        /// <param name="container">Контейнер объявления.</param>
         /// <returns>Объявление в контейнере.</returns>
         public AvitoAdvert Parse(IWebElement container)
         {
@@ -39,19 +46,40 @@ namespace AdSitesGrabber.Controller.Avito
             ParseDesc(container, ref advert);
 
             // Заголовок
-            ParseTitle(container, advert);
+            ParseTitle(container, ref advert);
 
             // Ссылка на объявление
-            ParseUrl(container, advert);
+            ParseUrl(container, ref advert);
 
             // Цена
-            ParsePrice(container, advert);
+            try
+            {
+                ParsePrice(container, ref advert);
+            }
+            catch (Exception)
+            {
+                // Do nothing
+            }
 
             // Заглавная фотография
-            ParseTitlePhoto(container, advert);
+            try
+            {
+                ParseTitlePhoto(container, ref advert);
+            }
+            catch (Exception)
+            {
+                // Do nothing
+            }
 
             // Количество фотографий
-            ParsePhotosCount(container, advert);
+            try
+            {
+                ParsePhotosCount(container, ref advert);
+            }
+            catch (Exception)
+            {
+                advert.Media.PhotosCount = (advert.Media.TitleImgUrl != null) ? 1 : 0;
+            }
 
             return advert;
 
@@ -60,10 +88,10 @@ namespace AdSitesGrabber.Controller.Avito
         /// <summary>
         /// Разбор региона.
         /// </summary>
-        /// <remarks>Метод имеет косяк в том, что Avito сокращает список элементов категорий, заменяя текст ссылки на "...". Пока нормально, но нужно помнить.</remarks>
+        /// <param name="advert">Объявление.</param>
         private void ParseRegion(ref AvitoAdvert advert)
         {
-            SelectElement select = new SelectElement(waitElement("select#region"));
+            SelectElement select = new SelectElement(Driver.FindElement("select#region"));
             String regionTitle = select.SelectedOption.Text.Trim();
             advert.Location.Region = regionTitle;
         }
@@ -75,25 +103,7 @@ namespace AdSitesGrabber.Controller.Avito
         /// <param name="advert">Объявление.</param>
         private void ParseDesc(IWebElement container, ref AvitoAdvert advert)
         {
-            /*
-    <div class="description">
- 
-    <h3 class="title item-description-title"> <a class="item-description-title-link" href="/izhevsk/planshety_i_elektronnye_knigi/romoss_sense_6_20000_mah_novyy_910493586" title="Romoss Sense 6 20000 mAh новый в Ижевске">
-    Romoss Sense 6 20000 mAh новый
-    </a>
-     </h3> <div class="about">
-    2 500 руб.       </div>
-  
-    <div class="data">
-         <p>Планшеты и электронные книги</p>
-    <p>р-н Первомайский</p>
-     <div class="clearfix ">
-    <div class="date c-2">
-    Сегодня 14:43
-    </div>
-    </div> </div> </div>
-            */
-            IWebElement descElement = waitElement(".description", container);
+            IWebElement descElement = container.FindElement(".description");
             ParseCategories(descElement, ref advert);
             ParseUpdateTime(descElement, ref advert);
         }
@@ -101,8 +111,8 @@ namespace AdSitesGrabber.Controller.Avito
         /// <summary>
         /// Разбор категорий.
         /// </summary>
+        /// <param name="container">Контейнер объявления.</param>
         /// <param name="advert">Объявление.</param>
-        /// <remarks>Видимо, пока писал на Avito убрали отображение категорий в списке оъявлений.</remarks>
         private void ParseCategories(IWebElement container, ref AvitoAdvert advert)
         {
             IJavaScriptExecutor js = Driver as IJavaScriptExecutor;
@@ -120,10 +130,11 @@ namespace AdSitesGrabber.Controller.Avito
         /// <summary>
         /// Разбор штампа времени.
         /// </summary>
+        /// <param name="container">Контейнер объявления.</param>
         /// <param name="advert">Объявление.</param>
         private void ParseUpdateTime(IWebElement container, ref AvitoAdvert advert)
         {
-            IWebElement div = waitElement("div.clearfix div.date", container);
+            IWebElement div = container.FindElement("div.clearfix div.date");
             String inputStr = div.GetAttribute("innerText");
             advert.UpdateTimeStr = inputStr;
             advert.UpdateTime = ExtractDateTime(inputStr);
@@ -132,78 +143,58 @@ namespace AdSitesGrabber.Controller.Avito
         /// <summary>
         /// Разбор заголовка объявления.
         /// </summary>
+        /// <param name="container">Контейнер объявления.</param>
         /// <param name="advert">Объявление.</param>
-        private void ParseTitle(IWebElement container, AvitoAdvert advert)
+        private void ParseTitle(IWebElement container, ref AvitoAdvert advert)
         {
-            IWebElement h3 = waitElement(".item-description-title", container);
+            IWebElement h3 = container.FindElement(".item-description-title");
             advert.Title = h3.GetAttribute("innerText");
         }
 
         /// <summary>
         /// Разбор ссылки на страницу объявления.
         /// </summary>
+        /// <param name="container">Контейнер объявления.</param>
         /// <param name="advert">Объявление.</param>
-        private void ParseUrl(IWebElement container, AvitoAdvert advert)
+        private void ParseUrl(IWebElement container, ref AvitoAdvert advert)
         {
-            IWebElement a = waitElement(".item-description-title a", container);
+            IWebElement a = container.FindElement(".item-description-title a");
             advert.Url = a.GetAttribute("href");
         }
 
         /// <summary>
-        /// Цена.
+        /// Разбор цены.
         /// </summary>
+        /// <param name="container">Контейнер объявления.</param>
         /// <param name="advert">Объявление.</param>
-        private void ParsePrice(IWebElement container, AvitoAdvert advert)
+        private void ParsePrice(IWebElement container, ref AvitoAdvert advert)
         {
-            try
-            {
-                IWebElement about = waitElement("div.about", container);
-                String textContent = about.GetAttribute("innerText");
-                advert.Price.RawValue = textContent.Trim();
-            }
-            catch (WebDriverTimeoutException)
-            {
-                // Do nothing
-            }
+            IWebElement about = container.FindElement("div.about");
+            String textContent = about.GetAttribute("innerText");
+            advert.Price.RawValue = textContent.Trim();
         }
 
         /// <summary>
         /// Заглавная фотография.
         /// </summary>
+        /// <param name="container">Контейнер объявления.</param>
         /// <param name="advert">Объявление.</param>
-        private void ParseTitlePhoto(IWebElement container, AvitoAdvert advert)
+        private void ParseTitlePhoto(IWebElement container, ref AvitoAdvert advert)
         {
-            try
-            {
-                IWebElement img = waitElement(".b-photo img.photo-count-show", container);
-                advert.Media.TitleImgUrl = img.GetAttribute("src");
-            }
-            catch (WebDriverTimeoutException)
-            {
-                // Do nothing
-            }
+            IWebElement img = container.FindElement(".b-photo img.photo-count-show");
+            advert.Media.TitleImgUrl = img.GetAttribute("src");
         }
 
         /// <summary>
         /// Количество фотографий.
         /// </summary>
+        /// <param name="container">Контейнер объявления.</param>
         /// <param name="advert">Объявление.</param>
-        private void ParsePhotosCount(IWebElement container, AvitoAdvert advert)
+        private void ParsePhotosCount(IWebElement container, ref AvitoAdvert advert)
         {
-            try
-            {
-                IWebElement i = waitElement(".b-photo .photo-icons i", container);
-                String innerText = i.GetAttribute("innerText");
-                advert.Media.PhotosCount = Convert.ToInt16(innerText);
-            }
-            catch (WebDriverTimeoutException)
-            {
-                advert.Media.PhotosCount = (advert.Media.TitleImgUrl != null) ? 1 : 0;
-            }
-            catch (FormatException)
-            {
-                advert.Media.PhotosCount = (advert.Media.TitleImgUrl != null) ? 1 : 0;
-            }
+            IWebElement i = container.FindElement(".b-photo .photo-icons i");
+            String innerText = i.GetAttribute("innerText");
+            advert.Media.PhotosCount = Convert.ToInt16(innerText);
         }
 
     }
