@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using AdSitesGrabber.Model;
-
+﻿using AdSitesGrabber.Model;
+using System;
+using System.Collections.Generic;
 
 namespace AdSitesGrabber.Controller
 {
@@ -8,8 +8,16 @@ namespace AdSitesGrabber.Controller
     /// <summary>
     /// Абстрастный граббер сайта.
     /// </summary>
-    abstract class SiteGrabber : PageGrabber
+    abstract class SiteGrabber : IDisposable
     {
+
+        /// <summary>
+        /// Освобождение.
+        /// </summary>
+        public virtual void Dispose()
+        {
+            // do nothing yet
+        }
 
         /// <summary>
         /// Параметры запуска граббера.

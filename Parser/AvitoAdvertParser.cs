@@ -6,10 +6,18 @@ using System.Text.RegularExpressions;
 
 namespace AdSitesGrabber.Controller.Avito
 {
-    abstract class AvitoAdvertGrabber : AdvertGrabber
+
+    /// <summary>
+    /// Парсер объявления.
+    /// </summary>
+    public abstract class AvitoAdvertParser : AdvertParser
     {
 
-        public AvitoAdvertGrabber(IWebDriver driver) : 
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
+        /// <param name="driver">Вэб-драйвер.</param>
+        public AvitoAdvertParser(IWebDriver driver) : 
             base(driver)
         {
         }

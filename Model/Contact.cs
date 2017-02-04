@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace AdSitesGrabber.Model
 {
-    class Contact
+
+    /// <summary>
+    /// Контакт.
+    /// </summary>
+    public class Contact
     {
 
         /// <summary>

@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 using AdSitesGrabber.Controller;
-using AdSitesGrabber.Model;
 
 using CommandLine;
 using CommandLine.Text;

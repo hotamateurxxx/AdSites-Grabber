@@ -1,0 +1,153 @@
+﻿use [master]
+go
+
+drop database [AdSitesGrabber]
+go
+
+create database [AdSitesGrabber]
+go
+
+use [AdSitesGrabber]
+go
+
+-- Локации
+create table [Locations] (
+    [recId]     uniqueidentifier not null rowguidcol default newid(),
+    [region]    nvarchar(256) not null,
+    [district]  nvarchar(256) not null,
+    constraint [PK_Locations] primary key ([recId])
+)
+go
+
+-- Цены
+create table [Prices] (
+    [recId]     uniqueidentifier not null rowguidcol default newid(),
+    [rawValue]  nvarchar(256) not null,
+    [unit]		nvarchar(256) not null,
+    [value]		decimal(9) not null,
+    constraint [PK_Prices] primary key ([recId])
+)
+go
+
+-- Категории
+create table [Categories] (
+    [recId]     uniqueidentifier not null rowguidcol default newid(),
+    constraint [PK_Categories] primary key ([recId])
+)
+go
+
+-- Элементы категрии
+create table [CategoryItems] (
+    [recId]     uniqueidentifier not null rowguidcol default newid(),
+    [category]  uniqueidentifier not null,
+    [order]     int null,
+    [name]      nvarchar(256) not null,
+    constraint [PK_CategoryItems] primary key ([recId]),
+    constraint [FK_CategoryItems_category] foreign key ([category]) 
+        references [Categories] ([recId])
+        on delete cascade
+        on update cascade,
+)
+go
+
+-- Контакты
+create table [Contacts] (
+    [recId]     uniqueidentifier not null rowguidcol default newid(),
+    constraint [PK_Contacts] primary key ([recId])
+)
+go
+
+-- Элементы контактов
+create table [ContactItems] (
+    [recId]     uniqueidentifier not null rowguidcol default newid(),
+    [contact]   uniqueidentifier not null,
+    [order]     int not null,
+    [type]      nvarchar(256) not null,
+    [name]      nvarchar(256) not null,
+    constraint [PK_ContactItems] primary key ([recId]),
+    constraint [FK_ContactItems_contact] foreign key ([contact]) 
+        references [Contacts] ([recId])
+        on delete cascade
+        on update cascade
+)
+go
+
+-- Объявления
+create table [Adverts] (
+    [recId]         uniqueidentifier not null rowguidcol default newid(),
+    [url]           nvarchar(256) not null,
+    [title]         nvarchar(256) not null,
+    [location]      uniqueidentifier null,
+    [price]         uniqueidentifier null,
+    [updated]       datetime null,
+    constraint [PK_Adverts] primary key ([recId]),
+    constraint [FK_Adverts_location] foreign key ([location]) 
+        references [Locations] ([recId])
+        on delete cascade
+        on update cascade,
+    constraint [FK_Adverts_Price] foreign key ([Price])
+        references [Prices] ([recId])
+        on delete cascade
+        on update cascade,
+    constraint [UK_Adverts_url] unique ([url])
+)
+go
+
+-- Тексты объявлений
+create table [Texts] (
+    [advert]        uniqueidentifier not null,
+    [html]          ntext not null,
+    constraint [PK_Texts] primary key ([advert]),
+    constraint [FK_Texts_advert] foreign key ([advert]) 
+        references [Adverts] ([recId])
+        on delete cascade
+        on update cascade
+)
+go
+
+-- Категории объявления
+create table [AdvertCategories] (
+    [recId]     uniqueidentifier not null rowguidcol default newid(),
+    [advert]    uniqueidentifier not null,
+    [category]  uniqueidentifier not null,
+    constraint [PK_AdvertCategories] primary key ([recId]),
+    constraint [FK_AdvertCategories_category] foreign key ([category]) 
+        references [Categories] ([recId])
+        on delete cascade
+        on update cascade,
+    constraint [FK_AdvertCategories_advert] foreign key ([advert]) 
+        references [Adverts] ([recId])
+        on delete cascade
+        on update cascade
+)
+go
+
+-- Контакты объявления
+create table [AdvertContacts] (
+    [recId]     uniqueidentifier not null rowguidcol default newid(),
+    [advert]    uniqueidentifier not null,
+    [contact]   uniqueidentifier not null
+    constraint [PK_AdvertContacts] primary key ([recId]),
+    constraint [FK_AdvertContacts_contact] foreign key ([contact]) 
+        references [Contacts] ([recId])
+        on delete cascade
+        on update cascade,
+    constraint [FK_AdvertContacts_advert] foreign key ([advert]) 
+        references [Adverts] ([recId])
+        on delete cascade
+        on update cascade
+)
+go
+
+exec sp_addlogin 
+    @loginame = 'grabberLogin',
+    @passwd = 'grabberPass'
+go
+    
+exec sp_adduser
+    @loginame = 'grabberLogin',
+    @name_in_db = 'grabberUser',
+    @grpname = 'db_owner'
+go
+
+use [master]

@@ -1,21 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data.SqlClient;
-using System.Xml;
-using System.Reflection;
-
-using NHibernate;
+﻿using NHibernate;
 using NHibernate.Cfg;
-using NHibernate.Tool.hbm2ddl;
-using NHibernate.Engine;
-using NHibernate.Mapping;
 using NHibernate.Criterion;
-
-using log4net;
-using log4net.Config;
+using System;
+using System.Collections.Generic;
 
 namespace AdSitesGrabber.Controller
 {
