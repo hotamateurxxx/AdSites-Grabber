@@ -1,0 +1,26 @@
+﻿<?xml version="1.0"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="AdSitesGrabber.Model" assembly="Grabber">
+
+  <class name="Category" table="Categories">
+
+    <id name="RecId">
+      <column name="recId" />
+      <generator class="guid.comb" />
+    </id>
+
+    <list name="Items" table="CategoryItems" cascade="all" lazy="false">
+      <key column="category" />
+      <!-- 
+        Объясняю почему это здесь поле order экранировано. NHibernate тупо не умеет нормально экранировать имена. 
+        Во-первых, он не умеет экранировать все имена вообще, он умеет экранировать только заложенные в диалекте
+        зарегистрированные слова. Если вдруг случилось что в диалекте забыли упомянуть слово, которое надо 
+        экранировать - все хана, невозможно нормально доопределить диалект или переписать класс для адекватного 
+        экранирования. Во-вторых, слово "order" не зарегистрировано в диалекте MSSQL2000.
+      -->
+      <index column="[order]" />
+      <element column="name" type="String" />
+    </list>
+    
+  </class>
+
+</hibernate-mapping>

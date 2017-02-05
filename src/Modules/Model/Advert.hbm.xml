@@ -1,0 +1,17 @@
+﻿<?xml version="1.0"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="AdSitesGrabber.Model" assembly="Grabber">
+
+  <class name="Advert" table="Adverts">
+
+    <id name="RecId">
+      <column name="recId" />
+      <generator class="guid.comb" />
+    </id>
+
+    <property name="Url" column="url"/>
+    <property name="Title" column="title"/>
+    <property name="UpdateTime" column="updated"/>
+    
+  </class>
+
+</hibernate-mapping>
