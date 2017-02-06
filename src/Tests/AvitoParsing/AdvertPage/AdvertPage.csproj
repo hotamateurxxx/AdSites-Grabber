@@ -85,6 +85,9 @@
       <HintPath>..\..\..\..\packages\Selenium.Support.3.0.1\lib\net40\WebDriver.Support.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="WebManager">
+      <HintPath>..\..\..\..\bin\WebManager.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Options.cs" />
