@@ -1,11 +1,11 @@
 ﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
-using System;
-
 
 namespace AdSitesGrabber.Extensions
 {
 
+    /// <summary>
+    /// Расширение интерфейса OpenQA.Selenium.IWebElement.
+    /// </summary>
     public static class IWebElementExtension
     {
 
@@ -13,9 +13,8 @@ namespace AdSitesGrabber.Extensions
         /// Поиск элемента по CSS-селектору.
         /// </summary>
         /// <param name="context">Контекст поиска.</param>
-        /// <param name="cssSelector">Селектор.</param>
         /// <returns>Элемент.</returns>
-        public static String ToStringExt(this IWebElement context)
+        public static string ToStringExt(this IWebElement context)
         {
             return (
                          "--------------------------------------------"

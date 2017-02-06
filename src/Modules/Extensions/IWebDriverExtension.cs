@@ -1,10 +1,13 @@
 ﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Support.Extensions;
 using OpenQA.Selenium.Support.UI;
 using System;
 
 namespace AdSitesGrabber.Extensions
 {
+
+    /// <summary>
+    /// Расширение интерфейса OpenQA.Selenium.IWebDriver.
+    /// </summary>
     public static class IWebDriverExtension
     {
 

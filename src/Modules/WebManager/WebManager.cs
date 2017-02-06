@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.PhantomJS;
-
+using System;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace AdSitesGrabber.Controller
 {
@@ -18,7 +17,19 @@ namespace AdSitesGrabber.Controller
         /// <summary>
         /// Используемый тип драйвера.
         /// </summary>
-        public enum DriverType { Firefox, PhantomJS }
+        public enum DriverType { 
+
+            /// <summary>
+            /// Для работы с браузером Firefox.
+            /// </summary>
+            Firefox,
+
+            /// <summary>
+            /// Для работы с браузером PhantomJS.
+            /// </summary>
+            PhantomJS 
+
+        }
 
         /// <summary>
         /// Запись с информацией о веб-драйвере.
@@ -85,8 +96,6 @@ namespace AdSitesGrabber.Controller
         {
             // Закрытие драйверов
             CloseDrivers();
-            // Надо дать время на взаимодействие с браузером, а то не успеет закрыть
-            Thread.Sleep(1000);
         }
 
         /// <summary>

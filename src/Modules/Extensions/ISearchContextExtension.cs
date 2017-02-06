@@ -1,5 +1,4 @@
 ﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
 using System;
 
 // Псевдонимы
@@ -32,7 +31,7 @@ namespace AdSitesGrabber.Extensions
         /// <param name="cssSelector">Селектор.</param>
         /// <param name="attrName">Имя атрибута.</param>
         /// <returns>Значение атрибута.</returns>
-        public static String FindAttrValue(this ISearchContext context, String cssSelector, String attrName)
+        public static string FindAttrValue(this ISearchContext context, String cssSelector, String attrName)
         {
             return FindElement(context, cssSelector).GetAttribute(attrName);
         }

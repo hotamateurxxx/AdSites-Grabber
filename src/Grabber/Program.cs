@@ -1,43 +1,26 @@
-﻿using AdSitesGrabber.Controller;
-using AdSitesGrabber.Controller.Avito;
+﻿using AdSitesGrabber.Controller.Avito;
 using AdSitesGrabber.Extensions;
-using CommandLine;
 using log4net.Config;
 using System;
 
 namespace AdSitesGrabber.Controller
 {
 
+    /// <summary>
+    /// Класс программы.
+    /// </summary>
     class Program
     {
 
-        class Options {
-
-            [Option("webDriverType", DefaultValue = WebManager.DriverType.PhantomJS, HelpText = "Тип используемого веб-драйвера (Firefox или PhantomJS).")]
-            public WebManager.DriverType WebDriverType { get; set; }
-
-            [Option("browserPath", HelpText = "Путь к исполняемому файлу браузера.")]
-            public string BrowserPath { get; set; }
-
-            [Option("region", HelpText = "Регион для загрузки объявлений.")]
-            public string Region { get; set; }
-
-            [Option("url", HelpText = "Адрес сайта объявлений.")]
-            public string Url { get; set; }
-
-            [Option("count", DefaultValue = 10, HelpText = "Количество объявлений для загрузки.")]
-            public int Count { get; set; }
-
-            [Option("waitTimeout", DefaultValue = 3000, HelpText = "Таймаут ожидания веб-элемента после загрузки текста страницы в мс.")]
-            public int WaitTimeout { get; set; }
-
-        }
-
+        /// <summary>
+        /// Основной метод программы.
+        /// </summary>
+        /// <param name="args">Аргументы командной строки.</param>
         static void Main(string[] args)
         {
 
             // Парсим входящие аргументы
-            var options = CommandLine.Parser.Default.ParseArguments<Options>(args);
+            var options = CommandLine.Parser.Default.ParseArguments<CommandLineArguments>(args);
             IWebDriverExtension.WaitTimeout = options.Value.WaitTimeout;
 
             try
@@ -79,6 +62,7 @@ namespace AdSitesGrabber.Controller
             Console.WriteLine("Программа выполнена. Для выхода нажмите Enter.");
             Console.ReadLine();
             Console.WriteLine("Здесь должно все закончиться.");
+
         }
 
     }

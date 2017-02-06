@@ -1,12 +1,10 @@
-﻿using System;
-using OpenQA.Selenium;
+﻿using AdSitesGrabber.Extensions;
 using AdSitesGrabber.Model;
 using AdSitesGrabber.Model.Avito;
-using AdSitesGrabber.Extensions;
+using OpenQA.Selenium;
+using System;
 
-// Псевдонимы
 using IWebElements = System.Collections.ObjectModel.ReadOnlyCollection<OpenQA.Selenium.IWebElement>;
-
 
 namespace AdSitesGrabber.Controller.Avito
 {

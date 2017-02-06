@@ -6,9 +6,8 @@ namespace AdSitesGrabber.Controller
 
     /// <summary>
     /// Менеджер веб-драйверов.
-    /// Нужен для того, чтобы во всех местах проекта использовались единые методы работы с веб-драйвером.
     /// </summary>
-    interface IWebManager : IDisposable
+    public interface IWebManager : IDisposable
     {
 
         /// <summary>

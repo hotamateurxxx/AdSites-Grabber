@@ -1,6 +1,6 @@
-﻿using System;
+﻿using AdSitesGrabber.Model;
+using System;
 using System.Collections.Generic;
-using AdSitesGrabber.Model;
 
 namespace AdSitesGrabber.Controller
 {
