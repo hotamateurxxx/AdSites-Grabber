@@ -39,10 +39,9 @@ namespace AdSitesGrabber.Controller.Avito
                 AvitoAdvert advert = new AvitoAdvert();
                 advert.Url = url;
                 Driver.Navigate().GoToUrl(advert.Url);
-                // Ждем окончания загрузки JS и jQuery
                 Driver.WaitForJSandJQueryToLoad();
+                ParseSearchForm(ref advert);
                 IWebElement body = Driver.FindElement("body");
-                ParseCategories(body, ref advert);
                 ParseBody(body, ref advert);
                 return advert;
             }
@@ -50,6 +49,74 @@ namespace AdSitesGrabber.Controller.Avito
             {
                 Logger.Warns.Error("\n\nОшибка анализа объявения по адресу:\n" + url, e);
                 throw e;
+            }
+        }
+
+        /// <summary>
+        /// Разбор формы поиска.
+        /// </summary>
+        /// <param name="advert">Объявление.</param>
+        private void ParseSearchForm(ref AvitoAdvert advert)
+        {
+            IWebElement form = Driver.FindElement("form#search_form");
+            ParseSearchForm_Categories(form, ref advert);
+            ParseSearchForm_Region(form, ref advert);
+        }
+
+        /// <summary>
+        /// Разбор категорий.
+        /// </summary>
+        /// <param name="form">Форма.</param>
+        /// <param name="advert">Объявление.</param>
+        private void ParseSearchForm_Categories(IWebElement form, ref AvitoAdvert advert)
+        {
+            SelectElement select = new SelectElement(form.FindElement("select#category"));
+            String categoryTitle = select.SelectedOption.Text.Trim();
+            // Создаем новую категорию
+            Category category = new Category();
+            // Добавляем новый элемент категории
+            category.Items.Add(categoryTitle);
+            // Добавляем категорию в список
+            advert.Categories.Add(category);
+        }
+
+        /// <summary>
+        /// Разбор категорий.
+        /// </summary>
+        /// <param name="form">Форма.</param>
+        /// <param name="advert">Объявление.</param>
+        private void ParseSearchForm_Region(IWebElement form, ref AvitoAdvert advert)
+        {
+            SelectElement select = new SelectElement(form.FindElement("select#region"));
+            String regionTitle = select.SelectedOption.Text.Trim();
+            advert.Location.Region = regionTitle;
+        }
+
+        /// <summary>
+        /// Разбор тела.
+        /// </summary>
+        /// <param name="container">Контейнер объявления.</param>
+        /// <param name="advert">Объявление.</param>
+        private void ParseBody(IWebElement container, ref AvitoAdvert advert)
+        {
+            IWebElement body = container.FindElement("div.item-view");
+            ParseTitle(body, ref advert);
+            ParseSubtitle(body, ref advert);
+            ParsePrice(body, ref advert);
+
+            // Разбор раздела контактов
+            IWebElement divContacts = body.FindElement("div.item-view-contacts");
+            ParseSeller(divContacts, ref advert);
+            ParseActions(divContacts, ref advert);
+
+            // Разбор текста объявления
+            try
+            {
+                ParseText(body, ref advert);
+            }
+            catch
+            {
+                // Do nothing
             }
         }
 
@@ -72,23 +139,6 @@ namespace AdSitesGrabber.Controller.Avito
         }
 
         /// <summary>
-        /// Разбор категорий.
-        /// </summary>
-        /// <param name="container">Контейнер объявления.</param>
-        /// <param name="advert">Объявление.</param>
-        private void ParseCategories(IWebElement container, ref AvitoAdvert advert)
-        {
-            SelectElement select = new SelectElement(container.FindElement("select#category"));
-            String categoryTitle = select.SelectedOption.Text.Trim();
-            // Создаем новую категорию
-            Category category = new Category();
-            // Добавляем новый элемент категории
-            category.Items.Add(categoryTitle);
-            // Добавляем категорию в список
-            advert.Categories.Add(category);
-        }
-
-        /// <summary>
         /// Разбор навигационной цепочки.
         /// </summary>
         /// <param name="container">Контейнер объявления.</param>
@@ -98,30 +148,6 @@ namespace AdSitesGrabber.Controller.Avito
             String cssSelector = ".b-catalog-breadcrumbs .breadcrumb-link";
             waitElement(cssSelector, container);
             IWebElements links = container.FindElements(By.CssSelector(cssSelector));
-        }
-
-        /// <summary>
-        /// Разбор тела.
-        /// </summary>
-        /// <param name="container">Контейнер объявления.</param>
-        /// <param name="advert">Объявление.</param>
-        private void ParseBody(IWebElement container, ref AvitoAdvert advert)
-        {
-            IWebElement body = container.FindElement("div.item-view");
-            ParseTitle(body, ref advert);
-            ParsePrice(body, ref advert);
-            //ParseLocation(body, ref advert);
-            try
-            {
-                ParseText(body, ref advert);
-            }
-            catch
-            {
-                // Do nothing
-            }
-            ParseSubtitle(body, ref advert);
-            ParseSeller(body, ref advert);
-            ParseActions(body, ref advert);
         }
 
         /// <summary>
@@ -139,7 +165,7 @@ namespace AdSitesGrabber.Controller.Avito
             {
                 ParsePopupPhone(ref advert);
             }
-            catch (WebDriverTimeoutException)
+            catch (Exception)
             {
                 // Do nothing
             }
@@ -152,13 +178,26 @@ namespace AdSitesGrabber.Controller.Avito
         private void ParsePopupPhone(ref AvitoAdvert advert)
         {
             // Содержимое всплывающего окна
-            IWebElement popupContent = Driver.FindElement("div.js-item-phone-popup-content");
+            IWebElement container = Driver.FindElement("div.js-item-phone-popup-content");
 
             // Телефон продавца картинкой
-            advert.Contact.Phone.Src = waitAttrValue("div.item-phone-big-number img", "src", popupContent);
+            advert.Contact.Phone.Src = waitAttrValue("div.item-phone-big-number img", "src", container);
+
+            // Разбор информации о продавце со всплывающего окна
+            ParseSeller(container, ref advert);
+
+        }
+
+        /// <summary>
+        /// Разбор раздела информации о продавце (во всплывающем окне или на правой части страницы).
+        /// </summary>
+        /// <param name="container">Контейнер объявления.</param>
+        /// <param name="advert">Объявление.</param>
+        private void ParseSeller(IWebElement container, ref AvitoAdvert advert)
+        {
 
             // Раздел информации о продавце
-            IWebElement divSeller = popupContent.FindElement("div.seller-info");
+            IWebElement divSeller = container.FindElement("div.seller-info");
 
             // Ссылка на профиль продавца (ее может не быть)
             try
@@ -171,12 +210,12 @@ namespace AdSitesGrabber.Controller.Avito
                 {
                     advert.Contact.Url = divSeller.FindAttrValue("div.seller-info-name a", "href").Trim();
                 }
-                catch (NoSuchElementException e)
+                catch (NoSuchElementException)
                 {
-                    throw e;
+                    // Do nothing
                 }
             }
-            
+
             IWebElements divProps = divSeller.FindElements("div.seller-info-prop");
             foreach (IWebElement divProp in divProps)
             {
@@ -203,16 +242,7 @@ namespace AdSitesGrabber.Controller.Avito
                         break;
                 }
             }
-        }
 
-        /// <summary>
-        /// Разбор раздела информации о продавце (под кнопкой "Показать телефон").
-        /// </summary>
-        /// <param name="container">Контейнер объявления.</param>
-        /// <param name="advert">Объявление.</param>
-        private void ParseSeller(IWebElement container, ref AvitoAdvert advert)
-        {
-            IWebElement elem = waitElement("div.seller-info", container);
         }
 
         /// <summary>
@@ -232,25 +262,16 @@ namespace AdSitesGrabber.Controller.Avito
         }
 
         /// <summary>
-        /// Разбор места.
-        /// </summary>
-        /// <param name="container">Контейнер объявления.</param>
-        /// <param name="advert">Объявление.</param>
-        private void ParseLocation(IWebElement container, ref AvitoAdvert advert)
-        {
-            IWebElement elem = container.FindElement("#map span[itemprop=name]");
-            advert.Location.Region = elem.Text;
-        }
-
-        /// <summary>
         /// Разбор текста.
         /// </summary>
         /// <param name="container">Контейнер объявления.</param>
         /// <param name="advert">Объявление.</param>
         private void ParseText(IWebElement container, ref AvitoAdvert advert)
         {
-            IWebElement elem = container.FindElement("div.item-description");
-            advert.Text = elem.GetAttribute("textContent");
+            //IWebElement elem = container.FindElement("div.item-description");
+            IWebElement elem = container.FindElement("div.item-view-main");
+            string text = elem.GetAttribute("innerText");
+            advert.Text = Regex.Replace(text, @"(^\s+$[\r\n]*)|(^\s+)|(\s+$)", "", RegexOptions.Multiline);
             advert.HtmlText = elem.GetAttribute("outerHTML");
         }
 

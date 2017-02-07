@@ -36,8 +36,11 @@ namespace AdSitesGrabber.Model
         /// <returns>Представление в строке.</returns>
         public override string ToString()
         {
+            string urls = "Заглавная: " + TitleImgUrl;
             return (
-                PhotosCount == 0 ? "Нет фотографий" : PhotosCount.ToString() + " фотографий"
+                (PhotosCount == 0) ? "Нет фотографий" : (
+                    PhotosCount.ToString() + " фотографий: " + ("\n" + urls).Replace("\n", "\n\t")
+                )
             );
         }
 

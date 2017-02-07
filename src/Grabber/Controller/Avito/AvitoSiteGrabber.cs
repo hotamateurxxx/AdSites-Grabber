@@ -35,15 +35,10 @@ namespace AdSitesGrabber.Controller.Avito
             {
                 // Общий индекс выполнения
                 int idx = 0;
-                // Создаем драйвер
                 IWebDriver driver = webManager.OccupyDriver(this);
-                // Загружаем отправную страницу
                 driver.Navigate().GoToUrl(Url);
-                // Выбираем город
                 selectLocation(driver);
-                // Ждем окончания загрузки JS и jQuery
                 driver.WaitForJSandJQueryToLoad();
-                // Обрабатываем объявления на текущей странице
                 processPageAdverts(driver);
                 int count = Math.Min(execParams.Count, adverts.Count);
                 using (AvitoAdvertOnPageParser grabber = new AvitoAdvertOnPageParser(driver))

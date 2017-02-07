@@ -105,6 +105,9 @@ namespace AdSitesGrabber.Model
                 + "\n" + "Цена: " + Price
                 + "\n" + "Контакт: " + ("\n" + Contact).Replace("\n", "\n\t")
                 + "\n" + "Обновлено: " + UpdateTime.ToString()
+                + "\n" + "Медиа: " + Media
+                + "\n" + "Текст: " + ("\n" + Text).Replace("\n", "\n\t")
+                //+ "\n" + "Текст с HTML-разметкой: " + ("\n" + HtmlText).Replace("\n", "\n\t")
             );
         }
 

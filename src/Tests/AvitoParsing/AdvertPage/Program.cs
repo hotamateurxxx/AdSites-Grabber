@@ -41,9 +41,21 @@ namespace AdvertPage
 
                     IWebDriver driver = webManager.OccupyDriver(webManager);
                     var parser = new AvitoAdvertOnPageParser(driver);
-                    Advert advert = parser.Parse(options.Value.Url);
+                    Advert advert;
+                    try
+                    {
+                        Console.WriteLine();
+                        advert = parser.Parse(options.Value.Url);
+                        Console.WriteLine("Со страницы прочитано следущее объявление:\n" + advert);
+                        Console.ReadLine();
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Warns.Error("Ошибка разбора объявления.", e);
+                        Console.ReadLine();
+                        throw e;
+                    }
                     webManager.ReleaseDriver(driver);
-                    Console.WriteLine("Со страницы прочитано следущее объявление:\n" + advert);
 
                 }
             }
@@ -52,9 +64,9 @@ namespace AdvertPage
                 Logger.Warns.Error("Ошибка выполнения программы.", e);
             }
             
-            Console.WriteLine();
-            Console.WriteLine("Программа выполнена. Для выхода нажмите Enter.");
-            Console.ReadLine();
+            //Console.WriteLine();
+            //Console.WriteLine("Программа выполнена. Для выхода нажмите Enter.");
+            //Console.ReadLine();
             Console.WriteLine("Здесь должно все закончиться.");
 
         }
