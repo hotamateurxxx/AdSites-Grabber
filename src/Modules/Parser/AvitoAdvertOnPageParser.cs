@@ -47,7 +47,10 @@ namespace AdSitesGrabber.Controller.Avito
             }
             catch (Exception e)
             {
-                Logger.Warns.Error("\n\nОшибка анализа объявения по адресу:\n" + url, e);
+                if (ParseNotFound())
+                {
+                    throw new Exception("Объявление не найдено.");
+                }
                 throw e;
             }
         }
@@ -303,8 +306,7 @@ namespace AdSitesGrabber.Controller.Avito
             }
             catch (FormatException e)
             {
-                Logger.Warns.Error("Ошибка разбора цены:\n" + advert.Price.RawValue + "\n" + elem.GetAttribute("outerHTML"), e);
-                throw e;
+                throw new ParseException("Ошибка разбора цены", e, advert.Price.RawValue);
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿using AdSitesGrabber.Model;
 using AdSitesGrabber.Model.Avito;
+using AdSitesGrabber.Extensions;
 using OpenQA.Selenium;
 using System;
 using System.Text.RegularExpressions;
@@ -41,8 +42,7 @@ namespace AdSitesGrabber.Controller.Avito
             }
             catch (FormatException e)
             {
-                Logger.Warns.Error("Ошибка разбора штампа времени объявления:\n" + inputStr, e);
-                throw e;
+                throw new ParseException("Ошибка разбора штампа времени объявления", e, inputStr);
             }
         }
 
@@ -59,9 +59,29 @@ namespace AdSitesGrabber.Controller.Avito
             }
             catch (FormatException e)
             {
-                Logger.Warns.Error("Ошибка разбора номера объявления:\n" + inputStr, e);
-                throw e;
+                throw new ParseException("Ошибка разбора номера объявления", e, inputStr);
             }
+        }
+
+        /// <summary>
+        /// Проверка страницы на ошибку "Не найдено".
+        /// </summary>
+        /// <returns>Является ли данная страница вариацией "Не найдено" или нет.</returns>
+        protected Boolean ParseNotFound()
+        {
+            try
+            {
+                IWebElement header = Driver.FindElement(".nulus .nulus__header");
+                String headerText = header.GetAttribute("textContent");
+                Match match = Regex.Match(headerText, "По вашему запросу ничего не найдено");
+                if (match.Success == false)
+                    return false;
+            }
+            catch (NoSuchElementException)
+            {
+                return false;
+            }
+            return true;
         }
 
     }

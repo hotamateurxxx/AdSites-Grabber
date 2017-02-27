@@ -60,6 +60,7 @@
     <Compile Include="AvitoAdvertOnPageParser.cs" />
     <Compile Include="AvitoAdvertParser.cs" />
     <Compile Include="PageParser.cs" />
+    <Compile Include="ParseException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -71,10 +72,6 @@
     <ProjectReference Include="..\Extensions\Extensions.csproj">
       <Project>{1e2cd646-f2b7-43a7-ad6f-ae045be4269a}</Project>
       <Name>Extensions</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Logger\Logger.csproj">
-      <Project>{d9a18be5-ffdd-4723-a759-f26a154acf8b}</Project>
-      <Name>Logger</Name>
     </ProjectReference>
     <ProjectReference Include="..\Model\Model.csproj">
       <Project>{ccf57068-8ce3-468a-b9c6-9a32f6bba1f4}</Project>

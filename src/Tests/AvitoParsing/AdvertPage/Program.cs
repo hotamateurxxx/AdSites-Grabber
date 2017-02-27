@@ -52,6 +52,7 @@ namespace AdvertPage
                     catch (Exception e)
                     {
                         Logger.Warns.Error("Ошибка разбора объявления.", e);
+                        Console.WriteLine("Программа приостановлена. Для продолжения нажмите Enter.");
                         Console.ReadLine();
                         throw e;
                     }
