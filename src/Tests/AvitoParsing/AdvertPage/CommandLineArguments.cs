@@ -24,7 +24,7 @@ namespace AdvertPage
         /// <summary>
         /// Таймаут ожидания веб-элемента после загрузки текста страницы в мс.
         /// </summary>
-        [Option("waitTimeout", DefaultValue = 3000, HelpText = "Таймаут ожидания веб-элемента после загрузки текста страницы в мс.")]
+        [Option("waitTimeout", Default = 3000, HelpText = "Таймаут ожидания веб-элемента после загрузки текста страницы в мс.")]
         public int WaitTimeout { get; set; }
 
     }

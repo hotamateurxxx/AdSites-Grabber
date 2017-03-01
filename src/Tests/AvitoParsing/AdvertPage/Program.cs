@@ -5,6 +5,9 @@ using AdSitesGrabber.Model;
 using log4net.Config;
 using OpenQA.Selenium;
 using System;
+using CommandLine;
+using CommandLine.Text;
+using CommandLine.Infrastructure;
 
 namespace AdvertPage
 {
@@ -23,8 +26,9 @@ namespace AdvertPage
         {
 
             // Парсим входящие аргументы
-            var options = CommandLine.Parser.Default.ParseArguments<CommandLineArguments>(args);
-            IWebDriverExtension.WaitTimeout = options.Value.WaitTimeout;
+            var result = Parser.Default.ParseArguments<CommandLineArguments>(args);
+            
+            //IWebDriverExtension.WaitTimeout = result.
 
             try
             {
@@ -37,7 +41,7 @@ namespace AdvertPage
 
                     // Конфигурация веб-менеджера
                     webManager.FactoryDriver = AdSitesGrabber.Controller.WebManager.DriverType.Firefox;
-                    webManager.BrowserPath = options.Value.BrowserPath;
+                    webManager.BrowserPath = result.Value.BrowserPath;
 
                     IWebDriver driver = webManager.OccupyDriver(webManager);
                     var parser = new AvitoAdvertOnPageParser(driver);
@@ -45,7 +49,7 @@ namespace AdvertPage
                     try
                     {
                         Console.WriteLine();
-                        advert = parser.Parse(options.Value.Url);
+                        advert = parser.Parse(result.Value.Url);
                         Console.WriteLine("Со страницы прочитано следущее объявление:\n" + advert);
                         Console.ReadLine();
                     }
@@ -63,6 +67,8 @@ namespace AdvertPage
             catch (Exception e)
             {
                 Logger.Warns.Error("Ошибка выполнения программы.", e);
+                        Console.WriteLine("Программа приостановлена. Для продолжения нажмите Enter.");
+                Console.ReadLine();
             }
             
             //Console.WriteLine();
