@@ -12,13 +12,13 @@ namespace AdvertPage
         /// <summary>
         /// Адрес страницы объявления на Авито.
         /// </summary>
-        [Option("url", HelpText = "Адрес страницы объявления на Авито.")]
+        [Option("url", Required = true, HelpText = "Адрес страницы объявления на Авито.")]
         public string Url { get; set; }
 
         /// <summary>
         /// Путь к исполняемому файлу браузера.
         /// </summary>
-        [Option("browserPath", HelpText = "Путь к исполняемому файлу браузера.")]
+        [Option("browserPath", Required = true, HelpText = "Путь к исполняемому файлу браузера.")]
         public string BrowserPath { get; set; }
 
         /// <summary>
