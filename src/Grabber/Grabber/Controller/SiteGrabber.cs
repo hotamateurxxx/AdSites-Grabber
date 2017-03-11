@@ -8,7 +8,7 @@ namespace AdSitesGrabber.Controller
     /// <summary>
     /// Абстрастный граббер сайта.
     /// </summary>
-    abstract class SiteGrabber : IDisposable
+    abstract public class SiteGrabber : IDisposable
     {
 
         /// <summary>

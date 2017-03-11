@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2012 for Windows Desktop
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model", "Model\Model.csproj", "{CCF57068-8CE3-468A-B9C6-9A32F6BBA1F4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parser", "Parser\Parser.csproj", "{BA3EAE6A-6A32-4B54-8EC0-6EBB816A908F}"
@@ -16,8 +18,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{3F23F1
 		.nuget\NuGet.exe = .nuget\NuGet.exe
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebManager", "WebManager\WebManager.csproj", "{2704B21C-4E69-402F-BBEF-BFFE525F4D75}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,10 +41,6 @@ Global
 		{D9A18BE5-FFDD-4723-A759-F26A154ACF8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D9A18BE5-FFDD-4723-A759-F26A154ACF8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D9A18BE5-FFDD-4723-A759-F26A154ACF8B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2704B21C-4E69-402F-BBEF-BFFE525F4D75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2704B21C-4E69-402F-BBEF-BFFE525F4D75}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2704B21C-4E69-402F-BBEF-BFFE525F4D75}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2704B21C-4E69-402F-BBEF-BFFE525F4D75}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
