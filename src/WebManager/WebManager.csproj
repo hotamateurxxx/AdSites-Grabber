@@ -13,14 +13,16 @@
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\Grabber\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\bin\</OutputPath>
-    <BaseIntermediateOutputPath>..\..\..\obj\</BaseIntermediateOutputPath>
-    <DocumentationFile>..\..\..\bin\WebManager.XML</DocumentationFile>
+    <OutputPath>..\..\bin\</OutputPath>
+    <BaseIntermediateOutputPath>..\..\obj\</BaseIntermediateOutputPath>
+    <DocumentationFile>..\..\bin\WebManager.XML</DocumentationFile>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -28,11 +30,11 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\bin\</OutputPath>
+    <OutputPath>..\..\bin\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\..\bin\WebManager.XML</DocumentationFile>
+    <DocumentationFile>..\..\bin\WebManager.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -43,12 +45,12 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="WebDriver, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\pkg\Selenium.WebDriver.3.0.1\lib\net40\WebDriver.dll</HintPath>
+    <Reference Include="WebDriver">
+      <HintPath>..\..\pkg\Selenium.WebDriver.3.3.0\lib\net40\WebDriver.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="WebDriver.Support, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\pkg\Selenium.Support.3.0.1\lib\net40\WebDriver.Support.dll</HintPath>
+    <Reference Include="WebDriver.Support">
+      <HintPath>..\..\pkg\Selenium.Support.3.3.0\lib\net40\WebDriver.Support.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
@@ -61,23 +63,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\..\pkg\WebDriver.GeckoDriver.0.13.0\content\geckodriver.exe">
+    <Content Include="..\..\pkg\WebDriver.GeckoDriver.0.13.0\content\geckodriver.exe">
       <Link>geckodriver.exe</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
-    <Error Condition="!Exists('..\..\..\pkg\Selenium.WebDriver.GeckoDriver.Win64.0.14.0\build\Selenium.WebDriver.GeckoDriver.Win64.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\pkg\Selenium.WebDriver.GeckoDriver.Win64.0.14.0\build\Selenium.WebDriver.GeckoDriver.Win64.targets'))" />
-    <Error Condition="!Exists('..\..\..\pkg\Selenium.WebDriver.PhantomJS.1.0.0.0\build\Selenium.WebDriver.PhantomJS.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\pkg\Selenium.WebDriver.PhantomJS.1.0.0.0\build\Selenium.WebDriver.PhantomJS.targets'))" />
-  </Target>
-  <Import Project="..\..\..\pkg\Selenium.WebDriver.GeckoDriver.Win64.0.14.0\build\Selenium.WebDriver.GeckoDriver.Win64.targets" Condition="Exists('..\..\..\pkg\Selenium.WebDriver.GeckoDriver.Win64.0.14.0\build\Selenium.WebDriver.GeckoDriver.Win64.targets')" />
-  <Import Project="..\..\..\pkg\Selenium.WebDriver.PhantomJS.1.0.0.0\build\Selenium.WebDriver.PhantomJS.targets" Condition="Exists('..\..\..\pkg\Selenium.WebDriver.PhantomJS.1.0.0.0\build\Selenium.WebDriver.PhantomJS.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

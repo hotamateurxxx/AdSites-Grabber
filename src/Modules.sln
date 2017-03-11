@@ -3,21 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model", "Model\Model.csproj", "{CCF57068-8CE3-468A-B9C6-9A32F6BBA1F4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model", "Modules\Model\Model.csproj", "{CCF57068-8CE3-468A-B9C6-9A32F6BBA1F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parser", "Parser\Parser.csproj", "{BA3EAE6A-6A32-4B54-8EC0-6EBB816A908F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parser", "Modules\Parser\Parser.csproj", "{BA3EAE6A-6A32-4B54-8EC0-6EBB816A908F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Extensions", "Extensions\Extensions.csproj", "{1E2CD646-F2B7-43A7-AD6F-AE045BE4269A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logger", "Logger\Logger.csproj", "{D9A18BE5-FFDD-4723-A759-F26A154ACF8B}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{3F23F1B7-A943-4C90-80E8-1E2E38BE7DF1}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\.gitignore = .nuget\.gitignore
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Extensions", "Modules\Extensions\Extensions.csproj", "{1E2CD646-F2B7-43A7-AD6F-AE045BE4269A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,10 +27,6 @@ Global
 		{1E2CD646-F2B7-43A7-AD6F-AE045BE4269A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E2CD646-F2B7-43A7-AD6F-AE045BE4269A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E2CD646-F2B7-43A7-AD6F-AE045BE4269A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D9A18BE5-FFDD-4723-A759-F26A154ACF8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D9A18BE5-FFDD-4723-A759-F26A154ACF8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D9A18BE5-FFDD-4723-A759-F26A154ACF8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D9A18BE5-FFDD-4723-A759-F26A154ACF8B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
