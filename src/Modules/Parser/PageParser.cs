@@ -10,11 +10,29 @@ namespace AdSitesGrabber.Controller
     {
 
         /// <summary>
+        /// Является ли объект уже освобожденным.
+        /// </summary>
+        private bool _disposed = false;
+
+        /// <summary>
         /// Освобождение.
         /// </summary>
-        public virtual void Dispose()
+        public void Dispose()
         {
-            // do nothing yet
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Совобождение ресурсов.
+        /// </summary>
+        /// <param name="disposing">Освобождение и управляемых и машинных ресурсов.</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this._disposed)
+            {
+                _disposed = true;
+            }
         }
 
     }

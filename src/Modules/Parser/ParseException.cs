@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.Serialization;
 
 namespace AdSitesGrabber.Controller
 {
@@ -10,7 +11,8 @@ namespace AdSitesGrabber.Controller
     /// <summary>
     /// Исключение разбора строки.
     /// </summary>
-    public class ParseException : Exception
+    [Serializable]
+    public class ParseException : Exception, ISerializable
     {
 
         /// <summary>
@@ -28,6 +30,17 @@ namespace AdSitesGrabber.Controller
             base(message, innerException)
         {
             InputString = inputString;
+        }
+
+        /// <summary>
+        /// При переопределении в производном классе задает объект SerializationInfo со сведениями об исключении.
+        /// </summary>
+        /// <param name="info">Объект SerializationInfo, содержащий сериализованные данные объекта о созданном исключении.</param>
+        /// <param name="context">Объект StreamingContext, содержащий контекстные сведения об источнике или назначении.</param>
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("InputString", InputString);
+            base.GetObjectData(info, context);
         }
 
     }

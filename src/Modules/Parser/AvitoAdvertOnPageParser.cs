@@ -45,13 +45,13 @@ namespace AdSitesGrabber.Controller.Avito
                 ParseBody(body, ref advert);
                 return advert;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 if (ParseNotFound())
                 {
                     throw new Exception("Объявление не найдено.");
                 }
-                throw e;
+                throw;
             }
         }
 
@@ -135,9 +135,9 @@ namespace AdSitesGrabber.Controller.Avito
                 IWebElement h1 = container.FindElement("div.title-info-main .title-info-title-text");
                 advert.Title = h1.GetAttribute("textContent");
             }
-            catch (WebDriverTimeoutException e)
+            catch (WebDriverTimeoutException)
             {
-                throw e;
+                throw;
             }
         }
 

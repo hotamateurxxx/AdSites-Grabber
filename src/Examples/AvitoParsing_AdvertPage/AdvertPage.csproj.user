@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <StartArguments>--browserPath "C:\Program Files\Mozilla Firefox\firefox.exe" --url "https://www.avito.ru/moskva/zapchasti_i_aksessuary/steklo_dveri_zadnee_levoe_shkoda_oktaviya_a3_a4_719618097"</StartArguments>
+  </PropertyGroup>
+</Project>
